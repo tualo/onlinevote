@@ -8,9 +8,10 @@ use Tualo\Office\OnlineVote\Middlewares\Init;
 use Tualo\Office\Basic\IMiddleware;
 
 class Ballotpaper  {
+    public static function db() { return App::get('session')->getDB(); }
 
-    public static function save(&$request,&$result){
-        $db = App::get('session')->getDB();
+    public static function save(){
+        $db =self::db();
 
         $voter = $db->direct('select session_id from voters where voter_id = {voter_id} and stimmzettel = {stimmzettel_id} and  session_id={session_id} ', 
         [
@@ -57,7 +58,7 @@ class Ballotpaper  {
                 if (isset($_SESSION['pug_session']['secret_token'])){
                     $hash['token']    = $_SESSION['pug_session']['secret_token'];
                 }else{
-                    $hash['token']    = generateGUID(10);
+                    $hash['token']    = $db->singleValue('select uuid() u',[],'u');
                 }
                 /**
                  * alter table ballotbox add isvalid tinyint default 0;
@@ -104,7 +105,7 @@ class Ballotpaper  {
 
     
     public static function valid(){
-        $db = App::get('session')->getDB();
+        $db =self::db();
         $_SESSION['pug_session']['ballotpaper']['valid'] = false;
         $kandidaten = $db->direct('select id,barcode,ridx,stimmzettelgruppen from kandidaten',$_SESSION['pug_session']['ballotpaper'],'id');
 
@@ -164,7 +165,7 @@ class Ballotpaper  {
     }
 
     public static function empty($id){
-        $db = CMSMiddlewareWMHelper::$db;
+        $db = self::db();
         return [
             'id' => $id,
             'valid' => true,
@@ -177,7 +178,7 @@ class Ballotpaper  {
 
 
     public static function isInterrupted( ){
-        $db = App::get('session')->getDB();
+        $db =self::db();
         if (isset($_SESSION['pug_session']) && (isset($_SESSION['pug_session']['ballotpaper']))){
             $interrupted = $db->singleValue('select unterbrochen from stimmzettel where id={id} ',$_SESSION['pug_session']['ballotpaper'],'unterbrochen');
             if ($interrupted==1) $_SESSION['pug_session']['ballotpaper']['interrupted']=true;
@@ -204,7 +205,7 @@ class Ballotpaper  {
 
     public static function run(&$request,&$result){
         @session_start();
-        $db = App::get('session')->getDB();
+        $db =self::db();
 
         
         if (!isset($_SESSION['current_state'])) return;
