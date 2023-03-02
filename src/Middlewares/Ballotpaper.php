@@ -1,6 +1,8 @@
 <?php
 namespace Tualo\Office\OnlineVote\Middlewares;
 
+use Tualo\Office\TualoPGP\TualoApplicationPGP;
+
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\OnlineVote\Middlewares\Init;
@@ -49,7 +51,7 @@ class Ballotpaper  {
             foreach($pgpkeys as $keyitem){
                 $hash = $keyitem;
                 
-                $hash['ballotpaper']=TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($_SESSION['pug_session']['ballotpaper']['checks']));
+                $hash['ballotpaper'] = TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($_SESSION['pug_session']['ballotpaper']['checks']));
                 
                 $hash['voter_id']   =$_SESSION['pug_session']['voter_id'];
                 $hash['stimmzettel_id']=$_SESSION['pug_session']['stimmzettel_id'];
