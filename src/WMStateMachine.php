@@ -1,0 +1,77 @@
+<?php
+declare(strict_types=1);
+namespace Tualo\Office\OnlineVote;
+use Tualo\Office\OnlineVote\Voter;
+use Tualo\Office\Basic\TualoApplication as App;
+
+class WMStateMachine {
+    public function logger(string $channel){
+        return App::logger($channel);
+    }
+    public function db(){
+        return App::get('session')->getDB();
+    }
+    public function config(){
+        return App::get('configuration');
+    }
+
+    private static ?WMStateMachine $instance = null;
+    public static function getInstance(): WMStateMachine
+    {
+      if (self::$instance === null) {
+            if (isset($_SESSION['statemachine'])){
+                self::$instance = unserialize($_SESSION['statemachine']);
+            }else{
+                self::$instance = new self();
+            }
+      }
+      return self::$instance;
+    }
+
+    private string $currentState = '';
+    private string $nextState = '';
+    private string $savedState = '';
+
+    private Voter $_voter;
+
+    public string $usernamefield = '';
+    public string $passwordfield = '';
+
+    public function __construct(){
+        
+    }
+
+    public function checkLogout():string{
+        if (isset($_REQUEST['logout']) && ($_REQUEST['logout']==1)){ 
+            $this->saveState();
+            return 'Tualo\Office\OnlineVote\States\Logout'; 
+        }
+        return '';
+    }
+
+    public function voter(bool $reset=false):Voter{
+        if ($reset===true) $this->_voter = new Voter();
+        return $this->_voter;
+    }
+
+    public function setNextState(string $state){
+        $this->nextState = $state;
+    }
+    public function setCurrentState(string $state){
+        $this->currentState = $state;
+    }
+
+    public function getNextState( ):string{
+        return $this->nextState;
+    }
+    public function getCurrentState( ):string{
+        return $this->currentState;
+    }
+
+    public function getSavedState( ):string{
+        return $this->savedState;
+    }
+    public function saveState( ):string{
+        return $this->savedState = $this->currentState;
+    }
+}
