@@ -1,6 +1,8 @@
 <?php
 
+
+require_once "CMSMiddleware/Init.php";
 /*
-require_once "Middlewares/Middleware.php";
 require_once "Routes/Query.php";
+
 */

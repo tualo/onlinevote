@@ -17,7 +17,9 @@
     },
     "minimum-stability": "dev",
     "require": {
+        "ramsey/uuid": "*",
         "phpseclib/phpseclib": "^3.0",
-        "tualo/tualopgp": "*"
+        "tualo/tualopgp": "*",
+        "michelf/php-markdown": "*"
     }
 }

@@ -11,7 +11,7 @@ class Login implements State {
 
     public static function login($username,$password,&$nextState):bool{
         $stateMachine = WMStateMachine::getInstance();
-        $stateMachine->logger('Login(State)')->info( "login  from ".$_SESSION['IP_ADDRESS']." - ".__LINE__." ".__FILE__." ");
+        $stateMachine->logger('Login(State)')->info( "login  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." ");
         
         if ($stateMachine->voter()->isBlocked($username)===true){ 
             $nextState = 'Tualo\Office\OnlineVote\States\BlockedUser';
@@ -38,13 +38,14 @@ class Login implements State {
         $nextState = 'Tualo\Office\OnlineVote\States\Login';
         $stateMachine = WMStateMachine::getInstance();
 
+        
         if (
-            isset($_REQUEST[$stateMachine->usernamefield]) &&
-            isset($_REQUEST[$stateMachine->passwordfield])
+            isset($_REQUEST[$stateMachine->usernamefield()]) &&
+            isset($_REQUEST[$stateMachine->passwordfield()])
         ){
-            $result['p1'] = $_REQUEST[$stateMachine->usernamefield];
-            $result['p2'] = $_REQUEST[$stateMachine->passwordfield];
-            $stateMachine->logger('Login(State)')->info("user and pw read  from ".$_SESSION['IP_ADDRESS']." - ".__LINE__." ".__FILE__." ");
+            $result['p1'] = $_REQUEST[$stateMachine->usernamefield()];
+            $result['p2'] = $_REQUEST[$stateMachine->passwordfield()];
+            $stateMachine->logger('Login(State)')->info("user and pw read  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." ");
         }else if (
             isset($_REQUEST['c']) && 
             is_string($_REQUEST['c']) && 
@@ -72,10 +73,10 @@ class Login implements State {
                     $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
                 }
             }else{
-                $stateMachine->logger('Login(State)')->warning( "login failed  from ".$_SESSION['IP_ADDRESS']." - ".__LINE__." ".__FILE__." " );
+                $stateMachine->logger('Login(State)')->warning( "login failed  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
             }
         }else{
-            $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$_SESSION['IP_ADDRESS']." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
+            $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
             
         }
 

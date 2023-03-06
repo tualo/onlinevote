@@ -3,7 +3,8 @@ declare(strict_types=1);
 namespace Tualo\Office\OnlineVote;
 use Tualo\Office\OnlineVote\Voter;
 use Tualo\Office\Basic\TualoApplication as App;
-
+use Michelf\MarkdownExtra;
+use Ramsey\Uuid\Uuid;
 class WMStateMachine {
     public function logger(string $channel){
         return App::logger($channel);
@@ -34,8 +35,9 @@ class WMStateMachine {
 
     private Voter $_voter;
 
-    public string $usernamefield = '';
-    public string $passwordfield = '';
+    private string $_usernamefield = '';
+    private string $_passwordfield = '';
+    private string $_ip = '';
 
     public function __construct(){
         
@@ -73,5 +75,26 @@ class WMStateMachine {
     }
     public function saveState( ):string{
         return $this->savedState = $this->currentState;
+    }
+
+    public function ip(string $ip=''):string{
+        if ($ip!='') $this->_ip=$ip;
+        return $this->_ip;
+    }
+
+    public function usernamefield(bool $reset=false):string{
+        if ($reset===true) $this->_usernamefield=  (Uuid::uuid4())->toString();
+        return $this->_usernamefield;
+    }
+
+    public function passwordfield(bool $reset=false):string{
+        if ($reset===true) $this->_passwordfield =  (Uuid::uuid4())->toString();
+        return $this->_passwordfield;
+    }
+
+    public function markdown(string $text):string{
+        $result = MarkdownExtra::defaultTransform( $text );
+        if (strpos($result,"<p>")===0) $result = substr( $result ,3,-3);
+        return $result;
     }
 }
