@@ -134,9 +134,19 @@ class Voter {
     public function availableBallotpapers():array{
         return $this->available_ballotpapers;
     }
+
+    public function isLoggedIn():bool{
+        return $this->loggedIn;
+    }
     
     private function addAvailableBallotpaper(Ballotpaper $ballotpaper):void{
         $this->available_ballotpapers[] = $ballotpaper;
+    }
+
+    
+
+    public function getCurrentBallotpaper():Ballotpaper{
+        return $this->currentBallotpaper;
     }
 
     public function selectBallotpaper($index=0):bool{

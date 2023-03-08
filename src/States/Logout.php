@@ -6,6 +6,11 @@ use Tualo\Office\OnlineVote\WMStateMachine;
 
 class Logout implements State{
 
+    public function prepare(&$request,&$result):string {
+        $stateMachine = WMStateMachine::getInstance();
+        return $stateMachine->getNextState();
+    }
+    
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
 

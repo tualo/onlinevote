@@ -35,6 +35,11 @@ class Login implements State {
         }
     }
 
+    public function prepare(&$request,&$result):string {
+        $stateMachine = WMStateMachine::getInstance();
+        return $stateMachine->getNextState();
+    }
+
     public function transition(&$request,&$result):string {
         $nextState = 'Tualo\Office\OnlineVote\States\Login';
         $stateMachine = WMStateMachine::getInstance();

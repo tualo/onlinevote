@@ -94,28 +94,26 @@ class Init {
         }
 
 
-        // print_r($result['wm_state']['texts'] );exit();
-
-        /*
-        if (isset($config['__CMS_ALLOWED_IP_FIELD__'])){
-            $_SESSION['IP_ADDRESS'] = isset($_SERVER[$config['__CMS_ALLOWED_IP_FIELD__']])?$_SERVER[$config['__CMS_ALLOWED_IP_FIELD__']]:$_SERVER['REMOTE_ADDR'];
-            $allowedcidr = $db->direct('select cidr from allowed_test_ip where current_date <= allowed_until and current_date >= allowed_from',[],'');
-            $allowed=false;
-            foreach($allowedcidr as $cidr){
-                if (CIDR::IPisWithinCIDR($_SESSION['IP_ADDRESS'],$cidr['cidr'])) $allowed=true;
-            }
-            if ($allowed===false){
-                self::$next_state = 'notstarted';
-                $_SESSION['current_state']= 'notstarted';
-            }
-        }
-        $_SESSION['pug_session']['error'] = [];
-        */
-        //$wmstate->currentState
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);
 
 
+
+
+
+        // prepare the next state
+        try{
+            $class = new \ReflectionClass($wmstate->getNextState());
+            if (!$class->hasMethod('prepare')){ 
+                App::logger('CMS')->error($wmstate->getNextState().' has no  prepare');
+            }else{
+                $state = new ($wmstate->getNextState());
+                $wmstate->setNextState( $state->prepare($request,$result) );
+            }
+        }catch(\Exception $e ){
+            App::logger('OnlineVote')->error($e->getMessage());
+        }
+        
         $result['wms'] =$wmstate;
         $result['md'] = self::markdownfn();
         $result['txt'] = self::textfn();

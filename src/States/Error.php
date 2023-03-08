@@ -6,6 +6,11 @@ use Tualo\Office\OnlineVote\WMStateMachine;
 
 class Error implements State{
 
+    public function prepare(&$request,&$result):string {
+        $stateMachine = WMStateMachine::getInstance();
+        return $stateMachine->getNextState();
+    }
+    
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($logoutState = $stateMachine->checkLogout())!='') return $logoutState;
