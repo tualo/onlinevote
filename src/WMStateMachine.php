@@ -6,6 +6,7 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Michelf\MarkdownExtra;
 use Ramsey\Uuid\Uuid;
 class WMStateMachine {
+    public static $sessionkey = 'wms';
     public function logger(string $channel){
         return App::logger($channel);
     }
@@ -20,16 +21,18 @@ class WMStateMachine {
     public static function getInstance(): WMStateMachine
     {
       if (self::$instance === null) {
-            if (isset($_SESSION['statemachine'])){
-                self::$instance = unserialize($_SESSION['statemachine']);
-            }else{
-                self::$instance = new self();
-            }
+        if (isset($_SESSION['wmstatemachine'])){
+            self::$instance = unserialize( $_SESSION['wmstatemachine'] );
+        }else{
+            self::$instance = new self();
+        }
       }
       return self::$instance;
     }
 
+
     private string $currentState = '';
+    private string $prevState = '';
     private string $nextState = '';
     private string $savedState = '';
 
@@ -52,15 +55,23 @@ class WMStateMachine {
     }
 
     public function voter(bool $reset=false):Voter{
+        if (!isset($this->_voter)) $reset=true;
         if ($reset===true) $this->_voter = new Voter();
         return $this->_voter;
     }
 
     public function setNextState(string $state){
         $this->nextState = $state;
+        App::logger('WMStateMachine')->error($this->getCurrentState().' to '.$this->getNextState());
     }
     public function setCurrentState(string $state){
+        if ($this->currentState!=$this->prevState) $this->prevState = $this->currentState;
         $this->currentState = $state;
+    }
+
+
+    public function getPrevState( ):string{
+        return $this->prevState;
     }
 
     public function getNextState( ):string{

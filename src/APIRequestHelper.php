@@ -13,7 +13,7 @@ class APIRequestHelper {
     public static function query($url,  $post=NULL){
         self::$last_data = self::raw($url,  $post);
         if (self::$last_data===false) return false;
-
+        App::logger('APIRequestHelper')->debug(   self::$last_data );
         $object = json_decode(self::$last_data,true);
         if (
             !is_null($object) && 

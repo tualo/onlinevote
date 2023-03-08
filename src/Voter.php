@@ -39,19 +39,23 @@ class Voter {
 
     }
 
-    public function fromJSON($jsonstring):void {
-        $json = json_decode($jsonstring,true);
+    public function fromJSON($json):void {
         $this->username = isset($json['username'])?$json['username']:'';
         $this->pwhash = isset($json['pwhash'])?$json['pwhash']:'';
         $this->secret = isset($json['secret'])?$json['secret']:'';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])){
-            $possible_ballotpapers = json_decode($json['possible_ballotpapers'],true);
+            $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'],true);
+        }
+
+        if (isset($json['possible_ballotpapers']) && is_array($json['possible_ballotpapers']) ){
             $this->possible_ballotpapers=[];
-            foreach($possible_ballotpapers as $ballotpaperJSON){
+            foreach($json['possible_ballotpapers'] as $ballotpaperJSON){
+                 
                 $bp = Ballotpaper::getInstanceFromJSON($ballotpaperJSON);
                 $this->addPossibleBallotpaper( Ballotpaper::getInstanceFromJSON($ballotpaperJSON)  );
                 if ($bp->getCanvote()==1) $this->addAvailableBallotpaper( $bp );
             }
+           
         }
         $this->loggedIn = isset($json['loggedIn'])?boolval($json['loggedIn']):false;
         if (isset($json['currentBallotpaper'])){
@@ -62,23 +66,24 @@ class Voter {
     public function login(string $username,string $password):string{
         $record = $this->loginGetCredentials($username);
         if ($record!==false){
+
             $this->fromJSON($record);
             if (count($this->available_ballotpapers)==0) return 'allready-voted';
-
             if (crypt($password, $record['pwhash']) == $record['pwhash']) {
                 $this->loggedIn = true;
+                
                 return 'ok';
             }
         }
         return 'error';
     }
-
-    public function loginGetCredentials($username):array{
+    public function loginGetCredentials($username):mixed{
         try{
             $record=false;
             if ($_SESSION['api']==1){
-                $url = $_SESSION['api_url'].str_replace('{username}',$username,'/papervote/wmregister/{username}');
+                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/wmregister/{username}');
                 $record = APIRequestHelper::query($url);
+                
             }else{
                 // $record = json_decode($db->singleValue('select voterCredential({username}) u',['username'=>$username],'u'),true);
                 $record = false;

@@ -20,10 +20,11 @@ class Login implements State {
         }
 
         $res = $stateMachine->voter(true)->login($username,$password);
-        if ($res==='ok'){
+        $stateMachine->logger('Login(State)')->warning( "login res ".$res  );
+        if ($res=='ok'){
             $stateMachine->logger('Login(State)')->debug( "login ok {$username} - ".__LINE__." ".__FILE__." ");
             return true;
-        }else if ($res==='allready-voted'){
+        }else if ($res=='allready-voted'){
             $nextState = 'Tualo\Office\OnlineVote\States\AllreadyVoted';
             $stateMachine->logger('Login(State)')->info( "login AllreadyVoted {$username} - ".__LINE__." ".__FILE__." ");
             return false;
@@ -38,7 +39,7 @@ class Login implements State {
         $nextState = 'Tualo\Office\OnlineVote\States\Login';
         $stateMachine = WMStateMachine::getInstance();
 
-        
+
         if (
             isset($_REQUEST[$stateMachine->usernamefield()]) &&
             isset($_REQUEST[$stateMachine->passwordfield()])
@@ -66,12 +67,9 @@ class Login implements State {
             $username = $result['p1'];
             $password = $result['p2'];
             if (self::login($username,$password,$nextState)){
+                $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
                 // hier müsste die Legitimation kommen, ggf mit Bestätigung für verschiedenen Unternehmen
-                if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
-                    $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
-                }else{
-                    $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
-                }
+                $stateMachine->logger('Login(State)')->debug( "login successfully from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
             }else{
                 $stateMachine->logger('Login(State)')->warning( "login failed  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
             }
@@ -79,6 +77,11 @@ class Login implements State {
             $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
             
         }
+
+        $stateMachine->logger('Login(State)')->error(' remove me in production '." - ".__LINE__." ".__FILE__." ");
+        $result['p1']='SbNKhi9c';
+        $result['p2']='KbiDVkTb';
+        
 
         return $nextState;
     }

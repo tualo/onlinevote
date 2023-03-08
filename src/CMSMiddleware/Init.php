@@ -2,10 +2,27 @@
 namespace Tualo\Office\OnlineVote\CMSMiddleware;
 use Tualo\Office\OnlineVote\CIDR;
 use Tualo\Office\OnlineVote\WMStateMachine;
+use Michelf\MarkdownExtra;
 use Tualo\Office\Basic\TualoApplication as App;
 
 class Init {
     private static $textsSQL = 'select id,value_plain,value_html from wm_texts where id<>"" ';
+    public static $texts=[];
+    public static function markdownfn():mixed{
+        return function(string $textkey):string{
+            $result = MarkdownExtra::defaultTransform( isset(self::$texts[$textkey])?self::$texts[$textkey]:"{$textkey} not defined" );
+            if (strpos($result,"<p>")===0) $result = substr( $result ,3,-3);
+            return $result;
+        };
+    }
+
+    public static function textfn():mixed{
+        return function(string $textkey):string{
+            $result =  isset(self::$texts[$textkey])?self::$texts[$textkey]:"{$textkey} not defined";
+            return $result;
+        };
+    }
+
     public static function db() { return App::get('session')->getDB(); }
     public static function registerstep($name){
         $db = self::db();
@@ -40,14 +57,24 @@ class Init {
 
     public static function run(&$request,&$result){
         @session_start();
-        $db = self::db();
-        self::_initrun($request,$result);
-        $config = App::get('configuration');
+
+        //if (isset($_REQUEST['resetsession'])) @session_destroy();
 
         
-        $result['texts'] = $db->directMap(self::$textsSQL,[],'id','value_plain');
+        $db = self::db();
+        self::_initrun($request,$result);
+
+        App::timing(self::class.' '.__LINE__);
+        InitApiUse::run($request,$result);
+        App::timing(self::class.' '.__LINE__);
+        $config = App::get('configuration');
+        App::timing(self::class.' '.__LINE__);
+
         
-        if (!isset($_SESSION['wmstatemachine'])){ $wmstate = new WMStateMachine();}else{ $wmstate=unserialize($_SESSION['wmstatemachine']); }
+        self::$texts = $result['texts'] = $db->directMap(self::$textsSQL,[],'id','value_plain');
+        App::timing(self::class.' '.__LINE__);
+        $wmstate = WMStateMachine::getInstance();
+
         $wmstate->ip($_SERVER['REMOTE_ADDR']);
         $wmstate->setCurrentState($wmstate->getNextState());
 
@@ -87,8 +114,15 @@ class Init {
         //$wmstate->currentState
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);
-        $result['wmstatemachine'] =$wmstate;
+
+
+        $result['wms'] =$wmstate;
+        $result['md'] = self::markdownfn();
+        $result['txt'] = self::textfn();
+
         $_SESSION['wmstatemachine'] = serialize($wmstate);
-        session_commit();
+
+        
+        
     }
 }
