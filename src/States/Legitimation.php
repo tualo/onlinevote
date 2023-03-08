@@ -8,14 +8,18 @@ class Legitimation implements State{
 
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
-        if (($logoutState = $stateMachine->checkLogout())!='') return $logoutState;
-        /*
-        if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
-            $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
-        }else{
-            $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
-        }
-        */
-        return 'Tualo\Office\OnlineVote\States\Legitimation';
+        if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
+        $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
+        if (
+            isset($_REQUEST['legitimation_confirmed']) && 
+            ($_REQUEST['legitimation_confirmed']==1)
+        ){ 
+            if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
+                $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
+            }else{
+                $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
+            }
+        } 
+        return $nextState;
     }
 }

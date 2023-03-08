@@ -78,7 +78,7 @@ class Login implements State {
             
         }
 
-        $stateMachine->logger('Login(State)')->error(' remove me in production '." - ".__LINE__." ".__FILE__." ");
+        $stateMachine->logger('Login(State)')->error('remove me in production '." - ".__LINE__." ".__FILE__." ");
         $result['p1']='SbNKhi9c';
         $result['p2']='KbiDVkTb';
         
