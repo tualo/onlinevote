@@ -5,16 +5,14 @@ use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\WMStateMachine;
 
-class Ballotpaper implements State{
+class BallotpaperOverview implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
-
         $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}',[
             'id'=> $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
         ]);
-
         $candidates = [];
         $ballotpaper_groups = $db->direct('select view_website_ballotpaper_groups.*,uuid() x from view_website_ballotpaper_groups where ballotpaper_id = {id} order by id',$result['ballotpaper']);
         foreach($ballotpaper_groups as $key=>$ballotpaper_group){
@@ -34,19 +32,25 @@ class Ballotpaper implements State{
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
-        $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
-
+        $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
+        App::logger('BallotpaperOverview(State)')->debug(json_encode($_REQUEST) );
         if (
-            isset($_REQUEST['send']) && 
-            $_REQUEST['send']=1
+            isset($_REQUEST['correct']) && 
+            $_REQUEST['correct']=1
+        ){
+            $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
+        }else  if (
+            isset($_REQUEST['save']) && 
+            $_REQUEST['save']=1
         ){
             // kreuze lesen
-            if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
-            $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
-            $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
+            // if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
+            // $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
+            $stateMachine->voter(true);
+            $nextState = 'Tualo\Office\OnlineVote\States\Login';
         }
         
-        App::logger('Ballotpaper(State)')->debug("here" );
+        App::logger('BallotpaperOverview(State)')->debug("here" );
         return $nextState;
     }
 }

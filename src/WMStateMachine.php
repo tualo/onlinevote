@@ -62,9 +62,9 @@ class WMStateMachine {
 
     public function setNextState(string $state){
         $this->nextState = $state;
-        App::logger('WMStateMachine')->error($this->getCurrentState().' to '.$this->getNextState());
+        App::logger('WMStateMachine')->info($this->getCurrentState().' to '.$this->getNextState());
     }
-    
+
     public function setCurrentState(string $state){
         if ($this->currentState!=$this->prevState) $this->prevState = $this->currentState;
         $this->currentState = $state;

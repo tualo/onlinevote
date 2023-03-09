@@ -67,7 +67,7 @@ class Login implements State {
             isset($result['p1']) && 
             isset($result['p2']) && 
             isset($_REQUEST['accept']) &&
-            ($_REQUEST['accept']==1)
+            ($_REQUEST['accept']==1 || $_REQUEST['accept']=='on' )
         ){
             $username = $result['p1'];
             $password = $result['p2'];

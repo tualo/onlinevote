@@ -8,12 +8,13 @@ class Error implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
+        $stateMachine->voter(true);
         return $stateMachine->getNextState();
     }
-    
+
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($logoutState = $stateMachine->checkLogout())!='') return $logoutState;
-        return 'Tualo\Office\OnlineVote\States\Error';
+        return 'Tualo\Office\OnlineVote\States\Login';
     }
 }

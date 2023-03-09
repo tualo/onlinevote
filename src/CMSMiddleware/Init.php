@@ -60,8 +60,61 @@ class Init {
 
         //if (isset($_REQUEST['resetsession'])) @session_destroy();
 
-        
         $db = self::db();
+        $result['rows'] = $db->direct('
+        select
+                bp_row.pos,
+                bp_row.row_name,
+                bp_row.prefix,
+                
+                json_arrayagg(
+                    json_object(
+                        "column_name",
+                        col.column_name,
+                        "pos",
+                        col.pos,
+                        "prefix",
+                        col.prefix,
+                    "definition",definition
+                    ) 
+                    order by col.pos
+                ) columns
+        from
+        bp_row
+        join (select
+                    bp_column.column_name,
+                    bp_column.pos,
+                    bp_column.row_name,
+                    bp_column.prefix,
+            
+                    json_arrayagg(
+                        json_object(
+                            "column_field",
+                            bp_column_definition.column_field,
+                            "htmltag",
+                            bp_column_definition.htmltag
+                        ) 
+                        order by bp_column_definition.pos
+                    ) definition
+                    from
+                        bp_column
+                        join bp_column_definition 
+                            on  bp_column.column_name = bp_column_definition.column_name 
+                                and bp_column_definition.active=1  
+                                and bp_column.active=1
+                        join ds_column 
+                            on  (ds_column.table_name,ds_column.column_name) = ("view_website_candidates", bp_column_definition.column_field) 
+                                and ds_column.existsreal=1
+
+                    group by bp_column.column_name
+                order by pos
+        ) col
+        on bp_row.row_name = col.row_name
+                        and bp_row.active=1
+        
+        group by bp_row.row_name
+            order by pos
+        ');
         self::_initrun($request,$result);
 
         App::timing(self::class.' '.__LINE__);
@@ -90,6 +143,8 @@ class Init {
                 $wmstate->setNextState( $state->transition($request,$result) );
             }
         }catch(\Exception $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
             App::logger('OnlineVote')->error($e->getMessage());
         }
 
@@ -113,7 +168,7 @@ class Init {
         }catch(\Exception $e ){
             App::logger('OnlineVote')->error($e->getMessage());
         }
-        
+
         $result['wms'] =$wmstate;
         $result['md'] = self::markdownfn();
         $result['txt'] = self::textfn();

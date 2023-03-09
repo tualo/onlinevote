@@ -148,6 +148,7 @@ class Voter {
     public function getCurrentBallotpaper():Ballotpaper{
         return $this->currentBallotpaper;
     }
+    public function ballotpaper():Ballotpaper { return $this->getCurrentBallotpaper(); }
 
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){
