@@ -3,13 +3,14 @@ declare(strict_types=1);
 namespace Tualo\Office\OnlineVote;
 
 use Tualo\Office\Basic\TualoApplication as App;
-use Exception;
+
+use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Ramsey\Uuid\Uuid;
-/**
- * 
 
+use Tualo\Office\OnlineVote\Exception\SystemBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exception\RemoteBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exception\RemoteBallotpaperApiException;
 
- */
 class Ballotpaper {
     private int $voter_id;
     private int $ballotpaper_id;
@@ -22,6 +23,7 @@ class Ballotpaper {
     private array $hashMap = [];
     private array $candidates = [];
     private array $config = [];
+    private array $configgroups = [];
     
     private static array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
 
@@ -56,8 +58,17 @@ class Ballotpaper {
         $this->setupHashMap();
     }
 
-    public function setConfiguration(array $config):void{
+    public function setConfiguration(array $config,array $configgroups):void{
+        $candidates = [];
+        foreach($configgroups as &$group){ 
+            $candidates+=$group['candidates'];
+            $l=[];
+            foreach($group['candidates'] as $candidate) $l[]=$candidate['id'];
+            $group['candidates_by_id']=$l;
+        }
         $this->config=$config;
+        $this->configgroups=$configgroups;
+        $this->setPossibleCandidates($candidates);
     }
 
     public function max():int{
@@ -69,34 +80,32 @@ class Ballotpaper {
 
     public function valid(){
         $this->is_valid=false;;
+        foreach($this->configgroups as &$group) $group['__checkcount']=0;
         foreach($this->filled as $check){
             if (!isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
                 return false;
             }
-        }
-        return $this->is_valid = true;
-    }
-
-    /*
-        if (isset($kandidaten[$check])){
-            if (isset($stimmzettelgruppen[$kandidaten[$check]['stimmzettelgruppen']])){
-                $stimmzettelgruppen[$kandidaten[$check]['stimmzettelgruppen']]['__checkcount']++;
-            }else{
-                syslog(LOG_CRIT,"WM Stimmzettegruppe {$kandidaten[$check]['stimmzettelgruppe']} bei Kandidat ID $check not found");
-                WMInit::$next_state = 'error';
-                $_SESSION['pug_session']['error'][] = 'Der Kandidat ist nicht für Ihren Stimmzettel zugelassen.';
-                return false;
+            foreach($this->configgroups as &$group){
+                if (in_array($check,$group['candidates_by_id'])) $group['__checkcount']++;
             }
-        }else{
-            syslog(LOG_CRIT,"WM Kandidate ID $check not found");
-            WMInit::$next_state = 'error';
-            $_SESSION['pug_session']['error'][] = 'Der Kandidat ist nicht für Ihren Stimmzettel zugelassen.';
-            return false;
         }
-
+        $this->is_valid = true;
+        $c = 0;
+        foreach($this->configgroups as $group){
+            if ($group['__checkcount']>$group['sitze']){
+                App::logger('Ballotpaper')->info( 'zu viele Stimmen in der Stimmzettelgruppe' );
+                $this->is_valid = false;
+            }
+            $c+=$group['__checkcount'];
+        }
+        if ($c > $this->config['sitze']) {
+            App::logger('Ballotpaper')->info( 'zu viele Stimmen auf dem Stimmzettel' );
+            $this->is_valid = false;
+        }
+        return $this->is_valid;
     }
-    */
+
 
 
     public function setupHashMap():void{
@@ -136,6 +145,58 @@ class Ballotpaper {
     public function save():void{
         // check md5
         // ggf recreate md5
+
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $queryHash=[
+            'voter_id'=>$this->getVoterId(),
+            'stimmzettel_id'=>$this->getBallotpaperId(),
+            'session_id'=>session_id()
+        ];
+
+        $voter = $db->singleRow('select session_id from voters where voter_id = {voter_id} and stimmzettel = {stimmzettel_id} and  session_id={session_id} ',  $queryHash );
+
+        if ($voter===false){ 
+            throw new \Exception('Ihre Sitzung ist nicht mehr gültig');
+        }
+        $voter = $db->singleRow('select voter_id from voters where voter_id = {voter_id}  and stimmzettel = {stimmzettel_id} and completed=1 ', $queryHash);
+        if ($voter===false){ 
+            throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
+        }
+
+        
+        try{
+
+            $db->direct('start transaction;');
+            $pgpkeys = $db->direct('select * from pgpkeys');
+            foreach($pgpkeys as $keyitem){
+                $hash = $keyitem;
+                $hash['ballotpaper']=TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
+                $hash['stimmzettel_id']=$this->getBallotpaperId();
+                $hash['stimmzettel']=$this->getBallotpaperId().'|0';
+                $hash['isvalid']    =$this->is_valid;
+                $hash['token']    = $stateMachine->voter()->getSecretToken();
+
+                $db->direct('insert into ballotbox (id,keyname,ballotpaper,voter_id,stimmzettel_id,stimmzettel,isvalid) 
+                values ({token},{keyname},{ballotpaper},{voter_id},{stimmzettel_id},{stimmzettel},{isvalid})',$hash);
+                unset($hash['privatekey']);                
+            }
+            if ($_SESSION['api']==1){
+                $url = $_SESSION['api_url']
+                    .str_replace('{voter_id}',$queryHash['voter_id'],str_replace('{stimmzettel_id}',$queryHash['stimmzettel_id'],'papervote/api/set/{voter_id}/{stimmzettel_id}'));
+                $record = APIRequestHelper::query($url,[
+                    'secret_token'=>$_SESSION['pug_session']['secret_token']
+                ]);
+                if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
+                if ($record['success']==false) throw new RemoteBallotpaperSaveException($record['msg']);
+            }
+            $voter = $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}',$queryHash);
+            $db->direct('commit;');
+
+        }catch(\Exception $e){
+            throw new SystemBallotpaperSaveException($e->getMessage());
+        }
+
     }
 
 }

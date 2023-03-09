@@ -62,7 +62,10 @@ class Voter {
             $this->currentBallotpaper = Ballotpaper::getInstanceFromJSON($json['currentBallotpaper']);
         }
     }
-
+    public function getSecretToken():string{
+        return $this->secret;
+    }
+    
     public function login(string $username,string $password):string{
         $record = $this->loginGetCredentials($username);
         if ($record!==false){
@@ -138,6 +141,7 @@ class Voter {
     public function isLoggedIn():bool{
         return $this->loggedIn;
     }
+
     
     private function addAvailableBallotpaper(Ballotpaper $ballotpaper):void{
         $this->available_ballotpapers[] = $ballotpaper;

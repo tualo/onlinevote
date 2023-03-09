@@ -13,19 +13,16 @@ class BallotpaperOverview implements State{
         $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}',[
             'id'=> $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
         ]);
-        $candidates = [];
         $ballotpaper_groups = $db->direct('select view_website_ballotpaper_groups.*,uuid() x from view_website_ballotpaper_groups where ballotpaper_id = {id} order by id',$result['ballotpaper']);
         foreach($ballotpaper_groups as $key=>$ballotpaper_group){
             try{
                 $ballotpaper_groups[$key]['candidates'] = $db->direct('select * from view_website_candidates where stimmzettelgruppen = concat({id},"|0") order by barcode',$ballotpaper_group);
-                $candidates+=$ballotpaper_groups[$key]['candidates'];
             }catch(\Exception $e){
                 WMStateMachine::getInstance()->logger('Ballotpaper(State)')->error($e->getMessage());
             }
         }
         $result['ballotpaper_groups'] = $ballotpaper_groups;
-        $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($result['ballotpaper']);
-        $stateMachine->voter()->getCurrentBallotpaper()->setPossibleCandidates($candidates);
+        $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($result['ballotpaper'] ,$result['ballotpaper_groups']);
         return $stateMachine->getNextState();
     }
 
