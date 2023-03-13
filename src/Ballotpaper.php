@@ -183,7 +183,7 @@ class Ballotpaper {
             and completed   =   1
         ',  [
             'id'=>$stateMachine->voter()->getId(),
-            'stimmzettel_id'=>$this->getBallotpaperId()
+            'stimmzettel_id'=>((string)$this->getBallotpaperId()).'|0'
         ] );
         return $voter !== false;
     }
@@ -206,7 +206,7 @@ class Ballotpaper {
         }
         if ($this->allreadyVoted()===false){ 
             App::logger('Ballotpaper(function save)')->debug('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
-            throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
+            // throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
         }
 
         
