@@ -7,9 +7,10 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Ramsey\Uuid\Uuid;
 
-use Tualo\Office\OnlineVote\Exception\SystemBallotpaperSaveException;
-use Tualo\Office\OnlineVote\Exception\RemoteBallotpaperSaveException;
-use Tualo\Office\OnlineVote\Exception\RemoteBallotpaperApiException;
+use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
+use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 
 class Ballotpaper {
     private int $voter_id;
@@ -142,6 +143,51 @@ class Ballotpaper {
         }
     }
 
+
+    public function register():void{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $sql = 'insert into voters (
+            voter_id,
+            stimmzettel,
+            session_id,
+            completed
+        ) values (
+            {voter_id},
+            {stimmzettel},
+            {session_id},
+            {completed}
+        ) on 
+            duplicate key 
+            update session_id=values(session_id)
+        ';
+        $db->direct($sql,[
+            'voter_id'      =>  $this->getVoterId(),
+            'stimmzettel'   =>  ((string)$this->getBallotpaperId()).'|0',
+            'session_id'    =>  session_id(),
+            'completed'     =>  0
+        ]);
+    }
+
+    public function allreadyVoted():bool{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $voter = $db->singleRow('
+        select
+            voter_id 
+        from 
+            voters 
+        where 
+            voter_id        =   {voter_id}
+            and stimmzettel =   {stimmzettel_id}
+            and completed   =   1
+        ',  [
+            'id'=>$stateMachine->voter()->getId(),
+            'session_id'=>$this->getBallotpaperId()
+        ] );
+        return $voter !== false;
+    }
+
     public function save():void{
         // check md5
         // ggf recreate md5
@@ -149,18 +195,17 @@ class Ballotpaper {
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         $queryHash=[
-            'voter_id'=>$this->getVoterId(),
+            'id'=>$stateMachine->voter()->getId(), // kominiert kennung !!!
+            'voter_id'=>$this->getVoterId(), // wahlschein nummer 
             'stimmzettel_id'=>$this->getBallotpaperId(),
             'session_id'=>session_id()
         ];
-
-        $voter = $db->singleRow('select session_id from voters where voter_id = {voter_id} and stimmzettel = {stimmzettel_id} and  session_id={session_id} ',  $queryHash );
-
-        if ($voter===false){ 
-            throw new \Exception('Ihre Sitzung ist nicht mehr gültig');
+        if ($stateMachine->voter()->validSession()===false){ 
+            App::logger('Ballotpaper(function save)')->info('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)'.$db->last_sql);
+            throw new SessionBallotpaperSaveException('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)');
         }
-        $voter = $db->singleRow('select voter_id from voters where voter_id = {voter_id}  and stimmzettel = {stimmzettel_id} and completed=1 ', $queryHash);
-        if ($voter===false){ 
+        if ($this->allreadyVoted()===false){ 
+            App::logger('Ballotpaper(function save)')->debug('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
             throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
         }
 
@@ -171,26 +216,31 @@ class Ballotpaper {
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach($pgpkeys as $keyitem){
                 $hash = $keyitem;
-                $hash['ballotpaper']=TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
-                $hash['stimmzettel_id']=$this->getBallotpaperId();
-                $hash['stimmzettel']=$this->getBallotpaperId().'|0';
-                $hash['isvalid']    =$this->is_valid;
-                $hash['token']    = $stateMachine->voter()->getSecretToken();
+                $hash['ballotpaper']    =   TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
+                $hash['stimmzettel_id'] =   $this->getBallotpaperId();
+                $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
+                $hash['isvalid']        =   $this->is_valid;
+                $hash['token']          =   $stateMachine->voter()->getSecretToken();
 
-                $db->direct('insert into ballotbox (id,keyname,ballotpaper,voter_id,stimmzettel_id,stimmzettel,isvalid) 
-                values ({token},{keyname},{ballotpaper},{voter_id},{stimmzettel_id},{stimmzettel},{isvalid})',$hash);
-                unset($hash['privatekey']);                
+                $db->direct('
+                insert into ballotbox 
+                    (id,keyname,ballotpaper,voter_id,stimmzettel_id,stimmzettel,isvalid) 
+                values 
+                    ({token},{keyname},{ballotpaper},{voter_id},{stimmzettel_id},{stimmzettel},{isvalid})',
+                $hash);
             }
             if ($_SESSION['api']==1){
                 $url = $_SESSION['api_url']
-                    .str_replace('{voter_id}',$queryHash['voter_id'],str_replace('{stimmzettel_id}',$queryHash['stimmzettel_id'],'papervote/api/set/{voter_id}/{stimmzettel_id}'));
-                $record = APIRequestHelper::query($url,[
-                    'secret_token'=>$_SESSION['pug_session']['secret_token']
-                ]);
+                    .str_replace('{voter_id}',(string)$this->getVoterId(),str_replace('{stimmzettel_id}',(string)$this->getBallotpaperId(),'papervote/api/set/{voter_id}/{stimmzettel_id}'));
+                $record = APIRequestHelper::query($url,[  'secret_token'=>$stateMachine->voter()->getSecretToken() ]);
                 if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
+
                 if ($record['success']==false) throw new RemoteBallotpaperSaveException($record['msg']);
             }
-            $voter = $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}',$queryHash);
+            $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}',[
+                'voter_id'      =>  (string)$this->getVoterId(),
+                'stimmzettel_id'=>  (string)$this->getBallotpaperId()
+            ]);
             $db->direct('commit;');
 
         }catch(\Exception $e){

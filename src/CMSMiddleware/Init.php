@@ -3,6 +3,11 @@ namespace Tualo\Office\OnlineVote\CMSMiddleware;
 use Tualo\Office\OnlineVote\CIDR;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Michelf\MarkdownExtra;
+use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
+
+
 use Tualo\Office\Basic\TualoApplication as App;
 
 class Init {
@@ -131,6 +136,7 @@ class Init {
         $wmstate->ip($_SERVER['REMOTE_ADDR']);
         $wmstate->setCurrentState($wmstate->getNextState());
 
+        App::logger('OnlineVote')->debug(__LINE__);
 
         if( $wmstate->getCurrentState()=='') $wmstate->setCurrentState('Tualo\Office\OnlineVote\States\Login');
 
@@ -142,12 +148,24 @@ class Init {
                 $state = new ($wmstate->getCurrentState());
                 $wmstate->setNextState( $state->transition($request,$result) );
             }
+        }catch(VoterUnsyncException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            App::logger('OnlineVote(VoterUnsyncException)')->error($e->getMessage());
+        }catch(RemoteBallotpaperSaveException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            App::logger('OnlineVote(RemoteBallotpaperSaveException)')->error($e->getMessage());
+        }catch(SessionBallotpaperSaveException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
             App::logger('OnlineVote')->error($e->getMessage());
         }
-
+        App::logger('OnlineVote')->debug(__LINE__);
 
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);

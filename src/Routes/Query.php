@@ -124,6 +124,17 @@ group by
     }
 
     public static function register(){
+        BasicRoute::add('/onlinevote/state/completed',function($matches){
+            $db = App::get('session')->getDB();
+            $data = $db->directMap('
+                select "used" key, count(*) v from voters
+                union
+                select "completed" key, count(*) v from voters where completed=1
+            ',[],'key','v');
+            App::result('data',  $data );
+            App::result('success',count($data)>0);
+            App::contenttype('application/json');
+        },['get','post'],true);
         BasicRoute::add('/papervote/(?P<type>(identnummer|wahlschein))/(?P<barcode>[\w\-\_\d]+)',function($matches){
             try{
                 $db = App::get('session')->getDB();

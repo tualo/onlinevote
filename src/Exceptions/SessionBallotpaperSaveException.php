@@ -2,6 +2,6 @@
 declare(strict_types=1);
 
 namespace Tualo\Office\OnlineVote\Exceptions;
-class SystemBallotpaperSaveException extends \Exception{
+class SessionBallotpaperSaveException extends \Exception{
 
 }

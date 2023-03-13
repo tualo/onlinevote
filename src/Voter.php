@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 namespace Tualo\Office\OnlineVote;
+use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\Ballotpaper;
 use Tualo\Office\OnlineVote\APIRequestHelper;
+use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
 
 class Voter {
     public static $deleteBlockedQuery = 'delete from username_count where block_until<now() and id = {username} ';
@@ -31,6 +33,7 @@ class Voter {
     private string $pwhash = "";
     private string $username = "";
     private string $secret = "";
+    private string $id = ""; // kombiniert kennung!
 
     private bool $loggedIn = false;
     // private array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
@@ -40,9 +43,13 @@ class Voter {
     }
 
     public function fromJSON($json):void {
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+
         $this->username = isset($json['username'])?$json['username']:'';
         $this->pwhash = isset($json['pwhash'])?$json['pwhash']:'';
         $this->secret = isset($json['secret'])?$json['secret']:'';
+        $this->id = isset($json['id'])?$json['id']:'';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])){
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'],true);
         }
@@ -53,28 +60,87 @@ class Voter {
                  
                 $bp = Ballotpaper::getInstanceFromJSON($ballotpaperJSON);
                 $this->addPossibleBallotpaper( Ballotpaper::getInstanceFromJSON($ballotpaperJSON)  );
-                if ($bp->getCanvote()==1) $this->addAvailableBallotpaper( $bp );
+
+                if ($bp->getCanvote()==1){ 
+                    // gegen voter prüfen
+                    // wenn dort bereits completed ->>> ABBRUCH, schwerer Fehler
+
+                    $voter = $db->singleRow('
+                        select
+                            voter_id 
+                        from 
+                            voters 
+                        where 
+                            voter_id        =   {voter_id}
+                            and stimmzettel =   {stimmzettel_id}
+                            and completed   =   1
+                    ', [
+                        'voter_id' => $bp->getVoterId(),
+                        'stimmzettel_id'=> $bp->getBallotpaperId()
+                    ]);
+                    if ($voter!==false){ 
+                        App::logger('Voter(function fromJSON)')->error('canvote ist 1, aber in voter(tabelle) completed');
+                        throw new VoterUnsyncException('canvote ist 1, aber in voter(tabelle) completed. Wahlschein: '.$bp->getVoterId());
+                    }
+
+                    $this->addAvailableBallotpaper( $bp ); 
+                }
             }
            
         }
         $this->loggedIn = isset($json['loggedIn'])?boolval($json['loggedIn']):false;
         if (isset($json['currentBallotpaper'])){
-            $this->currentBallotpaper = Ballotpaper::getInstanceFromJSON($json['currentBallotpaper']);
+            $this->setCurrentBallotpaper( Ballotpaper::getInstanceFromJSON($json['currentBallotpaper']) );
         }
+    }
+
+    public function getId():string{
+        return $this->id;
     }
     public function getSecretToken():string{
         return $this->secret;
     }
     
+
+    
+    public function validSession():bool{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $voter = $db->singleRow('
+            select 
+                session_id 
+            from 
+                unique_voter_session 
+            where 
+                id = {id}  
+                and  session_id={session_id} 
+        ',  [
+            'id'=>$this->getId(),
+            'session_id'=>session_id()
+        ] );
+        return $voter !== false;
+    }
+    public function registerSession():void{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $sql = 'insert into unique_voter_session (id,session_id,create_time) values ({id},{session_id},now()) on duplicate key update session_id=values(session_id), create_time={create_time}';
+        $db->direct($sql,[
+            'id'=>$this->getId(),
+            'session_id'=>session_id()
+        ]);
+    }
+
     public function login(string $username,string $password):string{
         $record = $this->loginGetCredentials($username);
+
+        App::logger('Voter(login)')->info( json_encode($record) );
         if ($record!==false){
 
             $this->fromJSON($record);
             if (count($this->available_ballotpapers)==0) return 'allready-voted';
             if (crypt($password, $record['pwhash']) == $record['pwhash']) {
                 $this->loggedIn = true;
-                
+                $this->registerSession();
                 return 'ok';
             }
         }
@@ -152,11 +218,15 @@ class Voter {
     public function getCurrentBallotpaper():Ballotpaper{
         return $this->currentBallotpaper;
     }
+    public function setCurrentBallotpaper(Ballotpaper $bp):Ballotpaper{
+        $bp->register();
+        return $this->currentBallotpaper=$bp;
+    }
     public function ballotpaper():Ballotpaper { return $this->getCurrentBallotpaper(); }
 
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){
-            $this->currentBallotpaper =  $this->available_ballotpapers[$index];
+            $this->setCurrentBallotpaper($this->available_ballotpapers[$index]);
             return true;
         }
         return false;

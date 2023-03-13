@@ -40,9 +40,8 @@ class BallotpaperOverview implements State{
             isset($_REQUEST['save']) && 
             $_REQUEST['save']=1
         ){
-            // kreuze lesen
-            // if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
-            // $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
+            App::logger('BallotpaperOverview(State)')->debug('here');
+            $stateMachine->voter()->getCurrentBallotpaper()->save( );
             $stateMachine->voter(true);
             $nextState = 'Tualo\Office\OnlineVote\States\Login';
         }
