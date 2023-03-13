@@ -199,7 +199,7 @@ class Ballotpaper {
             App::logger('Ballotpaper(function save)')->info('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)'.$db->last_sql);
             throw new SessionBallotpaperSaveException('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)');
         }
-        if ($this->allreadyVoted()===false){ 
+        if ($this->allreadyVoted()===true){ 
             $txt = 'Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.'.((string)$this->getBallotpaperId()).'|0'.'##'.$this->getVoterId();
             App::logger('Ballotpaper(function save)')->debug($txt );
             App::logger('Ballotpaper(function save)')->debug( $db->last_sql );
