@@ -220,6 +220,7 @@ class Voter {
     }
     public function setCurrentBallotpaper(Ballotpaper $bp):Ballotpaper{
         $bp->register();
+        WMStateMachine::getInstance()->logger('Voter->setCurrentBallotpaper')->error("********");
         return $this->currentBallotpaper=$bp;
     }
     public function ballotpaper():Ballotpaper { return $this->getCurrentBallotpaper(); }
