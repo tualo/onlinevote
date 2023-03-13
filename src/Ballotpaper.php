@@ -182,7 +182,7 @@ class Ballotpaper {
             and stimmzettel =   {stimmzettel_id}
             and completed   =   1
         ',  [
-            'voter_id'=>$stateMachine->voter()->getId(),
+            'voter_id'=>$this->getVoterId(),
             'stimmzettel_id'=>((string)$this->getBallotpaperId()).'|0'
         ] );
         return $voter !== false;
