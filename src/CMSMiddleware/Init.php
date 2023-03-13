@@ -158,7 +158,7 @@ class Init {
             App::logger('OnlineVote(RemoteBallotpaperSaveException)')->error($e->getMessage());
         }catch(SessionBallotpaperSaveException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\SessionBallotpaperSaveError' );
             App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();

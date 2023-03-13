@@ -206,7 +206,7 @@ class Ballotpaper {
         }
         if ($this->allreadyVoted()===false){ 
             App::logger('Ballotpaper(function save)')->debug('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
-            // throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
+            throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
         }
 
         
@@ -230,16 +230,18 @@ class Ballotpaper {
                 $hash);
             }
             if ($_SESSION['api']==1){
+                /*
                 $url = $_SESSION['api_url']
                     .str_replace('{voter_id}',(string)$this->getVoterId(),str_replace('{stimmzettel_id}',(string)$this->getBallotpaperId(),'papervote/api/set/{voter_id}/{stimmzettel_id}'));
                 $record = APIRequestHelper::query($url,[  'secret_token'=>$stateMachine->voter()->getSecretToken() ]);
                 if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
 
                 if ($record['success']==false) throw new RemoteBallotpaperSaveException($record['msg']);
+                */
             }
             $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}',[
                 'voter_id'      =>  (string)$this->getVoterId(),
-                'stimmzettel_id'=>  (string)$this->getBallotpaperId()
+                'stimmzettel_id'=>  ((string)$this->getBallotpaperId()).'|0'
             ]);
             $db->direct('commit;');
 
