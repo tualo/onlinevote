@@ -182,7 +182,7 @@ class Ballotpaper {
             and stimmzettel =   {stimmzettel_id}
             and completed   =   1
         ',  [
-            'id'=>$stateMachine->voter()->getId(),
+            'voter_id'=>$stateMachine->voter()->getId(),
             'stimmzettel_id'=>((string)$this->getBallotpaperId()).'|0'
         ] );
         return $voter !== false;
@@ -194,19 +194,15 @@ class Ballotpaper {
 
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
-        $queryHash=[
-            'id'=>$stateMachine->voter()->getId(), // kominiert kennung !!!
-            'voter_id'=>$this->getVoterId(), // wahlschein nummer 
-            'stimmzettel_id'=>$this->getBallotpaperId(),
-            'session_id'=>session_id()
-        ];
+       
         if ($stateMachine->voter()->validSession()===false){ 
             App::logger('Ballotpaper(function save)')->info('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)'.$db->last_sql);
             throw new SessionBallotpaperSaveException('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)');
         }
         if ($this->allreadyVoted()===false){ 
-            App::logger('Ballotpaper(function save)')->debug('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
-            throw new \Exception('Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.');
+            $txt = 'Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.'.((string)$this->getBallotpaperId()).'|0'.'##'.$stateMachine->voter()->getId()
+            App::logger('Ballotpaper(function save)')->debug($txt );
+            throw new \Exception($txt );
         }
 
         
