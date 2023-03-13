@@ -43,7 +43,7 @@ class BallotpaperOverview implements State{
             App::logger('BallotpaperOverview(State)')->debug('here');
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
             $stateMachine->voter(true);
-            $nextState = 'Tualo\Office\OnlineVote\States\Login';
+            $nextState = 'Tualo\Office\OnlineVote\States\SaveCompleted';
         }
         
         App::logger('BallotpaperOverview(State)')->debug("here" );
