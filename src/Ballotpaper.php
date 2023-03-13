@@ -217,7 +217,7 @@ class Ballotpaper {
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
                 $hash['isvalid']        =   $this->is_valid?'1':'0';
-                $hash['token']          =   $stateMachine->voter()->getSecretToken();
+                $hash['token']          =   session_id();
 
                 $db->direct('
                 insert into ballotbox 
