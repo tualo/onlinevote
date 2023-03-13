@@ -220,13 +220,14 @@ class Voter {
     }
     public function setCurrentBallotpaper(Ballotpaper $bp):Ballotpaper{
         $bp->register();
-        WMStateMachine::getInstance()->logger('Voter->setCurrentBallotpaper')->error("********");
+        WMStateMachine::getInstance()->logger('Voter->setCurrentBallotpaper')->error("********".$bp->getVoterId());
         return $this->currentBallotpaper=$bp;
     }
     public function ballotpaper():Ballotpaper { return $this->getCurrentBallotpaper(); }
 
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){
+            
             $this->setCurrentBallotpaper($this->available_ballotpapers[$index]);
             return true;
         }
