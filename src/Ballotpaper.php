@@ -216,7 +216,7 @@ class Ballotpaper {
                 $hash['ballotpaper']    =   TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
-                $hash['isvalid']        =   $this->is_valid;
+                $hash['isvalid']        =   $this->is_valid?'1':'0';
                 $hash['token']          =   $stateMachine->voter()->getSecretToken();
 
                 $db->direct('
