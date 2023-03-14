@@ -17,6 +17,7 @@ class Ballotpaper {
     private int $ballotpaper_id;
     private int $canvote;
     private string $state;
+    private string $secret_token;
     private array $filled=[];
     private bool $is_valid =false;
 
@@ -38,6 +39,16 @@ class Ballotpaper {
         $instance->setCanvote(intval($json['canvote']));
         $instance->setState($json['state']);
 
+
+
+        if (isset($json['secret_token'])){
+
+
+            $instance->setSecretToken( (string)TualoApplicationPGP::decrypt( $_SESSION['api_private'],$json['secret_token']) ) ;
+            App::logger('Ballotpaper(function getInstanceFromJSON)')->info('secret token is '.$instance->getSecretToken());
+        }
+
+
         if (isset($json['filled'])) $instance->setFilled($json['filled']);
 
         return $instance;
@@ -48,11 +59,13 @@ class Ballotpaper {
     protected function setCanvote(int $canvote){  $this->canvote = $canvote; }
     protected function setState(string $state){  $this->state = $state; }
     protected function setFilled(array $filled){  $this->filled = $filled; }
+    protected function setSecretToken(string $secret_token){  $this->secret_token = $secret_token; }
 
     public function getVoterId( ):int{ return $this->voter_id; }
     public function getBallotpaperId( ):int{ return $this->ballotpaper_id; }
     public function getCanvote( ):int{ return $this->canvote; }
     public function getState( ):string{ return $this->state; }
+    public function getSecretToken( ):string{ return $this->secret_token; }
 
     public function setPossibleCandidates(array $candidates):void{
         $this->candidates=$candidates;

@@ -34,3 +34,22 @@ BEGIN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'allready voted';
   END IF;
 END
+
+
+
+
+alter table wm_wahlschein_register drop wahlscheinnummer;
+alter table wm_wahlschein_register drop birthdate_year;
+alter table wm_wahlschein_register drop birthdate_month;
+alter table wm_wahlschein_register drop birthdate_day;
+alter table wm_wahlschein_register drop phone_lc;
+alter table wm_wahlschein_register drop phone_number;
+alter table wm_wahlschein_register drop pin;
+alter table wm_wahlschein_register drop sms_response;
+alter table wm_wahlschein_register drop tmg_token;
+alter table wm_wahlschein_register drop person;
+
+drop trigger wm_wahlschein_register__au;
+drop trigger wm_wahlschein_register__ai;
+drop trigger wm_wahlschein_register__bd;
+

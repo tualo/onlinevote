@@ -32,7 +32,7 @@ class Voter {
 
     private string $pwhash = "";
     private string $username = "";
-    private string $secret = "";
+    
     private string $id = ""; // kombiniert kennung!
 
     private bool $loggedIn = false;
@@ -48,7 +48,7 @@ class Voter {
 
         $this->username = isset($json['username'])?$json['username']:'';
         $this->pwhash = isset($json['pwhash'])?$json['pwhash']:'';
-        $this->secret = isset($json['secret'])?$json['secret']:'';
+
         $this->id = isset($json['id'])?$json['id']:'';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])){
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'],true);
@@ -128,7 +128,31 @@ class Voter {
             'id'=>$this->getId(),
             'session_id'=>session_id()
         ]);
+
     }
+
+
+
+    /*
+    public function legitimze($request):void{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $sql = 'insert into unique_voter_session (id,session_id,create_time) values ({id},{session_id},now()) on duplicate key update session_id=values(session_id), create_time={create_time}';
+        $db->direct($sql,[
+            'id'=>$this->getId(),
+            'session_id'=>session_id()
+        ]);
+
+        if (isset($_SESSION['api_url']) && isset($_SESSION['pug_session']['secret_token'])){
+            $url = $_SESSION['api_url'].'/cmp_wm_ruecklauf/api/extended/'.$_SESSION['pug_session']['secret_token'].'?extended_data='.urlencode(json_encode($data));
+            $object = WMRequestHelper::query($url,'./');
+        }
+
+    }
+    */
+
+
+
 
     public function login(string $username,string $password):string{
         $record = $this->loginGetCredentials($username);
