@@ -42,10 +42,12 @@ class Ballotpaper {
 
 
         if (isset($json['secret_token'])){
-
-
             $instance->setSecretToken( (string)TualoApplicationPGP::decrypt( $_SESSION['api_private'],$json['secret_token']) ) ;
-            App::logger('Ballotpaper(function getInstanceFromJSON)')->info('secret token is '.$instance->getSecretToken());
+            if ($instance->getSecretToken()==''){
+                App::logger('Ballotpaper(function getInstanceFromJSON)')->error('secret token is '.$instance->getSecretToken());
+            }else{
+                App::logger('Ballotpaper(function getInstanceFromJSON)')->info('secret token is '.$instance->getSecretToken());
+            }
         }
 
 
