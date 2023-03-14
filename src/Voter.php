@@ -174,7 +174,7 @@ class Voter {
         try{
             $record=false;
             if ($_SESSION['api']==1){
-                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/wmregister/{username}');
+                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/get/{username}');
                 $record = APIRequestHelper::query($url);
                 
             }else{
