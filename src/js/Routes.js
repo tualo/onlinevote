@@ -1,10 +1,10 @@
 Ext.define('TualoOffice.routes.OnlineVote',{
     url: 'onlinevote',
     handler: {
-        action: function(type,tablename,id){
+        action: function( ){
             TualoOffice.getApplication().addView('Tualo.OnlineVote.Viewport');
         },
-        before: function (type,tablename,xid,action) {
+        before: function ( action) {
             action.resume();
         }
     }
