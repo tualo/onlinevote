@@ -1,4 +1,5 @@
 <?php
+
 namespace Tualo\Office\OnlineVote;
 use Tualo\Office\Basic\TualoApplication as App;
 

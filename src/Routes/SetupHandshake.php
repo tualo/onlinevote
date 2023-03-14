@@ -14,6 +14,10 @@ class SetupHandshake implements IRoute{
         $cookie_file = App::get('tempPath').'/api_cookie';
         if (file_exists($cookie_file)) unlink($cookie_file);
 
+        if (isset($_REQUEST['api_url']))
+        if (isset($_REQUEST['api_username']))
+        if (isset($_REQUEST['api_password']))
+        if (isset($_REQUEST['api_client']))
         if ($api_result = APIRequestHelper::query( $_REQUEST['api_url'], [
             'username' => $_REQUEST['api_username'],
             'password' => $_REQUEST['api_password'],
