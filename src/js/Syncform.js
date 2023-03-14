@@ -8,6 +8,7 @@ Ext.define('Tualo.OnlineVote.Syncform', {
     defaults: {
         anchor: '100%'
     },
+    bodyPadding: '25px',
     items: [
         {
             xtype: 'textfield',
@@ -78,11 +79,11 @@ Ext.define('Tualo.OnlineVote.Syncform', {
             text: "Einrichten",
             handler: function(btn){
                 let v = btn.up('form').getForm().getValues();
-                console.log(v);
                 v.domain = window.location.hostname;
+                console.log(v);
 
                 Tualo.Ajax.request({
-                    url: './wm-registerclientapi',
+                    url: './/onlinevote/setuphandshake',
                     params: v,
                     showWait: true,
                     scope: this,
