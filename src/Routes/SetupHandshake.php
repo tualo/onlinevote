@@ -65,6 +65,8 @@ class SetupHandshake implements IRoute{
 
                     }
     
+                }else{
+                    App::result('msg', "remote login failed");
                 }
 
 
