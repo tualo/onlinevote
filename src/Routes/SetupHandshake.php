@@ -38,6 +38,10 @@ class SetupHandshake implements IRoute{
                 $session = App::get('session');
                 $db = $session->getDB();
 
+                $mesage_to_send = [
+                    'domain'    => $_SERVER['SERVER_NAME'],
+                    'uri'       => substr($_SERVER['SCRIPT_URI'],0,-1*strlen('/onlinevote/setuphandshake')),
+                ];
                 if (self::remoteLogin()===true){
 
                     $token = $session->registerOAuth(
@@ -50,10 +54,8 @@ class SetupHandshake implements IRoute{
                     $keys = TualoApplicationPGP::keyGen(2048);
                     $publickey = $keys['public'];
 
-                    $mesage_to_send = [
+                    $mesage_to_send += [
                         'publickey' => $publickey,
-                        'domain'    => $_SERVER['SERVER_NAME'],
-                        'uri'       => substr($_SERVER['SCRIPT_URI'],0,-1*strlen('/onlinevote/setuphandshake')),
                         'token'     => $token,
                         'message'   => TualoApplicationPGP::encrypt($publickey,$token)
                     ];
