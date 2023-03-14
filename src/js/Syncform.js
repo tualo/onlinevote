@@ -83,7 +83,7 @@ Ext.define('Tualo.OnlineVote.Syncform', {
                 console.log(v);
 
                 Tualo.Ajax.request({
-                    url: './/onlinevote/setuphandshake',
+                    url: './onlinevote/setuphandshake',
                     params: v,
                     showWait: true,
                     scope: this,
