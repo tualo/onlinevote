@@ -68,7 +68,7 @@ class SetupHandshake implements IRoute{
                     $mesage_to_send += [
                         'publickey' => $publickey,
                         'token'     => $token,
-                        'message'   => TualoApplicationPGP::encrypt($publickey,$token)
+                        'message'   => TualoApplicationPGP::enamor(TualoApplicationPGP::encrypt($publickey,$token))
                     ];
                     
 
