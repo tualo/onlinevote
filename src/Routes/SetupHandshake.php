@@ -86,7 +86,7 @@ class SetupHandshake implements IRoute{
                         $message = (Uuid::uuid4())->toString();
                         $ping_result = APIRequestHelper::query( $_REQUEST['api_url'].'~/'.$api_result['token'].'/papervote/ping',[
                             'message'=>$message,
-                            'signature'=>RSA::load($privatekey)->sign($message)
+                            'signature'=>TualoApplicationPGP::sign($privatekey,$message)
                         ]);
                         App::result('ping_result',  $ping_result );
 
