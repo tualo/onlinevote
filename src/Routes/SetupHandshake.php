@@ -66,6 +66,12 @@ class SetupHandshake implements IRoute{
                     $publickey = $keys['public'];
                     $privatekey = $keys['privatekey'];
 
+
+                    $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                        'system_settings_id'    => 'erp/privatekey',
+                        'property'              => $privatekey
+                    ]);
+
                     $mesage_to_send += [
                         'publickey' => $publickey,
                         'token'     => $token,
@@ -76,7 +82,8 @@ class SetupHandshake implements IRoute{
                     $api_result = APIRequestHelper::query( $_REQUEST['api_url'].'papervote/setuphandshake', $mesage_to_send );
                     App::result('api_result', $api_result);
                     if ( $api_result ){
-                        if (TualoApplicationPGP::decrypt($api_result['publickey'],$api_result['message'])!=$token) throw new \Exception('Problem bei dem Schlüsseltausch');
+                        if (TualoApplicationPGP::decrypt($privatekey,TualoApplicationPGP::unarmor($api_result['message_public']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (1)');
+                        if (TualoApplicationPGP::decrypt($api_result['public'],TualoApplicationPGP::unarmor($api_result['message_private']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (2)');
 
                     }else{
                         App::result('msg', APIRequestHelper::$last_error_message);
