@@ -84,21 +84,35 @@ class SetupHandshake implements IRoute{
                     if ( $api_result ){
                         if (TualoApplicationPGP::decrypt($privatekey,TualoApplicationPGP::unarmor($api_result['message_public']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (1)');
 
-                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
-                            'system_settings_id'    => 'remote-erp/public',
-                            'property'              => $api_result['publickey']
-                        ]);
+                        $ping_result = APIRequestHelper::query( $_REQUEST['uri'].'~/'.$_REQUEST['token'].'/papervote/ping');
+                        if (
+                            ($ping_result==false)||
+                            (!isset($ping_result['success']))||
+                            ($ping_result['success']!==true)
+                        ){
+                            throw new \Exception("Das Briefwahlsystem kann nicht angepingt werden.");
+                        }else{
+                            $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                                'system_settings_id'    => 'remote-erp/public',
+                                'property'              => $api_result['publickey']
+                            ]);
+    
+    
+                            $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                                'system_settings_id'    => 'remote-erp/url',
+                                'property'              => $_REQUEST['uri']
+                            ]);
+    
+                            $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                                'system_settings_id'    => 'remote-erp/token',
+                                'property'              => $api_result['token']
+                            ]);
+                            App::result('success',  true );
+                        }
 
 
-                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
-                            'system_settings_id'    => 'remote-erp/url',
-                            'property'              => $_REQUEST['uri']
-                        ]);
 
-                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
-                            'system_settings_id'    => 'remote-erp/token',
-                            'property'              => $api_result['token']
-                        ]);
+                        
         
 
                     }else{
