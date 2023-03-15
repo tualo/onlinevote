@@ -84,7 +84,7 @@ class SetupHandshake implements IRoute{
                     if ( $api_result ){
                         if (TualoApplicationPGP::decrypt($privatekey,TualoApplicationPGP::unarmor($api_result['message_public']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (1)');
 
-                        $ping_result = APIRequestHelper::query( $_REQUEST['uri'].'~/'.$_REQUEST['token'].'/papervote/ping');
+                        $ping_result = APIRequestHelper::query( $_REQUEST['api_url'].'~/'.$api_result['token'].'/papervote/ping');
                         if (
                             ($ping_result==false)||
                             (!isset($ping_result['success']))||
