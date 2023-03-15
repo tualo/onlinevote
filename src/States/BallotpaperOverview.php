@@ -32,7 +32,7 @@ class BallotpaperOverview implements State{
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        if (!$stateMachine->voter()->getCurrentBallotpaper()->allreadyVoted()) throw new BallotPaperAllreadyVotedException();
+        if ($stateMachine->voter()->getCurrentBallotpaper()->allreadyVoted()) throw new BallotPaperAllreadyVotedException();
 
         $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
         App::logger('BallotpaperOverview(State)')->debug(json_encode($_REQUEST) );

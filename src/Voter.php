@@ -100,9 +100,6 @@ class Voter {
     public function getId():string{
         return $this->id;
     }
-    public function getSecretToken():string{
-        return $this->secret;
-    }
     
 
     
