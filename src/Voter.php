@@ -182,11 +182,11 @@ class Voter {
 
             $record=false;
             if ($_SESSION['api']==1){
-                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/get',[
+                $url = $_SESSION['api_url'].'papervote/get';
+                $record = APIRequestHelper::query($url,[
                     'username' => $username,
                     'signature' => TualoApplicationPGP::sign($privatekey,$username)
                 ]);
-                $record = APIRequestHelper::query($url);
                 
             }else{
                 // $record = json_decode($db->singleValue('select voterCredential({username}) u',['username'=>$username],'u'),true);
