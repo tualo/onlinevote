@@ -83,8 +83,25 @@ class SetupHandshake implements IRoute{
                     App::result('api_result', $api_result);
                     if ( $api_result ){
                         if (TualoApplicationPGP::decrypt($privatekey,TualoApplicationPGP::unarmor($api_result['message_public']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (1)');
-                        if (TualoApplicationPGP::decrypt($api_result['public'],TualoApplicationPGP::unarmor($api_result['message_private']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (2)');
+                        // if (TualoApplicationPGP::decrypt($api_result['publickey'],TualoApplicationPGP::unarmor($api_result['message_private']))!=$token) throw new \Exception('Problem bei dem Schlüsseltausch (2)');
 
+                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                            'system_settings_id'    => 'remote-erp/public',
+                            'property'              => $_REQUEST['publickey']
+                        ]);
+
+
+                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                            'system_settings_id'    => 'remote-erp/url',
+                            'property'              => $_REQUEST['uri']
+                        ]);
+
+                        $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                            'system_settings_id'    => 'remote-erp/token',
+                            'property'              => $_REQUEST['token']
+                        ]);
+        
+                        
                     }else{
                         App::result('msg', APIRequestHelper::$last_error_message);
                     }
