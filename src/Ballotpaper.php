@@ -179,7 +179,7 @@ class Ballotpaper {
         $db->direct($sql,[
             'voter_id'      =>  $this->getVoterId(),
             'stimmzettel'   =>  ((string)$this->getBallotpaperId()).'|0',
-            'session_id'    =>  $this->getSecretToken(),
+            'session_id'    =>  session_id(),
             'completed'     =>  0
         ]);
     }

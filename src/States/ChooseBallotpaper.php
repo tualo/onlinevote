@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
+use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 
 class ChooseBallotpaper implements State{
 
@@ -14,6 +15,8 @@ class ChooseBallotpaper implements State{
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($logoutState = $stateMachine->checkLogout())!='') return $logoutState;
+        if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
+
         // singleBallotpaper
         if(
             isset($_REQUEST['ballotpaperIndex']) &&

@@ -4,6 +4,8 @@ namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\WMStateMachine;
+use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
+use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 
 class Ballotpaper implements State{
 
@@ -30,6 +32,9 @@ class Ballotpaper implements State{
 
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
+        if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
+        if (!$stateMachine->voter()->getCurrentBallotpaper()->allreadyVoted()) throw new BallotPaperAllreadyVotedException();
+
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
         $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
 

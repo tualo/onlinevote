@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
+use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 
 class Legitimation implements State{
 
@@ -14,6 +15,7 @@ class Legitimation implements State{
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
+        if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
         $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
         if (
             isset($_REQUEST['legitimation_confirmed']) && 

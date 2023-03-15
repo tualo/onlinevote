@@ -6,6 +6,8 @@ use Michelf\MarkdownExtra;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
+use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
+use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 
 
 use Tualo\Office\Basic\TualoApplication as App;
@@ -160,6 +162,14 @@ class Init {
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\SessionBallotpaperSaveError' );
             App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
+        }catch(SessionInvalidException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\SessionInvalidError' );
+            App::logger('OnlineVote(SessionInvalidError)')->error($e->getMessage());
+        }catch(BallotPaperAllreadyVotedException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\BallotPaperAllreadyVotedError' );
+            App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
