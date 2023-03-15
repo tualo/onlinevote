@@ -10,6 +10,11 @@ use Ramsey\Uuid\Uuid;
 
 class SetupHandshake implements IRoute{
 
+    public static function clientAllowed($array,$client){
+        foreach($array as $elem){ if($elem['client']==$client) return true; }
+        return false;
+    }
+
     public static function remoteLogin(){
         $cookie_file = App::get('tempPath').'/api_cookie';
         if (file_exists($cookie_file)) unlink($cookie_file);
@@ -24,7 +29,12 @@ class SetupHandshake implements IRoute{
             'mandant' => $_REQUEST['api_client'],
             'forcelogin' => '1'
         ] )){
-            if (isset($api_result['client'])&&isset($api_result['clients']) && (!in_array($api_result['client'],$api_result['clients'])))  throw new \Exception('Der Client ist nicht erlaubt');
+            App::result('api_result', $api_result);
+            isset($api_result['client']) || throw new \Exception('Der Parameter *client* fehlte in der Antwort');
+            isset($api_result['clients']) ||  throw new \Exception('Der Parameter *clients* fehlte in der Antwort');
+            isset($api_result['success']) ||  throw new \Exception('Der Parameter *success* fehlte in der Antwort');
+
+            if (self::clientAllowed($api_result['clients'],$api_result['client'])) throw new \Exception('Der Client ist nicht erlaubt');
             if ($api_result['success']==false) throw new \Exception($api_result['msg'].'-');
             return true;
         }
