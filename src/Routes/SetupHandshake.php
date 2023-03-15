@@ -64,7 +64,7 @@ class SetupHandshake implements IRoute{
                     $session->oauthValidDays($token,365);
                     $keys = TualoApplicationPGP::keyGen(2048);
                     $publickey = $keys['public'];
-                    $privatekey = $keys['privatekey'];
+                    $privatekey = $keys['private'];
 
 
                     $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
