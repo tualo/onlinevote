@@ -100,7 +100,7 @@ class SetupHandshake implements IRoute{
     
                             $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
                                 'system_settings_id'    => 'remote-erp/url',
-                                'property'              => $_REQUEST['uri']
+                                'property'              => $_REQUEST['api_url']
                             ]);
     
                             $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
