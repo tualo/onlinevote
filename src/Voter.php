@@ -1,10 +1,13 @@
 <?php
 declare(strict_types=1);
 namespace Tualo\Office\OnlineVote;
+
+use Exception;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\Ballotpaper;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
+use Tualo\Office\TualoPGP\TualoApplicationPGP;
 
 class Voter {
     public static $deleteBlockedQuery = 'delete from username_count where block_until<now() and id = {username} ';
@@ -59,7 +62,7 @@ class Voter {
             foreach($json['possible_ballotpapers'] as $ballotpaperJSON){
                  
                 $bp = Ballotpaper::getInstanceFromJSON($ballotpaperJSON);
-                $this->addPossibleBallotpaper( Ballotpaper::getInstanceFromJSON($ballotpaperJSON)  );
+                $this->addPossibleBallotpaper( $bp  );
 
                 if ($bp->getCanvote()==1){ 
                     // gegen voter prüfen
@@ -172,9 +175,17 @@ class Voter {
     }
     public function loginGetCredentials($username):mixed{
         try{
+            $stateMachine = WMStateMachine::getInstance();
+            $db = $stateMachine->db();
+            $privatekey = $db->singleValue("select property FROM system_settings WHERE system_settings_id = 'erp/privatekey'",[],'property');
+            if ($privatekey===false) throw new \Exception("system_settings private key is missed");
+
             $record=false;
             if ($_SESSION['api']==1){
-                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/get/{username}');
+                $url = $_SESSION['api_url'].str_replace('{username}',$username,'papervote/get',[
+                    'username' => $username,
+                    'signature' => TualoApplicationPGP::sign($privatekey,$username)
+                ]);
                 $record = APIRequestHelper::query($url);
                 
             }else{
