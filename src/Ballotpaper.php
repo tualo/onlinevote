@@ -179,7 +179,7 @@ class Ballotpaper {
         $db->direct($sql,[
             'voter_id'      =>  $this->getVoterId(),
             'stimmzettel'   =>  ((string)$this->getBallotpaperId()).'|0',
-            'session_id'    =>  session_id(),
+            'session_id'    =>  $this->getSecretToken(),
             'completed'     =>  0
         ]);
     }
@@ -232,7 +232,7 @@ class Ballotpaper {
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
                 $hash['isvalid']        =   $this->is_valid?'1':'0';
-                $hash['token']          =   session_id();
+                $hash['token']          =   $this->getSecretToken();
 
                 $db->direct('
                 insert into ballotbox 
