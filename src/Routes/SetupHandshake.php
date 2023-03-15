@@ -7,6 +7,7 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Ramsey\Uuid\Uuid;
+use phpseclib3\Crypt\RSA;
 
 class SetupHandshake implements IRoute{
 
@@ -81,7 +82,14 @@ class SetupHandshake implements IRoute{
                     if ( $api_result ){
                         if (TualoApplicationPGP::decrypt($privatekey,TualoApplicationPGP::unarmor($api_result['message_public']))!=$api_result['token']) throw new \Exception('Problem bei dem Schlüsseltausch (1)');
 
-                        $ping_result = APIRequestHelper::query( $_REQUEST['api_url'].'~/'.$api_result['token'].'/papervote/ping');
+
+                        $message = (Uuid::uuid4())->toString();
+                        $ping_result = APIRequestHelper::query( $_REQUEST['api_url'].'~/'.$api_result['token'].'/papervote/ping',[
+                            'message'=>$message,
+                            'signature'=>RSA::load($privatekey)->sing($message)
+                        ]);
+                        App::result('ping_result',  $ping_result );
+
                         if (
                             ($ping_result==false)||
                             (!isset($ping_result['success']))||
@@ -90,11 +98,13 @@ class SetupHandshake implements IRoute{
                             throw new \Exception("Das Briefwahlsystem kann nicht angepingt werden.");
                         }else{
 
+                            
+
                             $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
                                 'system_settings_id'    => 'erp/privatekey',
                                 'property'              => $privatekey
                             ]);
-                            
+
                             $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
                                 'system_settings_id'    => 'remote-erp/public',
                                 'property'              => $api_result['publickey']
