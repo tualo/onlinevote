@@ -34,7 +34,7 @@ class SetupHandshake implements IRoute{
             isset($api_result['clients']) ||  throw new \Exception('Der Parameter *clients* fehlte in der Antwort');
             isset($api_result['success']) ||  throw new \Exception('Der Parameter *success* fehlte in der Antwort');
 
-            if (self::clientAllowed($api_result['clients'],$api_result['client'])) throw new \Exception('Der Client ist nicht erlaubt');
+            if (!self::clientAllowed($api_result['clients'],$api_result['client'])) throw new \Exception('Der Client ist nicht erlaubt');
             if ($api_result['success']==false) throw new \Exception($api_result['msg'].'-');
             return true;
         }
@@ -72,7 +72,7 @@ class SetupHandshake implements IRoute{
                     ];
                     
 
-                    if ($api_result = APIRequestHelper::query( $_REQUEST['api_url'].'/papervote/setuphandshake', $mesage_to_send )){
+                    if ( $api_result = APIRequestHelper::query( $_REQUEST['api_url'].'/papervote/setuphandshake', $mesage_to_send ) ){
                         App::result('api_result', $api_result);
                         if (TualoApplicationPGP::decrypt($privatekey,$api_result['message'])!=$token) throw new \Exception('Problem bei dem Schlüsseltausch');
 

@@ -23,6 +23,16 @@ class APIRequestHelper {
 
         ){
             return $object;
+        }else if (
+            !is_null($object) && 
+            isset($object["success"]) &&
+            isset($object["msg"]) &&
+            ($object["success"]===false)
+
+        ){
+            self::$last_error_message =$object["msg"];
+            App::logger('APIRequestHelper')->error( self::$last_error_message );
+            return false;
         }else{
             self::log('error','Code 2'."\API:".$url."\nResult:".self::$last_data);
             self::$last_error_nr = -100;
