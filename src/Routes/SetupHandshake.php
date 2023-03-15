@@ -24,6 +24,7 @@ class SetupHandshake implements IRoute{
             'mandant' => $_REQUEST['api_client'],
             'forcelogin' => '1'
         ] )){
+            if (isset($api_result['client'])&&isset($api_result['clients']) && (!in_array($api_result['client'],$api_result['clients'])))  throw new \Exception('Der Client ist nicht erlaubt');
             if ($api_result['success']==false) throw new \Exception($api_result['msg'].'-');
             return true;
         }
@@ -60,7 +61,9 @@ class SetupHandshake implements IRoute{
                         'message'   => TualoApplicationPGP::encrypt($publickey,$token)
                     ];
                     
+
                     if ($api_result = APIRequestHelper::query( $_REQUEST['api_url'].'/papervote/setuphandshake', $mesage_to_send )){
+                        App::result('api_result', $api_result);
                         if (TualoApplicationPGP::decrypt($privatekey,$api_result['message'])!=$token) throw new \Exception('Problem bei dem Schlüsseltausch');
 
                     }
