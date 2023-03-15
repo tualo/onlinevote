@@ -67,10 +67,7 @@ class SetupHandshake implements IRoute{
                     $privatekey = $keys['private'];
 
 
-                    $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
-                        'system_settings_id'    => 'erp/privatekey',
-                        'property'              => $privatekey
-                    ]);
+                    
 
                     $mesage_to_send += [
                         'publickey' => $publickey,
@@ -92,6 +89,12 @@ class SetupHandshake implements IRoute{
                         ){
                             throw new \Exception("Das Briefwahlsystem kann nicht angepingt werden.");
                         }else{
+
+                            $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
+                                'system_settings_id'    => 'erp/privatekey',
+                                'property'              => $privatekey
+                            ]);
+                            
                             $db->direct("insert into system_settings (system_settings_id,property) values ({system_settings_id},{property}) on duplicate key update property=values(property)",[
                                 'system_settings_id'    => 'remote-erp/public',
                                 'property'              => $api_result['publickey']
