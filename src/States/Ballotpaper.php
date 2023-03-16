@@ -13,7 +13,7 @@ class Ballotpaper implements State{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        if ($stateMachine->voter()->getCurrentBallotpaper()->()) throw new BallotPaperAllreadyVotedException();
+        if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
 
         $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}',[
             'id'=> $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
