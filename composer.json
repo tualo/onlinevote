@@ -20,6 +20,8 @@
         "ramsey/uuid": "*",
         "phpseclib/phpseclib": "^3.0",
         "tualo/tualopgp": "*",
+        "tualo/cms": "*",
+        "tualo/bsc": "*",
         "michelf/php-markdown": "*"
     }
 }

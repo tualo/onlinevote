@@ -13,7 +13,7 @@ class Ballotpaper implements State{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        if ($stateMachine->voter()->getCurrentBallotpaper()->allreadyVoted()) throw new BallotPaperAllreadyVotedException();
+        if ($stateMachine->voter()->getCurrentBallotpaper()->()) throw new BallotPaperAllreadyVotedException();
 
         $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}',[
             'id'=> $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
@@ -35,7 +35,7 @@ class Ballotpaper implements State{
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        if ($stateMachine->voter()->getCurrentBallotpaper()->allreadyVoted()) throw new BallotPaperAllreadyVotedException();
+        if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
 
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
         $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
