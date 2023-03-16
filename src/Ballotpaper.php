@@ -215,7 +215,7 @@ class Ballotpaper {
             $record = APIRequestHelper::query($url,[
                 'voter_id' =>$this->getVoterId(),
                 'ballotpaper_id' => $this->getBallotpaperId(),
-                'signature' => TualoApplicationPGP::sign($privatekey,$this->getVoterId())
+                'signature' => TualoApplicationPGP::sign($privatekey,(string)$this->getVoterId())
             ]);
             return $record!==false;
         }else{
