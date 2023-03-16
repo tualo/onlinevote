@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 
 use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
-use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
+use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 
 class Ballotpaper {
@@ -184,7 +184,7 @@ class Ballotpaper {
         ]);
     }
 
-    public function allreadyVoted():bool{
+    public function checkLocal():bool{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         $voter = $db->singleRow('
@@ -203,6 +203,26 @@ class Ballotpaper {
         return $voter !== false;
     }
 
+
+    public function checkRemote():bool{
+        if ($_SESSION['api']==1){
+            $stateMachine = WMStateMachine::getInstance();
+            $db = $stateMachine->db();
+            $privatekey = $db->singleValue("select property FROM system_settings WHERE system_settings_id = 'erp/privatekey'",[],'property');
+            if ($privatekey===false) throw new \Exception("system_settings private key is missed");
+
+            $url = $_SESSION['api_url'].'papervote/check';
+            $record = APIRequestHelper::query($url,[
+                'voter_id' =>$this->getVoterId(),
+                'ballotpaper_id' => $this->getBallotpaperId(),
+                'signature' => TualoApplicationPGP::sign($privatekey,$this->getVoterId())
+            ]);
+            return $record!==false;
+        }else{
+            return true;
+        }
+    }
+
     public function save():void{
         // check md5
         // ggf recreate md5
@@ -210,15 +230,20 @@ class Ballotpaper {
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
        
+
+        if ($this->checkRemote()===false){ 
+            App::logger('Ballotpaper(function save)')->info('Laut RemoteSystem bereits gewählt'.$this->getVoterId());
+            throw new BallotPaperAllreadyVotedException('Laut RemoteSystem bereits gewählt');
+        }
         if ($stateMachine->voter()->validSession()===false){ 
             App::logger('Ballotpaper(function save)')->info('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)'.$db->last_sql);
             throw new SessionBallotpaperSaveException('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)');
         }
-        if ($this->allreadyVoted()===true){ 
+        if ($this->checkLocal()===true){ 
             $txt = 'Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.'.((string)$this->getBallotpaperId()).'|0'.'##'.$this->getVoterId();
             App::logger('Ballotpaper(function save)')->debug($txt );
             App::logger('Ballotpaper(function save)')->debug( $db->last_sql );
-            throw new \Exception($txt );
+            throw new BallotPaperAllreadyVotedException($txt );
         }
 
         

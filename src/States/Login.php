@@ -14,7 +14,7 @@ class Login implements State {
         $stateMachine->logger('Login(State)')->info( "login  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." ");
         
         if ($stateMachine->voter()->isBlocked($username)===true){ 
-            $nextState = 'Tualo\Office\OnlineVote\States\BlockedUser';
+            $nextState = 'Tualo\Office\OnlineVote\States\BlockedUserError';
             $stateMachine->logger('Login(State)')->info( "login blocked {$username} - ".__LINE__." ".__FILE__." ");
             return false; 
         }
@@ -25,7 +25,7 @@ class Login implements State {
             $stateMachine->logger('Login(State)')->debug( "login ok {$username} - ".__LINE__." ".__FILE__." ");
             return true;
         }else if ($res=='allready-voted'){
-            $nextState = 'Tualo\Office\OnlineVote\States\AllreadyVoted';
+            $nextState = 'Tualo\Office\OnlineVote\States\LoginAllreadyVotedError';
             $stateMachine->logger('Login(State)')->info( "login AllreadyVoted {$username} - ".__LINE__." ".__FILE__." ");
             return false;
         }else {
@@ -84,8 +84,7 @@ class Login implements State {
         }
 
         $stateMachine->logger('Login(State)')->error('remove me in production '." - ".__LINE__." ".__FILE__." ");
-        $result['p1']='SbNKhi9c';
-        $result['p2']='KbiDVkTb';
+
         
 
         return $nextState;
