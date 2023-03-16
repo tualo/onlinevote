@@ -283,6 +283,7 @@ class Ballotpaper {
             $db->direct('commit;');
 
         }catch(\Exception $e){
+            $db->direct('rollback;');
             throw new SystemBallotpaperSaveException($e->getMessage());
         }
 
