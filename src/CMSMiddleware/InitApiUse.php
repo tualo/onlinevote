@@ -14,11 +14,13 @@ class InitApiUse /*extends CMSMiddleWare*/{
             union 
             select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
             union
+            select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
+            union
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
         ",[],'text','v');
         if ($o['api']==1){
             $_SESSION['api'] = intval($o['api']);
-            $_SESSION['api_url'] = $o['api_url'];
+            $_SESSION['api_url'] = $o['api_url'].'~/'.$_SESSION['api_token'] ;
             $_SESSION['api_private'] = $o['api_private'];
         }
         
