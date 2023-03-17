@@ -11,6 +11,7 @@ use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
 
 class Ballotpaper {
     private int $voter_id;
@@ -208,14 +209,12 @@ class Ballotpaper {
         if ($_SESSION['api']==1){
             $stateMachine = WMStateMachine::getInstance();
             $db = $stateMachine->db();
-            $privatekey = $db->singleValue("select property FROM system_settings WHERE system_settings_id = 'erp/privatekey'",[],'property');
-            if ($privatekey===false) throw new \Exception("system_settings private key is missed");
-
+            
             $url = $_SESSION['api_url'].'papervote/check';
             $record = APIRequestHelper::query($url,[
                 'voter_id' =>$this->getVoterId(),
                 'ballotpaper_id' => $this->getBallotpaperId(),
-                'signature' => TualoApplicationPGP::sign($privatekey,(string)$this->getVoterId())
+                'signature' => TualoApplicationPGP::sign($_SESSION['api_private'],(string)$this->getVoterId())
             ]);
             return $record!==false;
         }else{
@@ -253,8 +252,8 @@ class Ballotpaper {
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach($pgpkeys as $keyitem){
                 $hash = $keyitem;
-                
-                $hash['ballotpaper']    =   TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
+
+                $hash['ballotpaper']    =   TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled)),'MESSAGE');
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
                 $hash['isvalid']        =   $this->is_valid?'1':'0';
@@ -268,14 +267,16 @@ class Ballotpaper {
                 $hash);
             }
             if ($_SESSION['api']==1){
-                /*
-                $url = $_SESSION['api_url']
-                    .str_replace('{voter_id}',(string)$this->getVoterId(),str_replace('{stimmzettel_id}',(string)$this->getBallotpaperId(),'papervote/api/set/{voter_id}/{stimmzettel_id}'));
-                $record = APIRequestHelper::query($url,[  'secret_token'=>$stateMachine->voter()->getSecretToken() ]);
-                if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
 
+                $url = $_SESSION['api_url'].'papervote/set';
+                $record = APIRequestHelper::query($url,[
+                    'voter_id' =>$this->getVoterId(),
+                    'ballotpaper_id' => $this->getBallotpaperId(),
+                    'signature' => TualoApplicationPGP::sign($_SESSION['api_private'],(string)$this->getVoterId())
+                ]);
+                if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
                 if ($record['success']==false) throw new RemoteBallotpaperSaveException($record['msg']);
-                */
+
             }
             $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}',[
                 'voter_id'      =>  (string)$this->getVoterId(),

@@ -217,7 +217,7 @@ Ext.define('Tualo.OnlineVote.controller.Viewport', {
             ["encrypt", "decrypt"]
           )
           const publicKey = await window.crypto.subtle.exportKey('spki',keyPair.publicKey);
-          const privatKey = await window.crypto.subtle.exportKey('spki',keyPair.privateKey);
+          const privatKey = await window.crypto.subtle.exportKey('pkcs8',keyPair.privateKey);
 
           let body = window.btoa(String.fromCharCode(...new Uint8Array(publicKey)));
           body = body.match(/.{1,64}/g).join('\n');
