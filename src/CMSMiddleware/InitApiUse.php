@@ -20,7 +20,7 @@ class InitApiUse /*extends CMSMiddleWare*/{
         ",[],'text','v');
         if ($o['api']==1){
             $_SESSION['api'] = intval($o['api']);
-            $_SESSION['api_url'] = $o['api_url'].'~/'.$_SESSION['api_token'] ;
+            $_SESSION['api_url'] = $o['api_url'].'~/'.$o['api_token'] ;
             $_SESSION['api_private'] = $o['api_private'];
         }
         
