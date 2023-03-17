@@ -253,6 +253,7 @@ class Ballotpaper {
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach($pgpkeys as $keyitem){
                 $hash = $keyitem;
+                
                 $hash['ballotpaper']    =   TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled));
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';

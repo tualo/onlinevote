@@ -206,42 +206,46 @@ Ext.define('Tualo.OnlineVote.controller.Viewport', {
     generateKey: function(name){
         (async () => {
 
-            //RSA
-            const { privateKeyArmored, publicKeyArmored, revocationCertificate } = await openpgp.generateKey({
-                userIds: [{ name: name /*, email: login*/ }], // you can pass multiple user IDs
-                //curve: 'ed25519',                                           // ECC curve name
-                passphrase: ''           // protects the private key
-            });
-            
-            Tualo.Ajax.request({
-                url: './cmp_wm/append/publickey',
-                params: {
-                    publickey: publicKeyArmored
-                },
-                showWait: true,
-                scope: this,
-                json: function(o){
-                    if (o.success==false){
-                        Ext.toast({
-                            html: o.msg,
-                            title: 'Fehler',
-                            align: 't',
-                            iconCls: 'fa fa-warning'
-                        });
-                    }else{
-                        this.getViewModel().getStore('pgpkeys').load();
-                        this.download(name+'-private.key.asc',privateKeyArmored); 
-                    }
-                    console.log(o.success);
-                }
-              });
+          let keyPair = await window.crypto.subtle.generateKey(
+            {
+              name: "RSA-OAEP",
+              modulusLength: 4096,
+              publicExponent: new Uint8Array([1, 0, 1]),
+              hash: "SHA-256",
+            },
+            true,
+            ["encrypt", "decrypt"]
+          )
+          const publicKey = await window.crypto.subtle.exportKey('spki',keyPair.publicKey);
+          const privatKey = await window.crypto.subtle.exportKey('spki',keyPair.privateKey);
 
-            /*
-            console.log(privateKeyArmored);     // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
-            console.log(publicKeyArmored);      // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
-            console.log(revocationCertificate); // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
-            */
-            
+          let body = window.btoa(String.fromCharCode(...new Uint8Array(publicKey)));
+          body = body.match(/.{1,64}/g).join('\n');
+          const publicKeyPEM = (`-----BEGIN PUBLIC KEY-----\n${body}\n-----END PUBLIC KEY-----`);
+
+          body = window.btoa(String.fromCharCode(...new Uint8Array(privatKey)));
+          body = body.match(/.{1,64}/g).join('\n');
+          const privatKeyPEM = (`-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`);
+
+
+          this.download(name+'-private.key.asc',privatKeyPEM); 
+
+          let response = await fetch('./onlinevote/append/publickey', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type':'application/x-www-form-urlencoded'
+              },
+              body: (new URLSearchParams({
+                publickey: publicKeyPEM,
+                name: name
+              })).toString()
+          }).json();
+          if (response.success){
+
+            this.getViewModel().getStore('pgpkeys').load();
+            this.download(name+'-private.key.asc',privateKeyArmored); 
+          }
 
         })();
 
