@@ -1,5 +1,6 @@
 <?php
 
+require_once "Compiler.php";
 
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
