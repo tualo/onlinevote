@@ -1,4 +1,4 @@
-Ext.define('TualoOffice.routes.CMP',{
+Ext.define('TualoOffice.routes.OnlineVoteCMP',{
     url: 'cmp_wm',
     handler: {
         action: function( ){
