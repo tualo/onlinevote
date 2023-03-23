@@ -5,6 +5,9 @@ Ext.define('Tualo.routes.OnlineVoteCMP',{
             Ext.getApplication().addView('Tualo.OnlineVote.Viewport');
         },
         before: function ( action) {
+            let ping = Ext.getApplication().sessionPing;
+            if (ping.success===true) action.stop();
+
             action.resume();
         }
     }
