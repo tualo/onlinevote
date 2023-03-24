@@ -4,7 +4,7 @@ namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
 
-class Error implements State{
+class SaveCompleted implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
