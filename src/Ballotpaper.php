@@ -16,6 +16,8 @@ use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
 class Ballotpaper {
     private int $voter_id;
     private int $ballotpaper_id;
+    private string $ballotpaper_name;
+    private array $voter_data;
     private int $canvote;
     private string $state;
     private string $secret_token;
@@ -37,6 +39,8 @@ class Ballotpaper {
         }
         $instance->setVoterId(intval($json['voter_id']));
         $instance->setBallotpaperId(intval($json['ballotpaper_id']));
+        $instance->setBallotpaperName(($json['ballotpaper_name']));
+        $instance->setVoterData(is_string($json['voter_data'])?json_decode($json['voter_data'],true):$json['voter_data']);
         $instance->setCanvote(intval($json['canvote']));
         $instance->setState($json['state']);
 
@@ -59,6 +63,8 @@ class Ballotpaper {
 
     protected function setVoterId(int $voter_id){  $this->voter_id = $voter_id; }
     protected function setBallotpaperId(int $ballotpaper_id){  $this->ballotpaper_id = $ballotpaper_id; }
+    protected function setBallotpaperName(string $ballotpaper_name){  $this->ballotpaper_name = $ballotpaper_name; }
+    protected function setVoterData(array $voter_data){  $this->voter_data = $voter_data; }
     protected function setCanvote(int $canvote){  $this->canvote = $canvote; }
     protected function setState(string $state){  $this->state = $state; }
     protected function setFilled(array $filled){  $this->filled = $filled; }
@@ -66,6 +72,8 @@ class Ballotpaper {
 
     public function getVoterId( ):int{ return $this->voter_id; }
     public function getBallotpaperId( ):int{ return $this->ballotpaper_id; }
+    public function getBallotpaperName( ):string{ return $this->ballotpaper_name; }
+    public function getVoterData( ):array{ return $this->voter_data; }
     public function getCanvote( ):int{ return $this->canvote; }
     public function getState( ):string{ return $this->state; }
     public function getSecretToken( ):string{ return $this->secret_token; }
