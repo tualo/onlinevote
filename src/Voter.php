@@ -236,6 +236,21 @@ class Voter {
         return $this->available_ballotpapers;
     }
 
+    public function availableBallotpaperGroups():array{
+        $list = [];
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $colors = $db->directHash('select id,farbe from view_website_ballotpaper',[],'id');
+        foreach($this->available_ballotpapers as $bp){
+            $list[$bp->getBallotpaperId()] = [
+                'id'=> $bp->getBallotpaperId(),
+                'color'=>$colors[$bp->getBallotpaperId()]['farbe'],
+                'name'=>$bp->getBallotpaperName()
+            ];
+        }
+        return $list;
+    }
+
     public function isLoggedIn():bool{
         return $this->loggedIn;
     }
