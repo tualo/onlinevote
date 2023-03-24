@@ -39,6 +39,7 @@ class Voter {
     private string $id = ""; // kombiniert kennung!
 
     private bool $loggedIn = false;
+    private bool $groupedVote = false;
     // private array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
 
     public function __construct(){
@@ -202,6 +203,13 @@ class Voter {
         }
         return $record;
     }
+    public function setGroupedVote(bool $val):void{
+        $this->groupedVote = $val;
+    }
+    public function getGroupedVote():bool{
+        return $this->groupedVote;
+    }
+
 
     public function isBlocked($username):bool{
         $stateMachine = WMStateMachine::getInstance();
@@ -232,8 +240,15 @@ class Voter {
         return $this->possible_ballotpapers;
     }
 
-    public function availableBallotpapers():array{
-        return $this->available_ballotpapers;
+    public function availableBallotpapers(int $filter=-1):array{
+        if ($filter==-1) return $this->available_ballotpapers;
+        $list = [];
+        foreach($this->available_ballotpapers as $bp){
+            if ( $bp->getBallotpaperId()==$filter){
+                $list[] = $bp;
+            }
+        }
+        return $list;
     }
 
     public function availableBallotpaperGroups():array{
@@ -288,6 +303,8 @@ class Voter {
         $this->available_ballotpapers = $bp_list;
         return true;
     }
+
+
 
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){

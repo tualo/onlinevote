@@ -50,12 +50,20 @@ class BallotpaperOverview implements State{
             $_REQUEST['save']=1
         ){
             App::logger('BallotpaperOverview(State)')->debug('here');
+            $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
             $stateMachine->voter()->removeCurrentBallotpaper();
             if (count($stateMachine->voter()->availableBallotpapers())==0){
                 $stateMachine->voter(true);
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompleted';
             }else{
+                if (
+                    $stateMachine->voter()->getGroupedVote() &&
+                    count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
+                ){
+                    $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
+                    return $this->transition($request,$result);
+                }
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompletedChooseBallotpaper';
             }
         }

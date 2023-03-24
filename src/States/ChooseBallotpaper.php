@@ -23,11 +23,13 @@ class ChooseBallotpaper implements State{
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
 
         // singleBallotpaper
+        $stateMachine->voter()->setGroupedVote(false);
         if(
             isset($_REQUEST['ballotpaperIndex']) &&
             $this->testInt($_REQUEST['ballotpaperIndex']) &&
             ( $stateMachine->voter()->selectBallotpaper(intval($_REQUEST['ballotpaperIndex'])) )
         ){
+            if (isset($_REQUEST['grouped'])&&($_REQUEST['grouped']==1)) $stateMachine->voter()->setGroupedVote(true);
             return 'Tualo\Office\OnlineVote\States\Ballotpaper';
         }
         return 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
