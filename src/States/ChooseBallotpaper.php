@@ -7,6 +7,11 @@ use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 
 class ChooseBallotpaper implements State{
 
+    private function testInt(string $val){
+        preg_match('/[^0-9]/', $val, $matches);
+        return count($matches)==0;
+    }
+
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         return $stateMachine->getNextState();
@@ -20,7 +25,7 @@ class ChooseBallotpaper implements State{
         // singleBallotpaper
         if(
             isset($_REQUEST['ballotpaperIndex']) &&
-            is_int($_REQUEST['ballotpaperIndex']) &&
+            $this->testInt($_REQUEST['ballotpaperIndex']) &&
             ( $stateMachine->voter()->selectBallotpaper(intval($_REQUEST['ballotpaperIndex'])) )
         ){
             return 'Tualo\Office\OnlineVote\States\Ballotpaper';

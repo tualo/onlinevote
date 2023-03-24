@@ -30,7 +30,7 @@ class Ballotpaper {
     private array $config = [];
     private array $configgroups = [];
     
-    private static array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
+    private static array $required_attributes = ['voter_id','ballotpaper_id','canvote','state','ballotpaper_name','voter_data'];
 
     public static function getInstanceFromJSON($json):Ballotpaper {
         $instance = new self();
