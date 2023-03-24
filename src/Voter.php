@@ -260,6 +260,7 @@ class Voter {
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){
             $this->setCurrentBallotpaper($this->available_ballotpapers[$index]);
+            unset($this->available_ballotpapers[$index]);
             return true;
         }
         return false;
