@@ -68,6 +68,8 @@ class Init {
         //if (isset($_REQUEST['resetsession'])) @session_destroy();
 
         $db = self::db();
+        $result['links'] = $db->direct('select * from wm_page_links');
+
         $result['rows'] = $db->direct('
         select
                 bp_row.pos,
