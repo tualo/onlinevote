@@ -49,7 +49,7 @@ Ext.define('Tualo.OnlineVote.Syncform', {
             handler: function(btn){
 
                 Tualo.Ajax.request({
-                    url: './wm/syncremote',
+                    url: './onlinevote/syncremote',
                     showWait: true,
                     timeout: 300000,
                     scope: this,
