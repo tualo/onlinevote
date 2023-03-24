@@ -257,6 +257,18 @@ class Voter {
     }
     public function ballotpaper():Ballotpaper { return $this->getCurrentBallotpaper(); }
 
+
+    public function removeCurrentBallotpaper():bool {
+        $bp_list = [];
+        foreach($this->available_ballotpapers as $bp){
+            if ($bp->getVoterId()!=$this->currentBallotpaper->getVoterId()){
+                $bp_list[]=$bp;
+            }
+        }
+        $this->available_ballotpapers = $bp_list;
+        return true;
+    }
+
     public function selectBallotpaper($index=0):bool{
         if (isset($this->available_ballotpapers[$index])){
             $this->setCurrentBallotpaper($this->available_ballotpapers[$index]);
