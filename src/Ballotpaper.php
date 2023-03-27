@@ -170,6 +170,9 @@ class Ballotpaper {
     public function getVotes():array{
         return $this->filled;
     }
+    public function setVotesIntern(array $candidates){
+        $this->filled[]=$candidates;
+    }
 
 
     public function register():void{

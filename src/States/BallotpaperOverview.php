@@ -63,7 +63,7 @@ class BallotpaperOverview implements State{
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
                     $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
-                    $stateMachine->voter()->getCurrentBallotpaper()->setVotes($storedVotes);
+                    $stateMachine->voter()->getCurrentBallotpaper()->setVotesIntern($storedVotes);
 
                     return $this->transition($request,$result);
                 }
