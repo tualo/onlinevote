@@ -167,6 +167,10 @@ class Ballotpaper {
         }
     }
 
+    public function getVotes():array{
+        return $this->filled;
+    }
+
 
     public function register():void{
         $stateMachine = WMStateMachine::getInstance();

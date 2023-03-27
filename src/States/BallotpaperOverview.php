@@ -51,6 +51,7 @@ class BallotpaperOverview implements State{
         ){
             App::logger('BallotpaperOverview(State)')->debug('here');
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
+            $storedVotes = $stateMachine->voter()->getCurrentBallotpaper()->getVotes();
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
             $stateMachine->voter()->removeCurrentBallotpaper();
             if (count($stateMachine->voter()->availableBallotpapers())==0){
@@ -62,6 +63,8 @@ class BallotpaperOverview implements State{
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
                     $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
+                    $stateMachine->voter()->getCurrentBallotpaper()->setVotes($storedVotes);
+
                     return $this->transition($request,$result);
                 }
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompletedChooseBallotpaper';
