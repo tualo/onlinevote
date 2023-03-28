@@ -28,6 +28,9 @@ class Ballotpaper implements State{
             }
         }
         $result['ballotpaper_groups'] = $ballotpaper_groups;
+        if ($result['ballotpaper']===false)  throw new \Exception("view_website_ballotpaper is false");
+        if ($result['ballotpaper_groups']===false)  throw new \Exception("view_website_ballotpaper_groups is false");
+
         $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($result['ballotpaper'] ,$result['ballotpaper_groups']);
         return $stateMachine->getNextState();
     }
