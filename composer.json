@@ -18,7 +18,7 @@
     "minimum-stability": "dev",
     "require": {
         "ramsey/uuid": "*",
-        "phpseclib/phpseclib": "^3.0",
+        "phpseclib/phpseclib": "*",
         "tualo/tualopgp": "*",
         "tualo/cms": "*",
         "tualo/bsc": "*",
