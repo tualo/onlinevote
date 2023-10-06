@@ -9,12 +9,13 @@ CREATE TABLE IF NOT EXISTS `voters` (
   KEY `idx_voters_voter_id_session_id` (`voter_id`,`session_id`)
 ) ;
 
-DELIMITER ;;
- CREATE TRIGGER voters_bi_completed
+DELIMITER //
+
+ CREATE or replace TRIGGER voters_bi_completed
 AFTER INSERT
    ON voters FOR EACH ROW
 BEGIN
   IF EXISTS(select voter_id from voters where voter_id=new.voter_id and stimmzettel=new.stimmzettel and completed=1) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'allready voted';
   END IF;
-END ;;
+END //
