@@ -9,7 +9,7 @@ from stimmzettelgruppen join stimmzettel on stimmzettelgruppen.stimmzettel=stimm
 
 
 
-create table unique_voter_session (
+create table if not exists unique_voter_session (
 id varchar(36) primary key,
 session_id varchar(50),
 create_time datetime default current_timestamp
