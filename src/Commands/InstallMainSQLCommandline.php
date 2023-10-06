@@ -49,7 +49,8 @@ class InstallMainSQLCommandline implements ICommandline{
 
             
 
-
+            'install/ds_class'    => 'setup ds_class',
+            
             'install/wahlgruppe'    => 'setup wahlgruppe',
             'install/wahlgruppe.ds'    => 'setup wahlgruppe.ds',
 
