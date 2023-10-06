@@ -47,7 +47,7 @@ class InstallMainSQLCommandline implements ICommandline{
             'default-styles' => 'setup default-styles',
             'middlewares' => 'setup cms middlewares ',
 
-            //'view_website.ballotpaper' => 'setup view_website.ballotpaper',
+            
 
 
             'install/wahlgruppe'    => 'setup wahlgruppe',
@@ -79,6 +79,9 @@ class InstallMainSQLCommandline implements ICommandline{
 
             'install/wm_page_links'    => 'setup wm_page_links',
             'install/wm_page_links.ds'    => 'setup wm_page_links.ds',
+
+
+            'view_website.ballotpaper' => 'setup view_website.ballotpaper',
 
         ];
 
