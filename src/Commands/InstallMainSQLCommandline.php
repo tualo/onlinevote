@@ -46,7 +46,25 @@ class InstallMainSQLCommandline implements ICommandline{
         $files = [
             'default-styles' => 'setup default-styles',
             'middlewares' => 'setup cms middlewares ',
-            'view_website.ballotpaper' => 'setup view_website.ballotpaper',
+
+            //'view_website.ballotpaper' => 'setup view_website.ballotpaper',
+
+
+            'install/wahlgruppe'    => 'setup wahlgruppe',
+            'install/wahlgruppe.ds'    => 'setup wahlgruppe.ds',
+
+
+            'install/wahlbezirk'    => 'setup wahlbezirk',
+            'install/wahlbezirk.ds'    => 'setup wahlbezirk.ds',
+
+            'install/stimmzettel'    => 'setup stimmzettel',
+            'install/stimmzettel.ds'    => 'setup stimmzettel.ds',
+
+            'install/kandidaten'    => 'setup kandidaten',
+            'install/kandidaten.ds'    => 'setup kandidaten.ds',
+
+            'install/kandidaten_bilder'    => 'setup kandidaten_bilder',
+            'install/kandidaten_bilder.ds'    => 'setup kandidaten_bilder.ds',
 
             'install/canChangeValue'    => 'setup canChangeValue',
             'install/system_settings_suggestion'    => 'setup system_settings_suggestion',
