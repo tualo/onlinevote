@@ -2,6 +2,9 @@
 
 require_once "Compiler.php";
 
+require_once "Commands/InstallMainSQLCommandline.php";
+require_once "Commands/InstallMenuSQLCommandline.php";
+
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
 require_once "Routes/SetupHandshake.php";

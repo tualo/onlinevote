@@ -1,3 +1,5 @@
+delimiter ; 
+
 create or replace view view_website_ballotpaper as select * from stimmzettel;
 
 create or replace view view_website_ballotpaper_groups as 
