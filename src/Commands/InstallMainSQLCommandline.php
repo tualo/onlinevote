@@ -48,15 +48,19 @@ class InstallMainSQLCommandline implements ICommandline{
             'middlewares' => 'setup cms middlewares ',
             'view_website.ballotpaper' => 'setup view_website.ballotpaper',
 
-            'canChangeValue'    => 'setup canChangeValue',
-            'system_settings_suggestion'    => 'setup system_settings_suggestion',
-            'system_settings_suggestion.ds'    => 'setup system_settings_suggestion.ds',
+            'install/canChangeValue'    => 'setup canChangeValue',
+            'install/system_settings_suggestion'    => 'setup system_settings_suggestion',
+            'install/system_settings_suggestion.ds'    => 'setup system_settings_suggestion.ds',
 
-            'system_settings'    => 'setup system_settings',
-            'system_settings.ds'    => 'setup system_settings.ds',
+            'install/system_settings'    => 'setup system_settings',
+            'install/system_settings.ds'    => 'setup system_settings.ds',
 
-            'wm_page_links'    => 'setup wm_page_links',
-            'wm_page_links.ds'    => 'setup wm_page_links.ds',
+            'install/system_settings_user_access'    => 'setup system_settings_user_access',
+            'install/system_settings_user_access.ds'    => 'setup system_settings_user_access.ds',
+            
+
+            'install/wm_page_links'    => 'setup wm_page_links',
+            'install/wm_page_links.ds'    => 'setup wm_page_links.ds',
 
         ];
 
