@@ -68,6 +68,9 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/kandidaten'    => 'setup kandidaten',
             'install/kandidaten.ds'    => 'setup kandidaten.ds',
 
+            'install/kandidaten_bilder_typen'    => 'setup kandidaten_bilder_typen',
+            'install/kandidaten_bilder_typen.ds'    => 'setup kandidaten_bilder_typen.ds',
+
             'install/kandidaten_bilder'    => 'setup kandidaten_bilder',
             'install/kandidaten_bilder.ds'    => 'setup kandidaten_bilder.ds',
 
