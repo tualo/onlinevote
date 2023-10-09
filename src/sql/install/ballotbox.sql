@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `ballotbox` (
   CONSTRAINT `fk_ballotbox_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 DELIMITER  //
-CREATEOR REPLACE TRIGGER trigger_ballotbox_ai
+CREATE OR REPLACE TRIGGER trigger_ballotbox_ai
 AFTER INSERT
    ON ballotbox FOR EACH ROW
 BEGIN
