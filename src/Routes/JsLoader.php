@@ -1,5 +1,5 @@
 <?php
-namespace Tualo\Office\HBKSplit\Routes;
+namespace Tualo\Office\OnlineVote\Routes;
 
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\Route as BasicRoute;
