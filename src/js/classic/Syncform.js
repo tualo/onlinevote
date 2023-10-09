@@ -9,6 +9,7 @@ Ext.define('Tualo.OnlineVote.Syncform', {
         anchor: '100%'
     },
     bodyPadding: '25px',
+    
     items: [
         {
             xtype: 'textfield',
