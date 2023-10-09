@@ -140,6 +140,9 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/view_website_candidates'    => 'setup view_website_candidates',
 
             'install/bp_row.and.column.data'    => 'setup bp_row.and.column.data',
+
+            'install/wm_loginpage_settings'    => 'setup wm_loginpage_settings',
+            'install/wm_loginpage_settings.ds'    => 'setup wm_loginpage_settings.ds',
         ];
         
 
