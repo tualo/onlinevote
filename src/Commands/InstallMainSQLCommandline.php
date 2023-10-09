@@ -116,7 +116,9 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/pgpkeys.readtable'    => 'setup pgpkeys.readtable',
             'install/pgpkeys.ds'    => 'setup pgpkeys.ds',
             
-
+            'install/wm_sync_tables'    => 'setup wm_sync_tables',
+            'install/wm_sync_tables.ds'    => 'setup wm_sync_tables.ds',
+            
         ];
 
 

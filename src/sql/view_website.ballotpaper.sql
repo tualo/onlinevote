@@ -63,3 +63,4 @@ insert ignore into  system_settings (system_settings_id) values
 insert ignore into system_settings_user_access(system_settings_id,groupname) values ('remote-erp/public','administration');
 insert ignore into system_settings_user_access(system_settings_id,groupname) values ('remote-erp/url','administration');
 insert ignore into system_settings_user_access(system_settings_id,groupname) values ('remote-erp/token','administration');
+insert ignore into system_settings_user_access(system_settings_id,groupname) values ('erp/privatekey','administration');
