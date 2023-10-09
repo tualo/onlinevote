@@ -94,6 +94,23 @@ class InstallMainSQLCommandline implements ICommandline{
 
             'view_website.ballotpaper' => 'setup view_website.ballotpaper',
 
+
+            'install/bp_row'    => 'setup bp_row',
+            'install/bp_row.ds'    => 'setup bp_row.ds',
+
+            'install/bp_column'    => 'setup bp_column',
+            'install/bp_column.ds'    => 'setup bp_column.ds',
+
+            'install/bp_column_definition'    => 'setup bp_column_definition',
+            'install/bp_column_definition.ds'    => 'setup bp_column_definition.ds',
+
+            'install/wm_texts'    => 'setup wm_texts',
+            'install/wm_texts.ds'    => 'setup wm_texts.ds',
+
+            'install/pgpkeys'    => 'setup pgpkeys',
+            'install/pgpkeys.ds'    => 'setup pgpkeys.ds',
+            
+
         ];
 
 
