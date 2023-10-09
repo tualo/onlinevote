@@ -133,8 +133,12 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/ds_files_data'    => 'setup ds_files_data',
             'install/ds_files_data.ds'    => 'setup ds_files_data.ds',
 
-        ];
+                        
+            'install/username_count'    => 'setup username_count',
+            'install/username_count.ds'    => 'setup username_count.ds',
 
+        ];
+        
 
         foreach($files as $file=>$msg){
             $installSQL = function(string $file){
