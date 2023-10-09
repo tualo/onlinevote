@@ -8,6 +8,7 @@ use Tualo\Office\Basic\Route as BasicRoute;
 use Tualo\Office\Basic\IRoute;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
+use Tualo\Office\DS\DSTable;
 
 class SyncRemote implements IRoute
 {
@@ -78,61 +79,24 @@ class SyncRemote implements IRoute
                 $remote_data = [];
                 $table_list = $db->direct('select table_name from wm_sync_tables order by position asc');
                 foreach ($table_list as $table_row) {
+                    set_time_limit(300);
                     $tablename = $table_row['table_name'];
                     $remote_data[$tablename] = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
+                    if($remote_data[$tablename]===false){
+                        throw new \Exception('error on '.$tablename);
+                    }
                 }
 
-                if (
-                    ($remote_data['kandidaten'] !== false) &&
-                    ($remote_data['stimmzettelgruppen'] !== false)  &&
-                    ($remote_data['stimmzettel'] !== false)
-                ) {
-                    $db->autocommit(false);
-
-                    $db->direct('delete from kandidaten_docdata');
-                    $db->direct('delete from kandidaten_doc');
-                    /**
-             create table wm_sync_tables (
-                table_name varchar(128) primary key,
-                position integer default 0,
-                last_sync datetime default null
-            );
-            insert into wm_sync_tables (table_name,position) values  
-                ('wahlbezirk',1),
-                ('wahlgruppe',2),
-                ('stimmzettel',3),
-                ('stimmzettelgruppen',4),
-                ('stimmzettel_fusstexte',5),
-                ('stimmzettel_stimmzettel_fusstexte',6),
-                ('kandidaten',7)
-                     */
-
-                    $table_list = $db->direct('select table_name from wm_sync_tables order by position desc');
-                    foreach ($table_list as $table_row) {
-                        $db->direct('delete from `' . $table_row['table_name'] . '`');
-                    }
-
-
-                    $table_list = $db->direct('select table_name from wm_sync_tables order by position asc');
-                    foreach ($table_list as $table_row) {
-                        $tablename = $table_row['table_name'];
-                        $res = DSCreateRoute::createRequest($db, $tablename, $remote_data[$tablename]);
-                        TualoApplication::result($tablename, count($res['data']));
-                    }
-
-                    foreach ($remote_data['kandidaten']['data'] as $row) {
-                        $data = APIRequestHelper::raw($url . '/dsfile/inlinebase64/kandidaten/' . $row['kandidaten__portaitbild']);
-                        file_put_contents($config['__PORTRAIT_PATH__'] . '/' . $row['kandidaten__portaitbild'] . '.png', base64_decode($data));
-                    }
-
-
-                    $db->commit();
-
-                    TualoApplication::result('success', true);
-                } else {
-                    TualoApplication::result('success', false);
-                    TualoApplication::result('msg', 'something went wrong');
+                $db->autocommit(false);
+                foreach ($table_list as $table_row) {
+                    $db->direct('delete from `' . $table_row['table_name'] . '`');
+                    $table = DSTable::instance($table_row['table_name']);
+                    $table->insert($remote_data[$table_row['table_name']]['data']);
                 }
+                $db->commit();
+
+                TualoApplication::result('success', true);
+                
             } catch (\Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
