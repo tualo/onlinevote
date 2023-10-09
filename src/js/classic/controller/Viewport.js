@@ -229,8 +229,7 @@ Ext.define('Tualo.OnlineVote.controller.Viewport', {
 
 
           this.download(name+'-private.key.asc',privatKeyPEM); 
-
-          let response = await(await fetch('./onlinevote/append/publickey', {
+          let fresponse = await fetch('./onlinevote/append/publickey', {
               method: 'POST',
               headers: {
                   'Accept': 'application/json',
@@ -240,7 +239,8 @@ Ext.define('Tualo.OnlineVote.controller.Viewport', {
                 publickey: publicKeyPEM,
                 name: name
               })).toString()
-          })).json();
+          });
+          let response = await fresponse.json();
           if (response.success){
 
             this.getViewModel().getStore('pgpkeys').load();

@@ -7,7 +7,10 @@ Ext.define('Tualo.routes.OnlineVote',{
         before: function ( action) {
             let ping = Ext.getApplication().sessionPing;
             if (ping.success===false) action.stop();
+
+            setTimeout(function(){
             action.resume();
+            },2000);
         }
     }
 });
