@@ -108,6 +108,11 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/wm_texts.ds'    => 'setup wm_texts.ds',
 
             'install/pgpkeys'    => 'setup pgpkeys',
+
+            'install/ballotbox_blockchain'    => 'setup ballotbox_blockchain',
+            'install/ballotbox'    => 'setup ballotbox',
+            'install/ballotbox_encrypted'    => 'setup ballotbox_encrypted',
+
             'install/pgpkeys.readtable'    => 'setup pgpkeys.readtable',
             'install/pgpkeys.ds'    => 'setup pgpkeys.ds',
             
