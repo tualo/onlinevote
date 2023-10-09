@@ -139,6 +139,7 @@ class InstallMainSQLCommandline implements ICommandline{
             
             'install/view_website_candidates'    => 'setup view_website_candidates',
 
+            'install/bp_row.and.column.data'    => 'setup bp_row.and.column.data',
         ];
         
 
