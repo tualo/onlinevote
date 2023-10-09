@@ -93,7 +93,9 @@ class SyncRemote implements IRoute
                     $table = DSTable::instance($table_row['table_name']);
                     $table->insert($remote_data[$table_row['table_name']]['data']);
                 }
+                $db->direct("update stimmzettel set farbe='rgb(101,172,101)' where farbe is null");
                 $db->commit();
+
 
                 TualoApplication::result('success', true);
                 
