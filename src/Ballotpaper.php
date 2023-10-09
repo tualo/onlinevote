@@ -86,7 +86,8 @@ class Ballotpaper {
     public function setConfiguration(array $config,array $configgroups):void{
         $candidates = [];
         foreach($configgroups as &$group){ 
-            $candidates+=$group['candidates'];
+            if (!isset($group['candidates'])) $group['candidates']=[];
+            $candidates[]=$group['candidates'];
             $l=[];
             foreach($group['candidates'] as $candidate) $l[]=$candidate['id'];
             $group['candidates_by_id']=$l;

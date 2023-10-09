@@ -16,4 +16,5 @@ INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('sti
 INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('stimmzettel_stimmzettel_fusstexte', 6, null);
 INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('kandidaten', 7, null);
 INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('ds_files', 8, null);
-INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('kandidaten_bilder', 9, null);
+INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('kandidaten_bilder_typen', 9, null);
+INSERT IGNORE INTO wm_sync_tables (table_name, position, last_sync) VALUES ('kandidaten_bilder', 10, null);
