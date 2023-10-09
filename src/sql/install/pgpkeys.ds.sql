@@ -1,6 +1,6 @@
 DELIMITER;
 
-INSERT INTO
+REPLACE INTO
     `ds` (
         `table_name`,
         `title`,
@@ -69,107 +69,9 @@ VALUES
         100,
         'Tualo.DataSets.ListView',
         1
-    ) ON DUPLICATE KEY
-UPDATE
-    title =
-VALUES
-(title),
-    reorderfield =
-VALUES
-(reorderfield),
-    use_history =
-VALUES
-(use_history),
-    searchfield =
-VALUES
-(searchfield),
-    displayfield =
-VALUES
-(displayfield),
-    sortfield =
-VALUES
-(sortfield),
-    searchany =
-VALUES
-(searchany),
-    hint =
-VALUES
-(hint),
-    overview_tpl =
-VALUES
-(overview_tpl),
-    sync_table =
-VALUES
-(sync_table),
-    writetable =
-VALUES
-(writetable),
-    globalsearch =
-VALUES
-(globalsearch),
-    listselectionmodel =
-VALUES
-(listselectionmodel),
-    sync_view =
-VALUES
-(sync_view),
-    syncable =
-VALUES
-(syncable),
-    cssstyle =
-VALUES
-(cssstyle),
-    alternativeformxtype =
-VALUES
-(alternativeformxtype),
-    read_table =
-VALUES
-(read_table),
-    class_name =
-VALUES
-(class_name),
-    special_add_panel =
-VALUES
-(special_add_panel),
-    existsreal =
-VALUES
-(existsreal),
-    character_set_name =
-VALUES
-(character_set_name),
-    read_filter =
-VALUES
-(read_filter),
-    listxtypeprefix =
-VALUES
-(listxtypeprefix),
-    phpexporter =
-VALUES
-(phpexporter),
-    phpexporterfilename =
-VALUES
-(phpexporterfilename),
-    combined =
-VALUES
-(combined),
-    default_pagesize =
-VALUES
-(default_pagesize),
-    allowForm =
-VALUES
-(allowForm),
-    listviewbaseclass =
-VALUES
-(listviewbaseclass),
-    showactionbtn =
-VALUES
-(showactionbtn),
-    modelbaseclass =
-VALUES
-(modelbaseclass);
+    )  ;
 
-INSERT
-    IGNORE INTO `ds_column` (
+REPLACE INTO `ds_column` (
         `table_name`,
         `column_name`,
         `default_value`,

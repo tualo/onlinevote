@@ -108,6 +108,7 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/wm_texts.ds'    => 'setup wm_texts.ds',
 
             'install/pgpkeys'    => 'setup pgpkeys',
+            'install/pgpkeys.readtable'    => 'setup pgpkeys.readtable',
             'install/pgpkeys.ds'    => 'setup pgpkeys.ds',
             
 
