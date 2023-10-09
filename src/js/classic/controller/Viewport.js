@@ -261,9 +261,9 @@ Ext.define('Tualo.OnlineVote.controller.Viewport', {
         document.body.removeChild(element);
     },
 
-    defaultName: function(get){
+    defaultName: function(){
         try{
-            return fullname
+            return Ext.getApplication().sessionPing.fullname
         }catch(e){
             
         }
