@@ -118,6 +118,12 @@ class InstallMainSQLCommandline implements ICommandline{
             
             'install/wm_sync_tables'    => 'setup wm_sync_tables',
             'install/wm_sync_tables.ds'    => 'setup wm_sync_tables.ds',
+
+            'install/stimmzettel_fusstexte'    => 'setup stimmzettel_fusstexte',
+            'install/stimmzettel_fusstexte.ds'    => 'setup stimmzettel_fusstexte.ds',
+            
+            'install/stimmzettel_stimmzettel_fusstexte'    => 'setup stimmzettel_stimmzettel_fusstexte',
+            'install/stimmzettel_stimmzettel_fusstexte.ds'    => 'setup stimmzettel_stimmzettel_fusstexte.ds',
             
         ];
 
