@@ -1,4 +1,4 @@
-delimiter;
+delimiter ; 
 
 CREATE OR REPLACE VIEW `view_readtable_pgpkeys_valid` AS
 select
