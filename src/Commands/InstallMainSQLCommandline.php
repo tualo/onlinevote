@@ -125,6 +125,14 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/stimmzettel_stimmzettel_fusstexte'    => 'setup stimmzettel_stimmzettel_fusstexte',
             'install/stimmzettel_stimmzettel_fusstexte.ds'    => 'setup stimmzettel_stimmzettel_fusstexte.ds',
             
+
+            'install/ds_files'    => 'setup ds_files',
+            'install/ds_files.ds'    => 'setup ds_files.ds',
+
+            
+            'install/ds_files_data'    => 'setup ds_files_data',
+            'install/ds_files_data.ds'    => 'setup ds_files_data.ds',
+
         ];
 
 
