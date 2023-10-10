@@ -23,6 +23,7 @@
         "tualo/cms": "*",
         "tualo/bsc": "*",
         "tualo/tualojs": "*",
+        "tualo/ds": "*",
         "tualo/monacoeditor": "*",
         "tualo/bootstrap": "*",
         "michelf/php-markdown": "*"
