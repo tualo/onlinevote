@@ -22,6 +22,9 @@
         "tualo/tualopgp": "*",
         "tualo/cms": "*",
         "tualo/bsc": "*",
+        "tualo/tualojs": "*",
+        "tualo/monacoeditor": "*",
+        "tualo/bootstrap": "*",
         "michelf/php-markdown": "*"
     }
 }
