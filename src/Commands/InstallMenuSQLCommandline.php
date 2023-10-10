@@ -43,7 +43,7 @@ class InstallMenuSQLCommandline implements ICommandline{
 
     public static function run(Args $args){
         $files = [
-            'CMS.menu' => 'setup CMS.menu'
+            // 'CMS.menu' => 'setup CMS.menu'
         ];
 
         foreach($files as $file=>$msg){
