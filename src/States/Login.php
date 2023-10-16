@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
+use Tualo\Office\Basic\TualoApplication as App;
 
 class Login implements State {
 
@@ -73,6 +74,20 @@ class Login implements State {
             $password = $result['p2'];
             if (self::login($username,$password,$nextState)){
                 $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
+                $config = App::get('configuration');
+
+                if ( isset($config['onlinevote']) 
+                    && isset($config['onlinevote']['skipLegitimation']) 
+                    && $config['onlinevote']['skipLegitimation']=='1'
+                ){
+                    if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
+                        $stateMachine->voter()->selectBallotpaper(0);
+                        $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
+                    }else{
+                        $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
+                    }
+                }
+
                 // hier müsste die Legitimation kommen, ggf mit Bestätigung für verschiedenen Unternehmen
                 $stateMachine->logger('Login(State)')->debug( "login successfully from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
             }else{
