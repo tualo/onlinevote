@@ -1,4 +1,4 @@
-DELIMITER;
+DELIMITER ;
 
 REPLACE INTO
     `ds` (

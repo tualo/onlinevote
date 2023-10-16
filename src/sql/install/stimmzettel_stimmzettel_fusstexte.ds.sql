@@ -1,4 +1,4 @@
-DELIMITER;
+DELIMITER ;
 
 INSERT INTO
     `ds` (
