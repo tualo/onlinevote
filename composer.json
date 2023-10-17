@@ -26,6 +26,7 @@
         "tualo/ds": "*",
         "tualo/monacoeditor": "*",
         "tualo/bootstrap": "*",
+        "tualo/fontawesome": "*",
         "michelf/php-markdown": "*"
     }
 }
