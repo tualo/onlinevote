@@ -4,13 +4,26 @@ Ext.define('Tualo.routes.OnlineVote',{
         action: function( ){
             Ext.getApplication().addView('Tualo.OnlineVote.Viewport');
         },
-        before: function ( action) {
+        before: function ( action,cnt) {
+            Ext.require('Tualo.OnlineVote.Viewport',function(){
+                action.resume();
+            },this);
+            /*
             let ping = Ext.getApplication().sessionPing;
-            if (ping.success===false) action.stop();
-
-            setTimeout(function(){
-            action.resume();
-            },2000);
+            if (!cnt) cnt=1;
+            if (!ping){
+                if (cnt<10){
+                    Ext.defer(this.before,500,this,[action,++cnt]);
+                }else{
+                    action.stop();
+                }
+            }else{
+                if (ping.success===false){
+                    action.stop();
+                }else{
+                    
+                }
+            }*/
         }
     }
 });
