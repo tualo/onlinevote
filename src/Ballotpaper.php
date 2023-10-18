@@ -87,7 +87,8 @@ class Ballotpaper {
         $candidates = [];
         foreach($configgroups as &$group){ 
             // if (!isset($group['candidates'])) $group['candidates']=[];
-            $candidates=$group['candidates'];
+            //$candidates=$group['candidates'];
+            $candidates=array_merge($candidates,$group['candidates']);
             $l=[];
             foreach($group['candidates'] as $candidate) $l[]=$candidate['id'];
             $group['candidates_by_id']=$l;
