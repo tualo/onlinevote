@@ -17,3 +17,5 @@ INSERT IGNORE INTO bp_column_definition (column_field, column_name, pos, active,
 INSERT IGNORE INTO bp_column_definition (column_field, column_name, pos, active, htmltag) VALUES ('person2', 'column1', 2, 0, 'p');
 INSERT IGNORE INTO bp_column_definition (column_field, column_name, pos, active, htmltag) VALUES ('person_function', 'column1', 3, 1, 'p');
 INSERT IGNORE INTO bp_column_definition (column_field, column_name, pos, active, htmltag) VALUES ('picture', 'column-pic', 0, 1, 'img');
+
+call fill_ds('');
