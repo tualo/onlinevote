@@ -79,6 +79,7 @@ class Voter {
                             and stimmzettel =   {stimmzettel_id}
                             and completed   =   1
                     ', [
+                        
                         'voter_id' => $bp->getVoterId(),
                         'stimmzettel_id'=> $bp->getBallotpaperId()
                     ]);

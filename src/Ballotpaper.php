@@ -152,7 +152,6 @@ class Ballotpaper {
     }
 
     public function isChecked(int $var){
-        # code...
         return in_array($var,$this->filled);
     }
     
