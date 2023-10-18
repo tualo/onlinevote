@@ -50,6 +50,8 @@ class SetupHandshake implements IRoute{
                 $session = App::get('session');
                 $db = $session->getDB();
 
+                if (!isset($_SERVER['SCRIPT_URI'])) $_SERVER['SCRIPT_URI']= $_SERVER['REQUEST_URI'];
+                
                 $mesage_to_send = [
                     'domain'    => $_SERVER['SERVER_NAME'],
                     'uri'       => substr($_SERVER['SCRIPT_URI'],0,-1*strlen('/onlinevote/setuphandshake')),
