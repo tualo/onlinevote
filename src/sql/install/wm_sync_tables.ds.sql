@@ -10,3 +10,16 @@ REPLACE INTO `ds_column_list_label` (`table_name`, `column_name`, `language`, `l
 REPLACE INTO `ds_column_form_label` (`table_name`, `column_name`, `language`, `label`, `xtype`, `field_path`, `position`, `hidden`, `active`, `allowempty`, `fieldgroup`, `flex`, `hint`) VALUES ('wm_sync_tables','last_sync','DE','letze Sync.','displaydatefield','Allgemein/Angaben',2,0,1,NULL,NULL,NULL,'\'\''),
 ('wm_sync_tables','position','DE','Position','displayfield','Allgemein/Angaben',1,0,1,NULL,NULL,NULL,'\'\''),
 ('wm_sync_tables','table_name','DE','Tabelle','combobox_ds_tabelle','Allgemein/Angaben',0,0,1,NULL,NULL,NULL,'\'\'');
+
+INSERT
+    IGNORE INTO `ds_access` (
+        `role`,
+        `table_name`,
+        `read`,
+        `write`,
+        `delete`,
+        `append`,
+        `existsreal`
+    )
+VALUES
+    ('administration', 'wm_sync_tables', 1, 1, 1, 1, 0);
