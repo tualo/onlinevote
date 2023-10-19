@@ -4,7 +4,7 @@ namespace Tualo\Office\OnlineVote\States;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\Basic\TualoApplication as App;
-
+use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailedException;
 class Login implements State {
 
     
@@ -92,6 +92,7 @@ class Login implements State {
                 $stateMachine->logger('Login(State)')->debug( "login successfully from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
             }else{
                 $stateMachine->logger('Login(State)')->warning( "login failed  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." " );
+                throw new VoterLoginFailedException('Laut RemoteSystem bereits gewählt');
             }
         }else{
             $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");

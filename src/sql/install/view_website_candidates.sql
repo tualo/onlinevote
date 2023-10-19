@@ -80,7 +80,7 @@ select
     ) AS `col2`,
 
     `kandidaten_bilder`.`file_id` AS `kandidaten_bild`,
-    `kandidaten_bilder`.`file_id` AS `picture`,
+    ifnull(`kandidaten_bilder`.`file_id`,'none') AS `picture`,
     
     `kandidaten`.`id` AS `id`,
     `kandidaten`.`stimmzettelgruppen` AS `stimmzettelgruppen`,

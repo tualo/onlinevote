@@ -8,6 +8,7 @@ use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
+use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailedException;
 
 
 use Tualo\Office\Basic\TualoApplication as App;
@@ -171,6 +172,10 @@ class Init {
         }catch(BallotPaperAllreadyVotedException $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\BallotPaperAllreadyVotedError' );
+            App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
+        }catch(VoterLoginFailedException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\VoterLoginFailed' );
             App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
