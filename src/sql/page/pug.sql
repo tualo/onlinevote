@@ -292,6 +292,6 @@ CWRpdi5jb2wgIXtjbXMubWFya2Rvd24oY21zLnR4dCgnYmFsbG90cGFwZXJfc2F2ZWQyJykpfQo=') )
 e2Ntcy5tYXJrZG93bihjbXMudHh0KCdjaG9vc2VfYmFsbG90cGFwZXJfc2F2ZWQnKSl9CgkJZGl2
 LnJvdwoJCQlkaXYuY29sICF7Y21zLm1hcmtkb3duKGNtcy50eHQoJ2Nob29zZV9iYWxsb3RwYXBl
 cl9zYXZlZDInKSl9Cg==') );
- insert ignore into ds_pug_templates (name,id,note,template) values ('page-section','page-section',from_base64('cGFnZS1zZWN0aW9u'),from_base64( 'ZGl2LmNvbnRhaW5lci1mbHVpZAogICAgZGl2LmNvbnRlbnQKICAgICAgICBkaXYucm93CiAgICAg
-ICAgICAgIGRpdi5jb2wKICAgICAgICAgICAgICAgIGgzICF7c2VjdGlvbi50aXRsZX0KICAgICAg
-ICAgICAgICAgIHAgIXtjbXMubWFya2Rvd24oc2VjdGlvbi5jb250ZW50KX0=') );
+ insert ignore into ds_pug_templates (name,id,note,template) values ('page-section','page-section',from_base64('cGFnZS1zZWN0aW9u'),from_base64( 'ZGl2LmNvbnRhaW5lci1mbHVpZAogICAgZGl2LmNvbnRhaW5lcgogICAgICAgIGRpdi5yb3cKICAg
+ICAgICAgICAgZGl2LmNvbAogICAgICAgICAgICAgICAgaDMgIXtzZWN0aW9uLnRpdGxlfQogICAg
+ICAgICAgICAgICAgcCAhe2Ntcy5tYXJrZG93bihzZWN0aW9uLmNvbnRlbnQpfQ==') );
