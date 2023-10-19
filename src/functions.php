@@ -4,7 +4,7 @@ require_once "Compiler.php";
 require_once "Checks/CheckEmpty.php";
 
 require_once "Commands/InstallMainSQLCommandline.php";
-require_once "Commands/InstallMenuSQLCommandline.php";
+require_once "Commands/InstallMenu.php";
 require_once "Commands/InstallPagePug.php";
 require_once "Commands/Import.php";
 

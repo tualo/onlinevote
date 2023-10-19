@@ -1,4 +1,5 @@
 DELIMITER ; 
+
 CREATE OR REPLACE VIEW `view_website_candidates` AS
 select
     concat(
@@ -77,7 +78,10 @@ select
             ''
         )
     ) AS `col2`,
+
     `kandidaten_bilder`.`file_id` AS `kandidaten_bild`,
+    `kandidaten_bilder`.`file_id` AS `picture`,
+    
     `kandidaten`.`id` AS `id`,
     `kandidaten`.`stimmzettelgruppen` AS `stimmzettelgruppen`,
     `kandidaten`.`barcode` AS `barcode`,
