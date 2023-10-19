@@ -1,4 +1,14 @@
 Ext.define('Tualo.routes.OnlineVote',{
+    statics: {
+        load: async function() {
+            return [
+                {
+                    name: 'Onlinewahl X',
+                    path: '#onlinevote'
+                }
+            ]
+        }
+    }, 
     url: 'onlinevote',
     handler: {
         action: function( ){
