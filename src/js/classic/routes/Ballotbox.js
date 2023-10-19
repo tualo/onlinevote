@@ -1,4 +1,4 @@
-Ext.define('Tualo.routes.Syncform',{
+Ext.define('Tualo.routes.Ballotbox',{
     statics: {
         load: async function() {
             return [
