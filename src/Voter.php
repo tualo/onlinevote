@@ -38,6 +38,11 @@ class Voter {
     
     private string $id = ""; // kombiniert kennung!
 
+
+    private string $requiredPhonePIN = "";
+    private string $phoneNumber = "";
+    
+
     private bool $loggedIn = false;
     private bool $groupedVote = false;
     // private array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
@@ -97,12 +102,30 @@ class Voter {
         if (isset($json['currentBallotpaper'])){
             $this->setCurrentBallotpaper( Ballotpaper::getInstanceFromJSON($json['currentBallotpaper']) );
         }
+
+
+        $this->requiredPhonePIN = isset($json['requiredPhonePIN'])?$json['requiredPhonePIN']:'';
+        $this->phoneNumber = isset($json['phoneNumber'])?$json['phoneNumber']:'';
+        
     }
 
     public function getId():string{
         return $this->id;
     }
     
+
+    public function setPhonenumber(string $val):void{
+        $this->phoneNumber = $val;
+    }
+    public function getPhonenumber():string{
+        return $this->phoneNumber;
+    }
+    public function getRequiredPhonePIN():string{
+        return $this->requiredPhonePIN;
+    }
+    public function setRequiredPhonePIN(string $val):void{
+        $this->requiredPhonePIN = $val;
+    }
 
     
     public function validSession():bool{
