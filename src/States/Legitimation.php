@@ -24,15 +24,13 @@ class Legitimation implements State{
         ){ 
             $config = App::get('configuration');
             
-                if ( isset($config['onlinevote']) 
-                    && isset($config['onlinevote']['phonePINLegitimation']) 
-                    && $config['onlinevote']['phonePINLegitimation']=='1'
-                ){
+                if ( App::configuration('onlinevote','phonePINLegitimation','0') == '1' ){
                     $nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
                     if (isset($_REQUEST['phonenumber'])){
                         $pin = rand(100000,999999);
                         $stateMachine->voter()->setPhonenumber($_REQUEST['phonenumber']);
                         $stateMachine->voter()->setRequiredPhonePIN((string)$pin);
+                        if(!class_exists('\Tualo\Office\SMS\SMS')) throw new \Exception('tualo/sms module not installed!');
                         \Tualo\Office\SMS\SMS::sendMessage("Ihr Online-Wahl-Code lautet: {$pin}",$_REQUEST['phonenumber']);
                     }
                 }else{

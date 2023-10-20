@@ -76,10 +76,8 @@ class Login implements State {
                 $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
                 $config = App::get('configuration');
 
-                if ( isset($config['onlinevote']) 
-                    && isset($config['onlinevote']['skipLegitimation']) 
-                    && $config['onlinevote']['skipLegitimation']=='1'
-                ){
+                
+                if ( App::configuration('onlinevote','skipLegitimation','0') == '1' ){
                     if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
                         $stateMachine->voter()->selectBallotpaper(0);
                         $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
