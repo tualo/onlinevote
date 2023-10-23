@@ -90,8 +90,10 @@ class SyncRemote implements IRoute
                 $db->autocommit(false);
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files'){
-                        $db->direct('delete from `' . $table_row['table_name'] . '_data` where  file_id in (select file_id from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder") ');
+                        $db->direct('delete from `' . $table_row['table_name'] . '_data` where file_id in (select file_id from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder") ');
                         $db->direct('delete from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder"');
+                    }else if ($table_row['table_name'] == 'ds_files_data'){
+
                     }else{
                         $db->direct('delete from `' . $table_row['table_name'] . '`');
                     }
