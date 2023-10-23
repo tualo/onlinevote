@@ -89,7 +89,12 @@ class SyncRemote implements IRoute
 
                 $db->autocommit(false);
                 foreach ($table_list as $table_row) {
-                    $db->direct('delete from `' . $table_row['table_name'] . '`');
+                    if ($table_row['table_name'] == 'ds_files'){
+                        $db->direct('delete from `' . $table_row['table_name'] . '_data` where  file_id in (select file_id from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder") ');
+                        $db->direct('delete from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder"');
+                    }else{
+                        $db->direct('delete from `' . $table_row['table_name'] . '`');
+                    }
                     $table = DSTable::instance($table_row['table_name']);
                     $table->insert($remote_data[$table_row['table_name']]['data']);
                 }
