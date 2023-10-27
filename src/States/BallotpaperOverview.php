@@ -41,13 +41,11 @@ class BallotpaperOverview implements State{
         $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
         App::logger('BallotpaperOverview(State)')->debug(json_encode($_REQUEST) );
         if (
-            isset($_REQUEST['correct']) && 
-            $_REQUEST['correct']=1
+            isset($_REQUEST['correct']) && $_REQUEST['correct']==1
         ){
             $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
         }else  if (
-            isset($_REQUEST['save']) && 
-            $_REQUEST['save']=1
+            isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
             App::logger('BallotpaperOverview(State)')->debug('here');
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
