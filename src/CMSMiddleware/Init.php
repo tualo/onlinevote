@@ -214,7 +214,7 @@ class Init {
             
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\Error' );
             App::logger('OnlineVote')->error($e->getMessage());
         }
         App::logger('OnlineVote')->debug(__LINE__);
