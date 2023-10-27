@@ -104,6 +104,9 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/bp_column_definition'    => 'setup bp_column_definition',
             'install/bp_column_definition.ds'    => 'setup bp_column_definition.ds',
 
+            'install/view_bp_fields'    => 'setup view_bp_fields',
+            'install/view_bp_fields.ds'    => 'setup view_bp_fields.ds',
+
             'install/wm_texts'    => 'setup wm_texts',
             'install/wm_texts.ds'    => 'setup wm_texts.ds',
 
