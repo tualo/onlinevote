@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Tualo\Office\OnlineVote\States;
+namespace Tualo\Office\OnlineVote\States\failures;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
 
-class BlockedUserError implements State{
+class BlockedUser implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();

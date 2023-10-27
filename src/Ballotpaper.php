@@ -35,7 +35,9 @@ class Ballotpaper {
     public static function getInstanceFromJSON($json):Ballotpaper {
         $instance = new self();
         foreach(self::$required_attributes as $key){
-            if (!isset($json[$key])) throw new \Exception("attribute {$key} is missed");
+            if (!isset($json[$key])){ 
+                throw new \Exception("attribute {$key} is missed");
+            }
         }
         $instance->setVoterId(intval($json['voter_id']));
         $instance->setBallotpaperId(intval($json['ballotpaper_id']));
@@ -161,8 +163,14 @@ class Ballotpaper {
 
         App::logger('Ballotpaper')->debug(  json_encode($candidates) );
         foreach( $candidates as $candidate){
-            if (!isset($this->hashMap[$candidate])){ App::logger('Ballotpaper')->error( "candidate not found" );  throw new \Exception("candidate not found"); }
-            if (in_array($this->hashMap[$candidate],$this->filled)){ App::logger('Ballotpaper')->error( "candidate allready in list" );  throw new \Exception("candidate allready in list");}
+            if (!isset($this->hashMap[$candidate])){ 
+                App::logger('Ballotpaper')->error( "candidate not found" );  
+                throw new \Exception("candidate not found"); 
+            }
+            if (in_array($this->hashMap[$candidate],$this->filled)){ 
+                App::logger('Ballotpaper')->error( "candidate allready in list" );  
+                throw new \Exception("candidate allready in list");
+            }
             $this->filled[]=intval($this->hashMap[$candidate]);
             App::logger('Ballotpaper')->debug(  json_encode($this->filled) );
         }
@@ -250,10 +258,12 @@ class Ballotpaper {
             App::logger('Ballotpaper(function save)')->info('Laut RemoteSystem bereits gewählt'.$this->getVoterId());
             throw new BallotPaperAllreadyVotedException('Laut RemoteSystem bereits gewählt');
         }
+
         if ($stateMachine->voter()->validSession()===false){ 
             App::logger('Ballotpaper(function save)')->info('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)'.$db->last_sql);
             throw new SessionBallotpaperSaveException('Ihre Sitzung ist nicht mehr gültig. (neue Anmeldung vorhanden)');
         }
+        
         if ($this->checkLocal()===true){ 
             $txt = 'Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.'.((string)$this->getBallotpaperId()).'|0'.'##'.$this->getVoterId();
             App::logger('Ballotpaper(function save)')->debug($txt );

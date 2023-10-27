@@ -8,8 +8,12 @@ use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
-use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailedException;
-
+use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailed;
+use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOnline;
+use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOffline;
+use Tualo\Office\OnlineVote\Exceptions\BlockedUser;
+use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
+use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
 
 use Tualo\Office\Basic\TualoApplication as App;
 
@@ -153,37 +157,61 @@ class Init {
                 $state = new ($wmstate->getCurrentState());
                 $wmstate->setNextState( $state->transition($request,$result) );
             }
+
+            $pgpkeysCount = $db->singleValue('select count(*) c from pgpkeys',[],'c');
+            if ($pgpkeysCount==0) throw new \Exception('No PGP Keys found!');
+
         }catch(VoterUnsyncException $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
             App::logger('OnlineVote(VoterUnsyncException)')->error($e->getMessage());
         }catch(RemoteBallotpaperSaveException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
-            App::logger('OnlineVote(RemoteBallotpaperSaveException)')->error($e->getMessage());
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperSave' );
+        }catch(RemoteBallotpaperApiException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperApi' );
         }catch(SessionBallotpaperSaveException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\SessionBallotpaperSaveError' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SessionBallotpaperSave' );
             App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
         }catch(SessionInvalidException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\SessionInvalidError' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SessionInvalid' );
             App::logger('OnlineVote(SessionInvalidError)')->error($e->getMessage());
         }catch(BallotPaperAllreadyVotedException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\BallotPaperAllreadyVotedError' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BallotPaperAllreadyVoted' );
             App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
-        }catch(VoterLoginFailedException $e ){
+        }catch(VoterLoginFailed $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\VoterLoginFailed' );
-            App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginFailed' );
+            App::logger('OnlineVote(VoterLoginFailed)')->error($e->getMessage());
+        }catch(LoginAllreadyVotedOnline $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOnline' );
+            App::logger('OnlineVote(LoginAllreadyVotedOnline)')->error($e->getMessage());
+        }catch(LoginAllreadyVotedOffline $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOffline' );
+            App::logger('OnlineVote(LoginAllreadyVotedOffline)')->error($e->getMessage());
+        }catch(BlockedUser $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BlockedUser' );
+            App::logger('OnlineVote(BlockedUser)')->error($e->getMessage());
+        }catch(SystemBallotpaperSaveException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SystemBallotpaperSave' );
+            App::logger('OnlineVote(SystemBallotpaperSaveException)')->error($e->getMessage());
+            
+            
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
             App::logger('OnlineVote')->error($e->getMessage());
         }
         App::logger('OnlineVote')->debug(__LINE__);
-
+        
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);
 

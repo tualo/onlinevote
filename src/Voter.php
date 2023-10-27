@@ -7,11 +7,13 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\Ballotpaper;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\OnlineVote\Exceptions\VoterUnsyncException;
+use Tualo\Office\OnlineVote\Exceptions\SystemSettingPrivateKeyMissed;
 use Tualo\Office\TualoPGP\TualoApplicationPGP;
 
 class Voter {
     public static $deleteBlockedQuery = 'delete from username_count where block_until<now() and id = {username} ';
     public static $isBlockedQuery = 'select id from username_count where id = {username} and block_until>now() and num > {times}';
+    public static $countLoginFailures = 'insert into username_count (username,block_until,num) values ({username},DATE_ADD(now(),INTERVAL {minutes} MINUTE),1) on duplicate key update block_until=DATE_ADD(now(),INTERVAL {minutes} MINUTE),num=num+1';
 
     
 
@@ -102,8 +104,6 @@ class Voter {
         if (isset($json['currentBallotpaper'])){
             $this->setCurrentBallotpaper( Ballotpaper::getInstanceFromJSON($json['currentBallotpaper']) );
         }
-
-
         $this->requiredPhonePIN = isset($json['requiredPhonePIN'])?$json['requiredPhonePIN']:'';
         $this->phoneNumber = isset($json['phoneNumber'])?$json['phoneNumber']:'';
         
@@ -184,26 +184,53 @@ class Voter {
 
         App::logger('Voter(login)')->info( json_encode($record) );
         if ($record!==false){
-
             $this->fromJSON($record);
-            if (count($this->available_ballotpapers)==0) return 'allready-voted';
+            // todo: check if it is ok to say allready-voted before login and password check
+            if (count($this->available_ballotpapers)==0){ 
+                $stateMachine = WMStateMachine::getInstance();
+                $db = $stateMachine->db();
+    
+                $voterVotedOnline = $db->singleRow('
+                    select
+                        voter_id 
+                    from 
+                        voters 
+                    where 
+                        voter_id        =   {voter_id}
+                        and completed   =   1
+                ', [
+                    'voter_id' => $this->getId()
+                ]);
+                if ($voterVotedOnline===false){ 
+                    return 'allready-voted-offline';
+                }else{
+                    return 'allready-voted-online';
+                }
+            }
             if (crypt($password, $record['pwhash']) == $record['pwhash']) {
                 $this->loggedIn = true;
                 $this->registerSession();
                 return 'ok';
             }
         }
+
+        $db = WMStateMachine::getInstance()->db();
+        $block_minutes = App::configuration('onlinevote','block_minutes',3);
+        $db->direct(Voter::$countLoginFailures,['username'=>$username,'minutes'=>$block_minutes]);
+        
         return 'error';
     }
+    
     public function loginGetCredentials($username):mixed{
         try{
             $stateMachine = WMStateMachine::getInstance();
             $db = $stateMachine->db();
-            $privatekey = $db->singleValue("select property FROM system_settings WHERE system_settings_id = 'erp/privatekey'",[],'property');
-            if ($privatekey===false) throw new \Exception("system_settings private key is missed");
 
             $record=false;
             if ($_SESSION['api']==1){
+                $privatekey = $db->singleValue("select property FROM system_settings WHERE system_settings_id = 'erp/privatekey'",[],'property');
+                if ($privatekey===false) throw new SystemSettingPrivateKeyMissed("system_settings private key is missed");
+
                 $url = $_SESSION['api_url'].'papervote/get';
                 $record = APIRequestHelper::query($url,[
                     'username' => $username,
@@ -214,6 +241,7 @@ class Voter {
                 // $record = json_decode($db->singleValue('select voterCredential({username}) u',['username'=>$username],'u'),true);
                 $record = false;
             }
+
             if ($record===false){
                 return false;
             }else if ($record['success']==false){
@@ -234,23 +262,15 @@ class Voter {
         return $this->groupedVote;
     }
 
-
     public function isBlocked($username):bool{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         $config = $stateMachine->config();
-
-        $times = 2;
-        if (
-            isset($config['onlinevote']) && 
-            isset($config['onlinevote']['allowed_failures'])
-        ) $times = intval($config['onlinevote']['allowed_failures']);
-
+        $times = App::configuration('onlinevote','allowed_failures',2);
         $db->direct(Voter::$deleteBlockedQuery,['username'=>$username]);
         if (
             $db->singleRow(Voter::$isBlockedQuery,['username'=>$username,'times'=>$times])!==false
         ){
-            
             return true;
         }
         return false;
