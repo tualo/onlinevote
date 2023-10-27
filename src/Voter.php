@@ -13,7 +13,7 @@ use Tualo\Office\TualoPGP\TualoApplicationPGP;
 class Voter {
     public static $deleteBlockedQuery = 'delete from username_count where block_until<now() and id = {username} ';
     public static $isBlockedQuery = 'select id from username_count where id = {username} and block_until>now() and num > {times}';
-    public static $countLoginFailures = 'insert into username_count (username,block_until,num) values ({username},DATE_ADD(now(),INTERVAL {minutes} MINUTE),1) on duplicate key update block_until=DATE_ADD(now(),INTERVAL {minutes} MINUTE),num=num+1';
+    public static $countLoginFailures = 'insert into username_count (id,block_until,num) values ({username},DATE_ADD(now(),INTERVAL {minutes} MINUTE),1) on duplicate key update block_until=DATE_ADD(now(),INTERVAL {minutes} MINUTE),num=num+1';
 
     
 

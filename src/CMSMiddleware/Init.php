@@ -165,6 +165,8 @@ class Init {
 
 
             $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1',array(),'');
+            if ($wm_wahlschein_register==false) throw new \Exception('No wm_loginpage_settings found!');
+            
             $current = date('Y-m-d H:i:s',time());
             if ($wm_wahlschein_register['starttime']>$current){
                 throw new VotingNotStarted();

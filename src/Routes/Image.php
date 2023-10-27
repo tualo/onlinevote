@@ -17,7 +17,7 @@ class Image implements IRoute{
             $image_error = $image->getError();
             if ($image_error!=''){
                 $image = DSFiles::instance('tualocms_bilder');
-                $imagedata = $image->getBase64('name','sample-male',true);
+                $imagedata = $image->getBase64('titel','sample-male',true);
                 $image_error = $image->getError();
                 if ($image_error!=''){
                     throw new \Exception($image_error);
