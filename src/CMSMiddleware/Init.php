@@ -167,7 +167,6 @@ class Init {
             $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1',array(),'');
             $current = date('Y-m-d H:i:s',time());
             if ($wm_wahlschein_register['starttime']>$current){
-                $result['wm_state'] = 'notstarted';
                 throw new VotingNotStarted();
             }else if ($wm_wahlschein_register['stoptime']<$current){
                 throw new VotingStopped();
