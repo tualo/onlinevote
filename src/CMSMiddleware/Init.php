@@ -164,7 +164,7 @@ class Init {
 
         }catch(VoterUnsyncException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\Error' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\Error' );
             App::logger('OnlineVote(VoterUnsyncException)')->error($e->getMessage());
         }catch(RemoteBallotpaperSaveException $e ){
             $result['errorMessage'] = $e->getMessage();
