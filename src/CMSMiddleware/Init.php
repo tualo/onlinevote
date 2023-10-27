@@ -15,6 +15,10 @@ use Tualo\Office\OnlineVote\Exceptions\BlockedUser;
 use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
 use Tualo\Office\OnlineVote\Exceptions\PGPKeyMissed;
+use Tualo\Office\OnlineVote\Exceptions\VotingNotStarted;
+use Tualo\Office\OnlineVote\Exceptions\VotingStopped;
+use Tualo\Office\OnlineVote\Exceptions\VotingInterrupted;
+
 
 use Tualo\Office\Basic\TualoApplication as App;
 
@@ -159,6 +163,18 @@ class Init {
                 $wmstate->setNextState( $state->transition($request,$result) );
             }
 
+
+            $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1',array(),'');
+            $current = date('Y-m-d H:i:s',time());
+            if ($wm_wahlschein_register['starttime']>$current){
+                $result['wm_state'] = 'notstarted';
+                throw new VotingNotStarted();
+            }else if ($wm_wahlschein_register['stoptime']<$current){
+                throw new VotingStopped();
+            }else if ($wm_wahlschein_register['interrupted']==1){ 
+                throw new VotingInterrupted();
+            }
+
             $pgpkeysCount = $db->singleValue('select count(*) c from pgpkeys',[],'c');
             if ($pgpkeysCount==0) throw new PGPKeyMissed('No PGP Keys found!');
 
@@ -212,6 +228,24 @@ class Init {
             App::logger('OnlineVote(PGPKeyMissed)')->error($e->getMessage());
             
             
+        }catch(VotingInterrupted $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingInterrupted' );
+            App::logger('OnlineVote(VotingInterrupted)')->error($e->getMessage());
+            
+            
+        }catch(VotingStopped $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingStopped' );
+            App::logger('OnlineVote(VotingStopped)')->error($e->getMessage());
+            
+            
+        }catch(VotingNotStarted $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingNotStarted' );
+            App::logger('OnlineVote(VotingNotStarted)')->error($e->getMessage());
+            
+            
         }catch(\Exception $e ){
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\Error' );
@@ -245,7 +279,12 @@ class Init {
 
         $_SESSION['wmstatemachine'] = serialize($wmstate);
 
-        
+        if (
+            isset($_REQUEST['correct']) && $_REQUEST['correct']==1
+            && ($wmstate->getNextState() == 'Tualo\Office\OnlineVote\States\Ballotpaper')
+        ){
+            header('Location: /');
+        }
         
     }
 }
