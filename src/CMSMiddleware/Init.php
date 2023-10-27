@@ -14,7 +14,7 @@ use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOffline;
 use Tualo\Office\OnlineVote\Exceptions\BlockedUser;
 use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
-use Tualo\Office\OnlineVote\Exceptions\PHPKeyMissed;
+use Tualo\Office\OnlineVote\Exceptions\PGPKeyMissed;
 
 use Tualo\Office\Basic\TualoApplication as App;
 
@@ -160,7 +160,7 @@ class Init {
             }
 
             $pgpkeysCount = $db->singleValue('select count(*) c from pgpkeys',[],'c');
-            if ($pgpkeysCount==0) throw new PHPKeyMissed('No PGP Keys found!');
+            if ($pgpkeysCount==0) throw new PGPKeyMissed('No PGP Keys found!');
 
         }catch(VoterUnsyncException $e ){
             $result['errorMessage'] = $e->getMessage();
@@ -206,10 +206,10 @@ class Init {
             App::logger('OnlineVote(SystemBallotpaperSaveException)')->error($e->getMessage());
             
             
-        }catch(PHPKeyMissed $e ){
+        }catch(PGPKeyMissed $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\PHPKeyMissed' );
-            App::logger('OnlineVote(PHPKeyMissed)')->error($e->getMessage());
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\PGPKeyMissed' );
+            App::logger('OnlineVote(PGPKeyMissed)')->error($e->getMessage());
             
             
         }catch(\Exception $e ){

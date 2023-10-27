@@ -2,6 +2,6 @@
 declare(strict_types=1);
 
 namespace Tualo\Office\OnlineVote\Exceptions;
-class PHPKeyMissed extends \Exception{
+class PGPKeyMissed extends \Exception{
 
 }

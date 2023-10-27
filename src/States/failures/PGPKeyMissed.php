@@ -4,7 +4,7 @@ namespace Tualo\Office\OnlineVote\States\failures;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
 
-class PHPKeyMissed implements State{
+class PGPKeyMissed implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
