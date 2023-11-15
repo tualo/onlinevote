@@ -6,7 +6,7 @@ use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\Basic\TualoApplication as App;
 
-class PhonePINLegitimation implements State{
+class FillUserInformations implements State{
 
     public function prepare(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
@@ -17,24 +17,19 @@ class PhonePINLegitimation implements State{
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        $nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
+        /*$nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
         if (
             isset($_REQUEST['pin']) && 
             ($_REQUEST['pin']==$stateMachine->voter()->getRequiredPhonePIN())
         ){ 
-
-            if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
-                $nextState = 'Tualo\Office\OnlineVote\States\FillUserInformations';
+        */
+            if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
+                $stateMachine->voter()->selectBallotpaper(0);
+                $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
             }else{
-
-                if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
-                    $stateMachine->voter()->selectBallotpaper(0);
-                    $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
-                }else{
-                    $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
-                }
+                $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
             }
-        } 
+        // } 
         return $nextState;
     }
 }

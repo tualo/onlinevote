@@ -33,9 +33,6 @@ class Legitimation implements State{
                         if(!class_exists('\Tualo\Office\SMS\SMS')) throw new \Exception('tualo/sms module not installed!');
                         \Tualo\Office\SMS\SMS::sendMessage("Ihr Online-Wahl-Code lautet: {$pin}",$_REQUEST['phonenumber']);
                     }
-                }else if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
-                    
-                        
                 }else{
 
             
