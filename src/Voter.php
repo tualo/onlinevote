@@ -32,6 +32,7 @@ class Voter {
     
     protected array $available_ballotpapers = [];
     protected array $possible_ballotpapers = [];
+    protected array $signing_persons = [];
     protected Ballotpaper $currentBallotpaper;
 
 
@@ -63,6 +64,12 @@ class Voter {
         $this->id = isset($json['id'])?$json['id']:'';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])){
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'],true);
+        }
+
+        
+        if (isset($json['wahlzeichnungsberechtigter']) && is_string($json['wahlzeichnungsberechtigter'])){
+            $json['wahlzeichnungsberechtigter'] = json_decode($json['wahlzeichnungsberechtigter'],true);
+            $this->signing_persons = $json['wahlzeichnungsberechtigter'];
         }
 
         if (isset($json['possible_ballotpapers']) && is_array($json['possible_ballotpapers']) ){
