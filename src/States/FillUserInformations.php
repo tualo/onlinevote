@@ -17,19 +17,19 @@ class FillUserInformations implements State{
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        /*$nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
+        $nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
         if (
-            isset($_REQUEST['pin']) && 
-            ($_REQUEST['pin']==$stateMachine->voter()->getRequiredPhonePIN())
+            isset($_REQUEST['name']) && 
+            ($_REQUEST['name']!="")
         ){ 
-        */
+        
             if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
                 $stateMachine->voter()->selectBallotpaper(0);
                 $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
             }else{
                 $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
             }
-        // } 
+        } 
         return $nextState;
     }
 }
