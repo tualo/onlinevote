@@ -67,7 +67,7 @@ class Voter {
         }
 
         
-        if (isset($json['wahlzeichnungsberechtigter']) && is_string($json['wahlzeichnungsberechtigter'])){
+        if (isset($json['wahlzeichnungsberechtigter']) ){
             $json['wahlzeichnungsberechtigter'] = json_decode($json['wahlzeichnungsberechtigter'],true);
             $this->signing_persons = $json['wahlzeichnungsberechtigter'];
         }
