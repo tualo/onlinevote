@@ -68,7 +68,7 @@ class Voter {
 
         
         if (isset($json['wahlzeichnungsberechtigter']) ){
-            $json['wahlzeichnungsberechtigter'] = json_decode($json['wahlzeichnungsberechtigter'],true);
+            //$json['wahlzeichnungsberechtigter'] = json_decode($json['wahlzeichnungsberechtigter'],true);
             $this->signing_persons = $json['wahlzeichnungsberechtigter'];
         }
 
@@ -120,6 +120,9 @@ class Voter {
         return $this->id;
     }
     
+    public function getSigners():array{
+        return $this->signing_persons;
+    }
 
     public function setPhonenumber(string $val):void{
         $this->phoneNumber = $val;
