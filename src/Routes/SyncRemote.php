@@ -2,6 +2,7 @@
 
 namespace Tualo\Office\OnlineVote\Routes;
 
+use Exception;
 use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Tualo\Office\Basic\TualoApplication;
 use Tualo\Office\Basic\Route as BasicRoute;
@@ -101,8 +102,12 @@ class SyncRemote implements IRoute
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
                         foreach($remote_data[$table_row['table_name']]['data'] as $row){
-                            $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
-                            $db->direct($sql,$row);
+                            try{
+                                $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
+                                $db->direct($sql,$row);
+                            }catch(Exception $e){
+                                
+                            }
                         }
                     }else{
                         $table = DSTable::instance($table_row['table_name']);
