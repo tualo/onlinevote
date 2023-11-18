@@ -25,11 +25,12 @@ class Legitimation implements State{
             $config = App::get('configuration');
             
             if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
-                if (isset($_REQUEST['wzb']) && (is_int($_REQUEST['wzb']))){
+                if (isset($_REQUEST['wzb']) && (is_string($_REQUEST['wzb']))){
                     foreach($stateMachine->voter()->getSigners() as $signer){
                         if ($signer['id']==$_REQUEST['wzb']){
                             $_REQUEST['lastname']=$signer['nachname'];
                             $_REQUEST['firstname']=$signer['vorname'];
+                            $_REQUEST['confirmed_birthdate']=$_REQUEST['birthdate'];
                             $_REQUEST['birthdate']=$signer['geburtsdatum'];
                         }
                     }
