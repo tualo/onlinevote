@@ -119,7 +119,12 @@ class Voter {
         }
         $this->requiredPhonePIN = isset($json['requiredPhonePIN'])?$json['requiredPhonePIN']:'';
         $this->phoneNumber = isset($json['phoneNumber'])?$json['phoneNumber']:'';
-        
+
+        $this->firstname = isset($json['firstname'])?$json['firstname']:'';
+        $this->lastname = isset($json['lastname'])?$json['lastname']:'';
+        $this->birthdate = isset($json['birthdate'])?$json['birthdate']:'';
+        $this->confirmed_birthdate = isset($json['confirmed_birthdate'])?$json['confirmed_birthdate']:'-----';
+
     }
 
     public function getId():string{
