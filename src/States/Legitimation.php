@@ -25,16 +25,26 @@ class Legitimation implements State{
             $config = App::get('configuration');
             
             if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
-                if (isset($_REQUEST['lastname'])){
+                if (isset($_REQUEST['wzb']) && (is_int($_REQUEST['wzb']))){
+                    foreach($stateMachine->voter()->getSigners() as $signer){
+                        if ($signer['id']==$_REQUEST['wzb']){
+                            $_REQUEST['lastname']=$signer['nachname'];
+                            $_REQUEST['firstname']=$signer['vorname'];
+                            $_REQUEST['birthdate']=$signer['geburtsdatum'];
+                        }
+                    }
+                }
+
+                if (isset($_REQUEST['lastname']) && is_string($_REQUEST['lastname'])){
                     $stateMachine->voter()->setLastName($_REQUEST['lastname']);
                 }
-                if (isset($_REQUEST['firstname'])){
+                if (isset($_REQUEST['firstname']) && is_string($_REQUEST['firstname'])){
                     $stateMachine->voter()->setLastName($_REQUEST['firstname']);
                 }
-                if (isset($_REQUEST['birthdate'])){
+                if (isset($_REQUEST['birthdate']) && is_string($_REQUEST['birthdate'])){
                     $stateMachine->voter()->setBirthdate($_REQUEST['birthdate']);
                 }
-                if (isset($_REQUEST['confirmed_birthdate'])){
+                if (isset($_REQUEST['confirmed_birthdate']) && is_string($_REQUEST['confirmed_birthdate'])){
                     $stateMachine->voter()->setConfirmedBirthdate($_REQUEST['confirmed_birthdate']);
                 }
             }
