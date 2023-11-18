@@ -23,9 +23,6 @@ class PhonePINLegitimation implements State{
             ($_REQUEST['pin']==$stateMachine->voter()->getRequiredPhonePIN())
         ){ 
 
-            if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
-                $nextState = 'Tualo\Office\OnlineVote\States\FillUserInformations';
-            }else{
 
                 if (count(WMStateMachine::getInstance()->voter()->availableBallotpapers())==1){
                     $stateMachine->voter()->selectBallotpaper(0);
@@ -33,7 +30,6 @@ class PhonePINLegitimation implements State{
                 }else{
                     $nextState = 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
                 }
-            }
         } 
         return $nextState;
     }
