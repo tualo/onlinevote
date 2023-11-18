@@ -101,6 +101,15 @@ class SyncRemote implements IRoute
                 }
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
+                        
+                    }else{
+                        $table = DSTable::instance($table_row['table_name']);
+                        $table->insert($remote_data[$table_row['table_name']]['data']);
+                    }
+                }
+
+                foreach ($table_list as $table_row) {
+                    if ($table_row['table_name'] == 'ds_files_data'){
                         foreach($remote_data[$table_row['table_name']]['data'] as $row){
                             try{
                                 $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
@@ -109,11 +118,9 @@ class SyncRemote implements IRoute
                                 
                             }
                         }
-                    }else{
-                        $table = DSTable::instance($table_row['table_name']);
-                        $table->insert($remote_data[$table_row['table_name']]['data']);
                     }
                 }
+
                 $db->direct("update stimmzettel set farbe='rgb(101,172,101)' where farbe is null");
                 $db->commit();
 
