@@ -13,9 +13,10 @@ class Image implements IRoute{
 
 
             $image = DSFiles::instance('kandidaten_bilder');
-            $imagedata = $image->getBase64('kandidat',$matches['id'],true);
+            $imagedata = $image->getBase64('id',$matches['id'],true);
             $image_error = $image->getError();
             if ($image_error!=''){
+                
                 $image = DSFiles::instance('tualocms_bilder');
                 $imagedata = $image->getBase64('titel','sample-male',true);
                 $image_error = $image->getError();
