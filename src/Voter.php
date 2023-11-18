@@ -160,7 +160,7 @@ class Voter {
     public function getBirthdate():string{
         return $this->birthdate;
     }
-    public function comfirmBirthdate():bool{
+    public function comfirmedBirthdate():bool{
         return $this->confirmed_birthdate == $this->birthdate;
     }
 
