@@ -44,6 +44,12 @@ class Voter {
 
     private string $requiredPhonePIN = "";
     private string $phoneNumber = "";
+
+    
+    private string $firstname = "";
+    private string $lastname = "";
+    private string $birthdate = "";
+    private string $confirmed_birthdate = "";
     
 
     private bool $loggedIn = false;
@@ -130,6 +136,34 @@ class Voter {
     public function getPhonenumber():string{
         return $this->phoneNumber;
     }
+
+    public function setFirstName(string $val):void{
+        $this->firstname = $val;
+    }
+    public function getFirstName():string{
+        return $this->firstname;
+    }
+
+    public function setLastName(string $val):void{
+        $this->lastname = $val;
+    }
+    public function getLastName():string{
+        return $this->lastname;
+    }
+
+    public function setConfirmedBirthdate(string $val):void{
+        $this->confirmed_birthdate = $val;
+    }
+    public function setBirthdate(string $val):void{
+        $this->birthdate = $val;
+    }
+    public function getBirthdate():string{
+        return $this->birthdate;
+    }
+    public function comfirmBirthdate():bool{
+        return $this->confirmed_birthdate == $this->birthdate;
+    }
+
     public function getRequiredPhonePIN():string{
         return $this->requiredPhonePIN;
     }
