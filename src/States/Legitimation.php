@@ -30,8 +30,10 @@ class Legitimation implements State{
                         if ($signer['id']==$_REQUEST['wzb']){
                             $_REQUEST['lastname']=$signer['nachname'];
                             $_REQUEST['firstname']=$signer['vorname'];
-                            $_REQUEST['confirmed_birthdate']=$_REQUEST['birthdate'];
-                            $_REQUEST['birthdate']=$signer['geburtsdatum'];
+                            if ($signer['geburtsdatum']==$_REQUEST['birthdate']){
+                                $_REQUEST['confirmed_birthdate']=$_REQUEST['birthdate'];
+                            }
+                            // $_REQUEST['birthdate']=$signer['geburtsdatum'];
                         }
                     }
                 }
