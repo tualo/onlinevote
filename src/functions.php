@@ -2,6 +2,7 @@
 
 require_once "Compiler.php";
 require_once "Checks/CheckEmpty.php";
+require_once "Checks/Tables.php";
 
 require_once "Commands/InstallMainSQLCommandline.php";
 require_once "Commands/InstallMenu.php";

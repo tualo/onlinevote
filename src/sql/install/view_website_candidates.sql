@@ -5,7 +5,7 @@ select
     
 
     `kandidaten_bilder`.`file_id` AS `kandidaten_bild`,
-    ifnull(`kandidaten_bilder`.`file_id`,'none') AS `picture`,
+    ifnull(`kandidaten_bilder`.`id`,'none') AS `picture`,
     `kandidaten`.*
 from
     `kandidaten`
