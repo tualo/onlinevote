@@ -25,7 +25,7 @@ select
   `ds_files`.`type` AS `__file_type`,
   `ds_files`.`file_id` AS `__file_id`,
   `ds_files`.`hash` AS `hash`,
-  '' AS `__file_data`
+  `ds_files`.`data` AS `__file_data`
 from
   (
     `kandidaten_bilder`
