@@ -108,15 +108,16 @@ class Ballotpaper {
     }
 
     public function valid(){
-        $this->is_valid=false;;
-        foreach($this->configgroups as &$group) $group['__checkcount']=0;
+        $this->is_valid=false;
+        foreach($this->configgroups as $index => $group) $this->configgroups[$index]['__checkcount']=0;
+
         foreach($this->filled as $check){
             if (!isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
                 return false;
             }
-            foreach($this->configgroups as &$group){
-                if (in_array($check,$group['candidates_by_id'])) $group['__checkcount']++;
+            foreach($this->configgroups as $index => $group){
+                if (in_array($check,$this->configgroups[$index]['candidates_by_id'])) $this->configgroups[$index]['__checkcount']++;
             }
         }
         $this->is_valid = true;
@@ -282,9 +283,9 @@ class Ballotpaper {
                 $hash['ballotpaper']    =   TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled)),'MESSAGE');
                 $hash['stimmzettel_id'] =   $this->getBallotpaperId();
                 $hash['stimmzettel']    =   $this->getBallotpaperId().'|0';
-                $hash['isvalid']        =   $this->is_valid?'1':'0';
+                $hash['isvalid']        =   $this->valid()?'1':'0';
                 $hash['token']          =   $this->getSecretToken();
-                $hash['voter_id']          =   $this->getVoterId();
+                $hash['voter_id']       =   $this->getVoterId();
 
                 $db->direct('
                 insert into ballotbox 
