@@ -61,6 +61,7 @@ class BallotpaperOverview implements State{
                     $stateMachine->voter()->getGroupedVote() &&
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
+                    set_time_limit(600);
                     $hashMap = $stateMachine->voter()->getCurrentBallotpaper()->getHashMap();
                     $idMap = $stateMachine->voter()->getCurrentBallotpaper()->getIdMap();
 
@@ -71,8 +72,10 @@ class BallotpaperOverview implements State{
 
                     $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
                     App::logger('BallotpaperOverview(State)')->debug('setCurrentBallotpaper to '.$stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId());
+                    
                     $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($config  ,$configgroups);
                     $stateMachine->voter()->getCurrentBallotpaper()->setVotesIntern($hashMap,$idMap,$storedVotes);
+
                     App::logger('BallotpaperOverview(State)')->debug('setVotesIntern to '.print_r($storedVotes,true));
 
                     return $this->transition($request,$result);
