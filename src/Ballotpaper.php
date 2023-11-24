@@ -112,7 +112,7 @@ class Ballotpaper {
         foreach($this->configgroups as $index => $group) $this->configgroups[$index]['__checkcount']=0;
 
         foreach($this->filled as $check){
-            if (!isset($this->idMap[$check])){
+            if (!isset($this->idMap) || !isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
                 return false;
             }

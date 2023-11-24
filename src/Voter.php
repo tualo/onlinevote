@@ -349,7 +349,7 @@ class Voter {
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         $colors = $db->directMap('select id,farbe from view_website_ballotpaper',[],'id','farbe');
-        foreach($this->available_ballotpapers as $bp){
+        foreach($this->available_ballotpapers as $index => $bp){
             if (isset($list[$bp->getBallotpaperId()])){
                 $list[$bp->getBallotpaperId()]['count']++;
             }else{
@@ -357,6 +357,7 @@ class Voter {
                     'id'=> $bp->getBallotpaperId(),
                     'color'=>$colors[$bp->getBallotpaperId()],
                     'name'=>$bp->getBallotpaperName(),
+                    'index'=>$index,
                     'count'=>1
                 ];
             }
