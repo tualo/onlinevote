@@ -110,7 +110,9 @@ class Ballotpaper {
     public function valid(){
         $this->is_valid=false;
         foreach($this->configgroups as $index => $group) $this->configgroups[$index]['__checkcount']=0;
-
+        App::logger('Ballotpaper')->debug( '+++++ filled'.print_r($this->filled,true) );
+        App::logger('Ballotpaper')->debug( '+++++ idMap'.print_r($this->idMap,true) );
+        App::logger('Ballotpaper')->debug( '+++++ hashMap'.print_r($this->hashMap,true) );
         foreach($this->filled as $check){
             if (!isset($this->idMap) || !isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
