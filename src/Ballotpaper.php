@@ -114,6 +114,7 @@ class Ballotpaper {
         App::logger('Ballotpaper')->debug( '+++++ idMap'.print_r($this->idMap,true) );
         App::logger('Ballotpaper')->debug( '+++++ hashMap'.print_r($this->hashMap,true) );
         foreach($this->filled as $check){
+            App::logger('Ballotpaper')->debug( '+++++ check'.$check );
             if (!isset($this->idMap) || !isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
                 return false;
@@ -191,7 +192,7 @@ class Ballotpaper {
     public function setVotesIntern(array $hashmap,array $idmap, array $candidates){
         $this->idMap = $idmap;
         $this->hashMap = $hashmap;
-        $this->filled[]=$candidates;
+        $this->filled=$candidates;
     }
 
 
