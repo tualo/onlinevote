@@ -51,6 +51,7 @@ class BallotpaperOverview implements State{
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
             $storedVotes = $stateMachine->voter()->getCurrentBallotpaper()->getVotes();
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
+
             $stateMachine->voter()->removeCurrentBallotpaper();
             if (count($stateMachine->voter()->availableBallotpapers())==0){
                 $stateMachine->voter(true);
@@ -60,11 +61,14 @@ class BallotpaperOverview implements State{
                     $stateMachine->voter()->getGroupedVote() &&
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
+                    $hashMap = $stateMachine->voter()->getCurrentBallotpaper()->getHashMap();
+                    $idMap = $stateMachine->voter()->getCurrentBallotpaper()->getIdMap();
+
                     App::logger('BallotpaperOverview(State)')->debug('getGroupedVote is true, '.count($stateMachine->voter()->availableBallotpapers($ballotpaperId)).' availableBallotpapers');
 
                     $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
                     App::logger('BallotpaperOverview(State)')->debug('setCurrentBallotpaper to '.$stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId());
-                    $stateMachine->voter()->getCurrentBallotpaper()->setVotesIntern($storedVotes);
+                    $stateMachine->voter()->getCurrentBallotpaper()->setVotesIntern($hashMap,$idMap,$storedVotes);
                     App::logger('BallotpaperOverview(State)')->debug('setVotesIntern to '.print_r($storedVotes,true));
 
                     return $this->transition($request,$result);

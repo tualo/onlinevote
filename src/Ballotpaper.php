@@ -180,7 +180,15 @@ class Ballotpaper {
     public function getVotes():array{
         return $this->filled;
     }
-    public function setVotesIntern(array $candidates){
+    public function getHashMap(): array{
+        return $this->hashMap;
+    }
+    public function getIdMap(): array{
+        return $this->idMap;
+    }
+    public function setVotesIntern(array $hashmap,array $idmap, array $candidates){
+        $this->idMap = $idmap;
+        $this->hashMap = $hashmap;
         $this->filled[]=$candidates;
     }
 
