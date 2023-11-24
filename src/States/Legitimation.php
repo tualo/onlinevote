@@ -22,7 +22,6 @@ class Legitimation implements State{
             isset($_REQUEST['legitimation_confirmed']) && 
             ($_REQUEST['legitimation_confirmed']==1)
         ){ 
-            $config = App::get('configuration');
             
             if ( App::configuration('onlinevote','extendedLegitimation','0') == '1' ){
                 if (isset($_REQUEST['wzb']) && (is_string($_REQUEST['wzb']))){

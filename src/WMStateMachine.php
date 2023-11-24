@@ -13,6 +13,8 @@ class WMStateMachine {
     public function db(){
         return App::get('session')->getDB();
     }
+    
+    // @deprecated
     public function config(){
         return App::get('configuration');
     }

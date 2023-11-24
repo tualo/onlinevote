@@ -314,7 +314,7 @@ class Voter {
     public function isBlocked($username):bool{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
-        $config = $stateMachine->config();
+
         $times = App::configuration('onlinevote','allowed_failures',2);
         $db->direct(Voter::$deleteBlockedQuery,['username'=>$username]);
         if (

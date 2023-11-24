@@ -139,9 +139,7 @@ class Init {
         App::timing(self::class.' '.__LINE__);
         InitApiUse::run($request,$result);
         App::timing(self::class.' '.__LINE__);
-        $config = App::get('configuration');
-        App::timing(self::class.' '.__LINE__);
-
+        
         
         self::$texts = $result['texts'] = $db->directMap(self::$textsSQL,[],'id','value_plain');
         App::timing(self::class.' '.__LINE__);
