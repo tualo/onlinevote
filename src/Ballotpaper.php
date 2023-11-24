@@ -85,15 +85,22 @@ class Ballotpaper {
         $this->setupHashMap();
     }
 
+    public function getConfiguration():array{
+        return $this->config;
+    }
+    public function getConfigurationGroups():array{
+        return $this->configgroups;
+    }
+    
     public function setConfiguration(array $config,array $configgroups):void{
         $candidates = [];
-        foreach($configgroups as &$group){ 
+        foreach($configgroups as $index=>$group){ 
             // if (!isset($group['candidates'])) $group['candidates']=[];
             //$candidates=$group['candidates'];
             $candidates=array_merge($candidates,$group['candidates']);
             $l=[];
             foreach($group['candidates'] as $candidate) $l[]=$candidate['id'];
-            $group['candidates_by_id']=$l;
+            $configgroups[$index]['candidates_by_id']=$l;
         }
         $this->config=$config;
         $this->configgroups=$configgroups;
@@ -132,6 +139,7 @@ class Ballotpaper {
             }
             $c+=$group['__checkcount'];
         }
+
         if ($c > $this->config['sitze']) {
             App::logger('Ballotpaper')->info( 'zu viele Stimmen auf dem Stimmzettel' );
             $this->is_valid = false;
