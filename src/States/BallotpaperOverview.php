@@ -47,7 +47,7 @@ class BallotpaperOverview implements State{
         }else  if (
             isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
-            App::logger('BallotpaperOverview(State)')->debug('here');
+            App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
             $storedVotes = $stateMachine->voter()->getCurrentBallotpaper()->getVotes();
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
@@ -60,8 +60,12 @@ class BallotpaperOverview implements State{
                     $stateMachine->voter()->getGroupedVote() &&
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
+                    App::logger('BallotpaperOverview(State)')->debug('getGroupedVote is true, '.count($stateMachine->voter()->availableBallotpapers($ballotpaperId)).' availableBallotpapers');
+
                     $stateMachine->voter()->setCurrentBallotpaper($stateMachine->voter()->availableBallotpapers($ballotpaperId)[0]);
+                    App::logger('BallotpaperOverview(State)')->debug('setCurrentBallotpaper to '.$stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId());
                     $stateMachine->voter()->getCurrentBallotpaper()->setVotesIntern($storedVotes);
+                    App::logger('BallotpaperOverview(State)')->debug('setVotesIntern to '.print_r($storedVotes,true));
 
                     return $this->transition($request,$result);
                 }
