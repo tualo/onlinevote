@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Tualo\Office\OnlineVote\States;
+use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
@@ -30,6 +31,7 @@ class ChooseBallotpaper implements State{
             ( $stateMachine->voter()->selectBallotpaper(intval($_REQUEST['ballotpaperIndex'])) )
         ){
             if (isset($_REQUEST['grouped'])&&($_REQUEST['grouped']==1)) $stateMachine->voter()->setGroupedVote(true);
+            if ( App::configuration('onlinevote','forceGrouped','0') == '1' ) $stateMachine->voter()->setGroupedVote(true);
             return 'Tualo\Office\OnlineVote\States\Ballotpaper';
         }
         return 'Tualo\Office\OnlineVote\States\ChooseBallotpaper';
