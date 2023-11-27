@@ -17,6 +17,7 @@ use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
 use Tualo\Office\OnlineVote\Exceptions\PGPKeyMissed;
 use Tualo\Office\OnlineVote\Exceptions\VotingNotStarted;
 use Tualo\Office\OnlineVote\Exceptions\VotingStopped;
+use Tualo\Office\OnlineVote\Exceptions\InvalidVote;
 use Tualo\Office\OnlineVote\Exceptions\VotingInterrupted;
 
 
@@ -243,6 +244,12 @@ class Init {
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingNotStarted' );
             App::logger('OnlineVote(VotingNotStarted)')->error($e->getMessage());
+            
+            
+        }catch(InvalidVote $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\InvalidVote' );
+            App::logger('OnlineVote(InvalidVote)')->error($e->getMessage());
             
             
         }catch(\Exception $e ){

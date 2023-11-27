@@ -12,6 +12,7 @@ use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 use Tualo\Office\OnlineVote\Exceptions\SessionBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
+use Tualo\Office\OnlineVote\Exceptions\InvalidVote;
 
 class Ballotpaper {
     private int $voter_id;
@@ -305,6 +306,8 @@ class Ballotpaper {
                 $hash['isvalid']        =   $this->valid()?'1':'0';
                 $hash['token']          =   $this->getSecretToken();
                 $hash['voter_id']       =   $this->getVoterId();
+
+                if ( App::configuration('onlinevote','errorOnInvalidVote','0') == '1' ) throw new InvalidVote("Ungültige Stimme");
 
                 $db->direct('
                 insert into ballotbox 
