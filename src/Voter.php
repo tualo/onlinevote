@@ -96,7 +96,7 @@ class Voter {
                             voters 
                         where 
                             voter_id        =   {voter_id}
-                            and stimmzettel =   {stimmzettel_id}
+                            and (stimmzettel =   {stimmzettel_id} or stimmzettel = concat({stimmzettel_id},"|0"))
                             and completed   =   1
                     ', [
                         
