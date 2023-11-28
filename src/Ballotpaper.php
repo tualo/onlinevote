@@ -118,11 +118,13 @@ class Ballotpaper {
     public function valid(){
         $this->is_valid=false;
         foreach($this->configgroups as $index => $group) $this->configgroups[$index]['__checkcount']=0;
-        App::logger('Ballotpaper')->debug( '+++++ filled'.print_r($this->filled,true) );
-        App::logger('Ballotpaper')->debug( '+++++ idMap'.print_r($this->idMap,true) );
-        App::logger('Ballotpaper')->debug( '+++++ hashMap'.print_r($this->hashMap,true) );
+        if( App::configuration('logger-options','Ballotpaper','0')=='1'){
+            App::logger('Ballotpaper')->debug( '+++++ filled'.print_r($this->filled,true) );
+            App::logger('Ballotpaper')->debug( '+++++ idMap'.print_r($this->idMap,true) );
+            App::logger('Ballotpaper')->debug( '+++++ hashMap'.print_r($this->hashMap,true) );
+        }
         foreach($this->filled as $check){
-            App::logger('Ballotpaper')->debug( '+++++ check'.$check );
+            if( App::configuration('logger-options','Ballotpaper','0')=='1') App::logger('Ballotpaper')->debug( '+++++ check'.$check );
             if (!isset($this->idMap) || !isset($this->idMap[$check])){
                 App::logger('Ballotpaper')->warning( "candidate not found ($check)" );
                 return false;
@@ -174,7 +176,7 @@ class Ballotpaper {
     public function setVotes(array $candidates){
         $this->filled=[];
 
-        App::logger('Ballotpaper')->debug(  json_encode($candidates) );
+        if( App::configuration('logger-options','Ballotpaper','0')=='1') App::logger('Ballotpaper')->debug(  json_encode($candidates) );
         foreach( $candidates as $candidate){
             if (!isset($this->hashMap[$candidate])){ 
                 App::logger('Ballotpaper')->error( "candidate not found" );  
@@ -185,7 +187,7 @@ class Ballotpaper {
                 throw new \Exception("candidate allready in list");
             }
             $this->filled[]=intval($this->hashMap[$candidate]);
-            App::logger('Ballotpaper')->debug(  json_encode($this->filled) );
+            if( App::configuration('logger-options','Ballotpaper','0')=='1') App::logger('Ballotpaper')->debug(  json_encode($this->filled) );
         }
     }
 
@@ -287,8 +289,8 @@ class Ballotpaper {
         
         if ($this->checkLocal()===true){ 
             $txt = 'Die Sitzung ist nicht mehr gültig, Sie haben bereits bereits gewählt.'.((string)$this->getBallotpaperId()).'|0'.'##'.$this->getVoterId();
-            App::logger('Ballotpaper(function save)')->debug($txt );
-            App::logger('Ballotpaper(function save)')->debug( $db->last_sql );
+            App::logger('Ballotpaper(function save)')->error($txt );
+            if( App::configuration('logger-options','Ballotpaper','0')=='1') App::logger('Ballotpaper(function save)')->debug( $db->last_sql );
             throw new BallotPaperAllreadyVotedException($txt );
         }
 
