@@ -93,7 +93,7 @@ class Login implements State {
         }else{
             $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
         }
-        $stateMachine->logger('Login(State)')->error('remove me in production '." - ".__LINE__." ".__FILE__." ");
+        // $stateMachine->logger('Login(State)')->error('remove me in production '." - ".__LINE__." ".__FILE__." ");
         return $nextState;
     }
 }
