@@ -24,7 +24,7 @@ class SyncBlockedVoters implements IRoute
                     throw new Exception("Es kann erst nach dem Ende der Wahlfrist entschlüsselt werden");
                 }
                 $db->autocommit(false);
-                
+
                 $db->direct('delete from blocked_voters');
                 $tablename = 'blocked_voters';
 
@@ -44,16 +44,16 @@ class SyncBlockedVoters implements IRoute
 
 
                 $table = DSTable::instance($tablename);
-                $table->insert($blocked_voters);
+                $table->insert($blocked_voters['data']);
                 if($table->error())
                     throw new Exception("Fehler beim Speichern der blockierten Wähler (" . $table->errorMessage() . ")");
 
-                TualoApplication::result('blocked_voters', count($blocked_voters));
+                TualoApplication::result('blocked_voters', count($blocked_voters['data']));
 
                 $db->direct('update ballotbox set blocked=0');
                 $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel_id) in (select voter_id,stimmzettel from blocked_voters)');
 
-                $db->direct('replace into blocked_synced (id,ts,count) values (1,now(),{count})',['count'=>count($blocked_voters)]);
+                $db->direct('replace into blocked_synced (id,ts,count) values (1,now(),{count})',['count'=>count($blocked_voters['data'])]);
                 $db->commit();
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
