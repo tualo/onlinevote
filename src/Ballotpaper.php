@@ -235,19 +235,20 @@ class Ballotpaper {
     public function checkLocal():bool{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
+
         $voter = $db->singleRow('
-        select
-            voter_id 
-        from 
-            voters 
-        where 
-            voter_id        =   {voter_id}
-            and stimmzettel =   {stimmzettel_id}
-            and completed   =   1
-        ',  [
-            'voter_id'=>$this->getVoterId(),
-            'stimmzettel_id'=>((string)$this->getBallotpaperId()).'|0'
-        ] );
+            select
+                distinct voter_id ,stimmzettel_id
+            from 
+                ballotbox 
+            where 
+                voter_id        =   {voter_id}
+                and stimmzettel_id =   {stimmzettel_id}
+        ', [
+
+            'voter_id' => $this->getVoterId(),
+            'stimmzettel_id' => $this->getBallotpaperId()
+        ]);
         return $voter !== false;
     }
 

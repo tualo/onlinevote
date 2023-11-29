@@ -1,6 +1,6 @@
 DELIMITER ; 
 
-CREATE OR REPLACE VIEW `view_website_candidates` AS
+CREATE   VIEW IF NOT EXISTS `view_website_candidates` AS
 select
     
 
