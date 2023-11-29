@@ -267,8 +267,8 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         }else if (c == 'card-4') {
             me.decrypt();
             me.calcKeys();
-            me.getView().down('#card-prev').setDisabled(false);
-            me.getView().down('#card-next').setDisabled(false);
+            me.getView().down('#card-prev').setDisabled(true);
+            me.getView().down('#card-next').setDisabled(true);
         }else if (c == 'card-5') {
             me.count();
             me.getView().down('#card-prev').setDisabled(next === 0);
