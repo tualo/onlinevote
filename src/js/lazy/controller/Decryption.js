@@ -130,6 +130,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         vm.set('decrypted', decrypted);
         vm.set('progress', decrypted/progressMax);
         vm.set('countPriatveKeys', countPriatveKeys);
+        me.getView().getComponent('card-4').getComponent('progressbar').updateText( decrypted+' von '+progressMax+' Stimmzetteln entschlüsselt');
     },
 
     decrypt: function (res) {

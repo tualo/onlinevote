@@ -53,6 +53,7 @@ Ext.define('Tualo.OnlineVote.Decryption', {
                 }
             },{
                 xtype: 'progressbar',
+                itemId: 'progressbar',
                 bind: {
                     value: '{progress}'
                 }
