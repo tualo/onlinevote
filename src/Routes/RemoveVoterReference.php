@@ -24,6 +24,10 @@ class RemoveVoterReference implements IRoute
                 if ( $db->singleRow( 'select stoptime from wm_loginpage_settings where stoptime<now() and id = 1',[] ) === false){
                     throw new Exception("Es kann erst nach dem Ende der Wahlfrist entschlüsselt werden");
                 }
+
+                if ( $db->singleRow( 'select ts from blocked_synced where ts - interval - 2 minute  > now()  ',[] ) === false){
+                    throw new Exception("Bitte zuerst die blockierten Wähler synchronisieren");
+                }
         
                 $db->direct('update ballotbox set voter_id=null where blocked=0');
                 TualoApplication::result('success', true);

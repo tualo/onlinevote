@@ -141,6 +141,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         this.getViewModel().getStore('pgpkeys').load();
                         this.decrypt(o);
                     } else {
+                        this.getView().down('#card-next').setDisabled(true);
                         this.getViewModel().getStore('pgpkeys').load();
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
@@ -168,6 +169,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         this.getViewModel().getStore('pgpkeys').load();
                     } else {
                         this.getViewModel().getStore('pgpkeys').load();
+                        this.getView().down('#card-next').setDisabled(true);
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
                 }
@@ -187,6 +189,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         align: 't',
                         iconCls: 'fa fa-warning'
                     });
+                    this.getView().down('#card-next').setDisabled(true);
                 }
                 this.getViewModel().getStore('pgpkeys').load();
 
@@ -208,6 +211,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         align: 't',
                         iconCls: 'fa fa-warning'
                     });
+                    this.getView().down('#card-next').setDisabled(true);
                 }
                 this.getViewModel().getStore('pgpkeys').load();
 
