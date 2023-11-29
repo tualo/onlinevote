@@ -57,7 +57,16 @@ Ext.define('Tualo.OnlineVote.Decryption', {
                 bind: {
                     value: '{progress}'
                 }
-            }]
+            },{
+                xtype: 'component',
+                cls: 'lds-container',
+                bind: {
+                    display: '{showwait}',
+                },
+                html: '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+                +'<div><h3>Die Entschlüsselung läuft</h3>'
+                +'<span>Einen Moment bitte ...</span></div>'
+              }]
         }, {
             itemId: 'card-5',
             html: '<h2>Auszählen</h2><p>Schritt 6 von 6</p><p>Klicken Sie auf Weiter, um die Stimmenauszählung zu starten.</p>'

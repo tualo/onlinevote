@@ -7,7 +7,8 @@ Ext.define('Tualo.OnlineVote.models.Decryption', {
         countKeys: 0,
         countPriatveKeys: 0,
         progressMax: 0,
-        progress: 0
+        progress: 0,
+        showwait: false,
     },
     stores: {
         pgpkeys: {

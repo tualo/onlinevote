@@ -130,7 +130,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         vm.set('decrypted', decrypted);
         vm.set('progress', decrypted/progressMax);
         vm.set('countPriatveKeys', countPriatveKeys);
-        me.getView().getComponent('card-4').getComponent('progressbar').updateText( decrypted+' von '+progressMax+' Stimmzetteln entschlüsselt');
+        me.getView().down('#panel').getComponent('card-4').getComponent('progressbar').updateText( decrypted+' von '+progressMax+' Stimmzetteln entschlüsselt');
     },
 
     decrypt: function (res) {
@@ -140,6 +140,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         if (typeof res == 'object') {
             if (res.count == 0) {
                 next = 0;
+                this.getViewModel().set('showwait',false);
                 this.getViewModel().getStore('pgpkeys').load({
                     callback: function () {
                         me.calcKeys();
@@ -152,6 +153,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         }
 
         if (next) {
+            this.getViewModel().set('showwait',true);
             Tualo.Ajax.request({
                 url: './onlinevote/decrypt',
                 // showWait: true,
