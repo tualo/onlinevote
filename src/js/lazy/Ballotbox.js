@@ -24,19 +24,19 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
             glyph: 'xf055@FontAwesome' ,
             tooltip: 'Eine Wahlrune anlegen',
             handler: 'onAppend'
-          },
+          },/*
           {
             //type:'add',
             glyph: 'xf13e@FontAwesome' ,
             tooltip: 'Einen privaten Schlüssel importieren',
             handler: 'onUpload'
-          },
+          },*/
           {
             //type:'add',
             glyph: 'xf15c@FontAwesome' ,
             tooltip: 'Bericht abrufen',
             handler: 'pzReport'
-          },
+          }/*,
           {
             //type:'add',
             glyph: 'xf0c6@FontAwesome' ,
@@ -60,7 +60,7 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
             glyph: 'f042@FontAwesome' ,
             tooltip: 'Auszählen',
             handler: 'countVotes'
-          }
+          }*/
         ],
         items: [
           
