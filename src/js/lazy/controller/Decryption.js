@@ -55,7 +55,11 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                                 scope: this,
                                 waitMsg: 'Die Datei wird hochgeladen...',
                                 success: function (form, o) {
-                                    me.getViewModel().getStore('pgpkeys').load();
+                                    me.getViewModel().getStore('pgpkeys').load({
+                                        callback: function () {
+                                            me.calcKeys();
+                                        }
+                                    });
                                 },
                                 failure: function (form, action) {
                                     switch (action.failureType) {
@@ -135,7 +139,11 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         if (typeof res == 'object') {
             if (res.count == 0) {
                 next = 0;
-                this.getViewModel().getStore('pgpkeys').load();
+                this.getViewModel().getStore('pgpkeys').load({
+                    callback: function () {
+                        me.calcKeys();
+                    }
+                });
                 l.setActiveItem(5);
                 me.getView().down('#card-prev').setDisabled(true);
                 me.getView().down('#card-next').setDisabled(false);
@@ -150,12 +158,20 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 scope: this,
                 json: function (o) {
                     if (o.success == true) {
-                        this.getViewModel().getStore('pgpkeys').load();
+                        this.getViewModel().getStore('pgpkeys').load({
+                            callback: function () {
+                                me.calcKeys();
+                            }
+                        });
                         this.calcKeys();
                         this.decrypt(o);
                     } else {
                         this.getView().down('#card-next').setDisabled(true);
-                        this.getViewModel().getStore('pgpkeys').load();
+                        this.getViewModel().getStore('pgpkeys').load({
+                            callback: function () {
+                                me.calcKeys();
+                            }
+                        });
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
                 }
@@ -168,7 +184,11 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         if (typeof res == 'object') {
             if (res.count == 0) {
                 next = 0;
-                this.getViewModel().getStore('pgpkeys').load();
+                this.getViewModel().getStore('pgpkeys').load({
+                    callback: function () {
+                        me.calcKeys();
+                    }
+                });
             }
         }
 
@@ -179,9 +199,17 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 scope: this,
                 json: function (o) {
                     if (o.success == true) {
-                        this.getViewModel().getStore('pgpkeys').load();
+                        this.getViewModel().getStore('pgpkeys').load({
+                            callback: function () {
+                                me.calcKeys();
+                            }
+                        });
                     } else {
-                        this.getViewModel().getStore('pgpkeys').load();
+                        this.getViewModel().getStore('pgpkeys').load({
+                            callback: function () {
+                                me.calcKeys();
+                            }
+                        });
                         this.getView().down('#card-next').setDisabled(true);
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
