@@ -6,6 +6,8 @@ Ext.define('Tualo.OnlineVote.models.Decryption', {
         currentWMState: 'unkown',
         countKeys: 0,
         countPriatveKeys: 0,
+        progressMax: 0,
+        progress: 0
     },
     stores: {
         pgpkeys: {

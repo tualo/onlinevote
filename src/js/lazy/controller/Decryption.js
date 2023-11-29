@@ -110,14 +110,21 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             vm = me.getViewModel(),
             store = vm.getStore('pgpkeys'),
             countKeys = 0,
+            total = 0,
+            encrypted = 0,
             countPriatveKeys = 0;
         store.each(function (rec) {
             countKeys++;
             if (rec.get('has_privatekey') == "vorhanden") {
+                total+=rec.get('total')*1-rec.get('blocked')*1;
+                encrypted+=rec.get('encrypted')*1;
                 countPriatveKeys++;
             }
         });
         vm.set('countKeys', countKeys);
+        vm.set('progressMax', progressMax);
+        vm.set('encrypted', encrypted);
+        vm.set('progress', encrypted/progressMax);
         vm.set('countPriatveKeys', countPriatveKeys);
     },
 
@@ -139,6 +146,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 json: function (o) {
                     if (o.success == true) {
                         this.getViewModel().getStore('pgpkeys').load();
+                        this.calcKeys();
                         this.decrypt(o);
                     } else {
                         this.getView().down('#card-next').setDisabled(true);

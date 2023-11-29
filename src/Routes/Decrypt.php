@@ -62,6 +62,15 @@ class Decrypt implements IRoute
                     limit 100
                 ');
 
+                foreach ($list as $elm) {
+
+                
+                    $decrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper'],'MESSAGE'));
+
+                    $elm['ballotpaper'] = $decrypted;
+                    $db->direct('insert into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid})  ', $elm);
+                }
+
                 TualoApplication::result('count', count($list));
                 TualoApplication::result(
                     'total',
@@ -88,12 +97,7 @@ class Decrypt implements IRoute
                         'c'
                     )
                 );
-                foreach ($list as $elm) {
-
-                    $encrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper']));
-                    $elm['ballotpaper'] = $encrypted;
-                    $db->direct('insert into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid})  ', $elm);
-                }
+                
 
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
