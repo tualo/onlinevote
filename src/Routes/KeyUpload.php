@@ -10,6 +10,9 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
 use Tualo\Office\DS\DSTable;
+use phpseclib3\Crypt\PrivateKeyLoader;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Crypt\Common\PrivateKey;
 
 class KeyUpload implements IRoute
 {
@@ -70,7 +73,13 @@ class KeyUpload implements IRoute
                             $file = file_get_contents(TualoApplication::get('tempPath') . '/upload.asc');
                             unlink(TualoApplication::get('tempPath') . '/upload.asc');
 
-                            $fingerprints = TualoApplicationPGP::fingerprint($file);
+                            $rsaKey = RSA::load($file);
+                            if (!$rsaKey instanceof PrivateKey) throw new \Exception("Der Schlüssel kann nicht verwendet werden");
+                            
+
+                            // TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled)),'MESSAGE');
+
+                            $fingerprints = [$rsaKey->getPublicKey()->getFingerprint('md5')]; // TualoApplicationPGP::fingerprint($file);
                             TualoApplication::result('fingerprint', $fingerprints);
 
 
