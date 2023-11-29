@@ -109,7 +109,7 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
                   '<tpl if="values.has_privatekey == \'vorhanden\'">',
                     '<div style="color: gray; font-size: 0.8em; font-weight: bold; min-height: 100px;">Diese Urne kann entschlüsselt werden</div>',
                     '<br>',
-                    '<div style="color: gray; font-size: 0.8em; font-weight: bold; min-height: 100px;">Bereits {encrypted} Stimmzettel entschlüsselt</div>',
+                    '<div style="color: gray; font-size: 0.8em; font-weight: bold; min-height: 100px;">Bereits {decrypted} Stimmzettel entschlüsselt</div>',
                   '</tpl>',
                   '<tpl if="values.has_privatekey != \'vorhanden\'">',
                     '<div style="color: gray; font-size: 0.8em; font-weight: bold; min-height: 100px;">Diese Urne kann noch nicht entschlüsselt werden</div>',
