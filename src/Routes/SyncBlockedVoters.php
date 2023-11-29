@@ -44,6 +44,9 @@ class SyncBlockedVoters implements IRoute
 
                 $table = DSTable::instance($tablename);
                 $table->insert($blocked_voters);
+                if($table->error())
+                    throw new Exception("Fehler beim Speichern der blockierten Wähler (" . $table->errorMessage() . ")");
+                
                 TualoApplication::result('blocked_voters', count($blocked_voters));
 
                 $db->direct('update ballotbox set blocked=0');
