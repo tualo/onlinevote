@@ -148,7 +148,7 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/wm_loginpage_settings.ds'    => 'setup wm_loginpage_settings.ds',
 
             'install/blocked_voters'    => 'setup blocked_voters',
-
+            'install/blocked_synced'=> 'setup blocked_synced',
             // immer zum schluss
             'install/ds_fill'    => 'refreshing ds data',
 
