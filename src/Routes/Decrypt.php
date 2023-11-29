@@ -59,6 +59,7 @@ class Decrypt implements IRoute
                         and blocked=0
                         and ballotbox.saveerror=0
                         and ballotbox_decrypted.id is null
+                    order by ballotbox.id asc
                     limit 100
                 ');
 
