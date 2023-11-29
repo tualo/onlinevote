@@ -37,7 +37,7 @@ INSERT INTO
     )
 VALUES
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         NULL,
         NULL,
         0,
@@ -197,7 +197,7 @@ INSERT
     )
 VALUES
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'ballotpaper',
         NULL,
         10000000,
@@ -223,7 +223,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'id',
         NULL,
         10000000,
@@ -249,7 +249,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'isvalid',
         '0',
         0,
@@ -275,7 +275,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'keyname',
         NULL,
         10000000,
@@ -301,7 +301,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'saveerror',
         '0',
         0,
@@ -327,7 +327,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'stimmzettel',
         '\'\'',
         0,
@@ -377,7 +377,7 @@ INSERT
     )
 VALUES
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'id',
         'DE',
         'id',
@@ -398,7 +398,7 @@ VALUES
         NULL
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'keyname',
         'DE',
         'keyname',
@@ -436,7 +436,7 @@ INSERT
     )
 VALUES
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'id',
         'DE',
         'id',
@@ -450,7 +450,7 @@ VALUES
         1.00
     ),
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'keyname',
         'DE',
         'keyname',
@@ -480,11 +480,11 @@ INSERT
     )
 VALUES
     (
-        'ballotbox_encrypted',
+        'ballotbox_decrypted',
         'pgpkeys',
-        '{\"ballotbox_encrypted__keyname\":\"pgpkeys__keyname\"}',
+        '{\"ballotbox_decrypted__keyname\":\"pgpkeys__keyname\"}',
         0,
-        'fk_ballotbox_encrypted_pgpkeys',
+        'fk_ballotbox_decrypted_pgpkeys',
         0,
         1,
         99999,

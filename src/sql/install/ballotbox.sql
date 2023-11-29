@@ -36,3 +36,5 @@ BEGIN
   SELECT md5(concat(last_hash,md5(NEW.ballotpaper))) INTO current_hash;
   insert into ballotbox_blockchain (keyname,hash_value,`last_hash`,ballotpaper_id) values (NEW.keyname,current_hash,last_hash,NEW.id);
 END //
+
+

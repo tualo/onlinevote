@@ -228,28 +228,32 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             i = l.activeItem.itemId.split('card-')[1],
             next = parseInt(i, 10) + incr;
 
-        if (c == 'card-1') {
+        if (c == 'card-0') {
+            me.getView().down('#card-prev').setDisabled(next === 0);
+            me.getView().down('#card-next').setDisabled(next === 5);
+        }else if (c == 'card-1') {
             me.sync_blockedvoters();
             me.calcKeys();
-        }
-        if (c == 'card-2') {
+            l.setActiveItem(next);
+            me.getView().down('#card-prev').setDisabled(next === 0);
+            me.getView().down('#card-next').setDisabled(next === 5);
+        }else if (c == 'card-2') {
             me.remove_voter_references();
             me.calcKeys();
-        }
-        if (c == 'card-3') {
+            l.setActiveItem(next);
+            me.getView().down('#card-prev').setDisabled(next === 0);
+            me.getView().down('#card-next').setDisabled(next === 5);
+        }else if (c == 'card-3') {
             if (vm.get('countPriatveKeys') == 0) {
                 return;
             }
             me.calcKeys();
-        }
-        if (c == 'card-4') {
+            l.setActiveItem(next);
+            me.getView().down('#card-prev').setDisabled(next === 0);
+            me.getView().down('#card-next').setDisabled(next === 5);
+        }else if (c == 'card-4') {
             me.decrypt();
             me.calcKeys();
         }
-
-        l.setActiveItem(next);
-
-        me.getView().down('#card-prev').setDisabled(next === 0);
-        me.getView().down('#card-next').setDisabled(next === 5);
     }
 });

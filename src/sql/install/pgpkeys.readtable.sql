@@ -79,3 +79,22 @@ from
             `view_readtable_pgpkeys_valid`.`keyname` = `pgpkeys`.`keyname`
         )
     );
+
+
+create or replace view view_readtable_pgpkeys_intern as
+select 
+    pgpkeys.keyname,
+    pgpkeys.keyid,
+    pgpkeys.fingerprint,
+    pgpkeys.username,
+    pgpkeys.publickey,
+    pgpkeys.privatekey, 
+    if (pgpkeys.privatekey is not null and pgpkeys.privatekey<>'', 'vorhanden', 'nicht vorhanden' ) has_privatekey,
+    ifnull(view_readtable_pgpkeys_valid.invalid,0) invalid,
+    ifnull(view_readtable_pgpkeys_valid.total,0) total,
+    ifnull(view_readtable_pgpkeys_valid.encrypted,0) `encrypted`
+from 
+    pgpkeys 
+    left join view_readtable_pgpkeys_valid
+        on view_readtable_pgpkeys_valid.keyname = pgpkeys.keyname;
+;

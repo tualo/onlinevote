@@ -114,7 +114,8 @@ class InstallMainSQLCommandline implements ICommandline{
 
             'install/ballotbox_blockchain'    => 'setup ballotbox_blockchain',
             'install/ballotbox'    => 'setup ballotbox',
-            'install/ballotbox_encrypted'    => 'setup ballotbox_encrypted',
+            'install/ballotbox_decrypted'    => 'setup ballotbox_decrypted',
+            'install/ballotbox_decrypted.ds'    => 'setup ballotbox_decrypted.ds',
 
             'install/pgpkeys.readtable'    => 'setup pgpkeys.readtable',
             'install/pgpkeys.ds'    => 'setup pgpkeys.ds',
