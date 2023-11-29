@@ -300,6 +300,11 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             me.getView().down('#card-next').setDisabled(next === 5);
         }else if (c == 'card-4') {
             me.decrypt();
+            me.decrypt();
+            me.decrypt();
+            me.decrypt();
+            me.decrypt();
+            me.decrypt();
             me.calcKeys();
             me.getView().down('#card-prev').setDisabled(true);
             me.getView().down('#card-next').setDisabled(true);

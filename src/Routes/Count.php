@@ -37,14 +37,12 @@ class Count implements IRoute
                         $candidates[$id]['stimmen']++;
                     }
                 }
-
                 $db->direct('create table if not exists kandidaten_stimmen (id integer primary key, stimmen integer default 0 )');
                 $db->direct('delete from  kandidaten_stimmen  ');
                 foreach ($candidates as $k => $v) {
                     $sql = 'insert into kandidaten_stimmen (id,stimmen) values ({id},{stimmen}) ';
                     $db->direct($sql, $v);
                 }
-
                 TualoApplication::result('stimmen', $candidates);
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
