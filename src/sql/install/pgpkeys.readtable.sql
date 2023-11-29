@@ -8,7 +8,7 @@ select
     ) AS `invalid`,
     count(0) AS `total`,
     sum(`a`.`blocked`) AS `blocked`,
-    sum(`a`.`encrypted`) AS `encrypted`
+    sum(`a`.`decrypted`) AS `decrypted`
 from
     (
         select
@@ -24,7 +24,7 @@ from
             ) AS `x`,
             `ballotbox_blockchain`.`id` AS `bbid`,
             `ballotbox_blockchain`.`hash_value` AS `hash_value`,
-            if(`ballotbox_encrypted`.`id` is null, 0, 1) AS `encrypted`
+            if(`ballotbox_decrypted`.`id` is null, 0, 1) AS `decrypted`
         from
             (
                 (
@@ -36,10 +36,10 @@ from
                         ) = (`ballotbox`.`id`, `ballotbox`.`keyname`)
                     )
                 )
-                left join `ballotbox_encrypted` on(
+                left join `ballotbox_decrypted` on(
                     (`ballotbox`.`id`, `ballotbox`.`keyname`) = (
-                        `ballotbox_encrypted`.`id`,
-                        `ballotbox_encrypted`.`keyname`
+                        `ballotbox_decrypted`.`id`,
+                        `ballotbox_decrypted`.`keyname`
                     )
                 )
             )
@@ -71,7 +71,7 @@ select
     ifnull(`view_readtable_pgpkeys_valid`.`invalid`, 0) AS `invalid`,
     ifnull(`view_readtable_pgpkeys_valid`.`total`, 0) AS `total`,
     ifnull(`view_readtable_pgpkeys_valid`.`blocked`, 0) AS `blocked`,
-    ifnull(`view_readtable_pgpkeys_valid`.`encrypted`, 0) AS `encrypted`
+    ifnull(`view_readtable_pgpkeys_valid`.`decrypted`, 0) AS `decrypted`
 from
     (
         `pgpkeys`
@@ -92,9 +92,11 @@ select
     if (pgpkeys.privatekey is not null and pgpkeys.privatekey<>'', 'vorhanden', 'nicht vorhanden' ) has_privatekey,
     ifnull(view_readtable_pgpkeys_valid.invalid,0) invalid,
     ifnull(view_readtable_pgpkeys_valid.total,0) total,
-    ifnull(view_readtable_pgpkeys_valid.encrypted,0) `encrypted`
+    ifnull(view_readtable_pgpkeys_valid.decrypted,0) `decrypted`
 from 
     pgpkeys 
     left join view_readtable_pgpkeys_valid
         on view_readtable_pgpkeys_valid.keyname = pgpkeys.keyname;
 ;
+
+call fill_ds_column('pgpkeys');
