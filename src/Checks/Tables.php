@@ -30,6 +30,7 @@ class Tables  extends PostCheck {
             'ballotbox_encrypted'=>[ ],
             'pgpkeys'=>[ ],
             'blocked_voters' => [ ],
+            'blocked_synced' => [ ],
             'stimmzettel_stimmzettel_fusstexte'=>[ ],
             'stimmzettel_fusstexte'=>[ ],
             'username_count'=>[ ]
