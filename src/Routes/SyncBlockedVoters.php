@@ -40,8 +40,11 @@ class SyncBlockedVoters implements IRoute
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
                 $blocked_voters = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
                 if ($blocked_voters === false) throw new Exception("Fehler beim Abrufen der blockierten Wähler (" . APIRequestHelper::$last_error_message . ")");
-                $res = DSCreateRoute::createRequest($db, $tablename, $blocked_voters);
-                TualoApplication::result('blocked_voters', count($res['data']));
+
+
+                $table = DSTable::instance($tablename);
+                $table->insert($blocked_voters);
+                TualoApplication::result('blocked_voters', count($blocked_voters));
 
                 $db->direct('update ballotbox set blocked=0');
                 $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel_id) in (select voter_id,stimmzettel from blocked_voters)');
