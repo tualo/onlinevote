@@ -73,9 +73,14 @@ Ext.define('Tualo.OnlineVote.Decryption', {
                         {
                         xtype: 'component',
                         cls: 'lds-container',
-                        html: '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
-                        +'<div><h3>Die Stimmzettel werden entschlüsselt</h3>'
-                        +'<span>Einen Moment bitte ...</span></div>'
+                        bind: {
+                            html: '<div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+                            +'<div><h3>Die Stimmzettel werden entschlüsselt</h3></p>'
+                            +'<span>Einen Moment bitte ...</span>'
+                            +'<span>{decrypted} von {progressMax} Stimmzetteln entschlüsselt</span>'
+                            +'</p></div>'
+                        },
+                        
                         }
                     ]
                 }

@@ -69,7 +69,7 @@ class Decrypt implements IRoute
                     $decrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper'],'MESSAGE'));
 
                     $elm['ballotpaper'] = $decrypted;
-                    $db->direct('insert into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid})  ', $elm);
+                    $db->direct('insert ignore into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid})  ', $elm);
                 }
 
                 TualoApplication::result('count', count($list));
