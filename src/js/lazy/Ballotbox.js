@@ -1,16 +1,16 @@
 Ext.define('Tualo.OnlineVote.Ballotbox', {
     extend: 'Ext.panel.Panel',
     requires: [
-      'Tualo.OnlineVote.controller.Viewport',
-      'Tualo.OnlineVote.models.Viewport'
+      'Tualo.OnlineVote.controller.Ballotbox',
+      'Tualo.OnlineVote.models.Ballotbox'
     ],
     layout: 'card',
     component: 'onlinevote',
-    controller: 'onlinevote_viewport_controller',
+    controller: 'onlinevote_ballotbox_controller',
     viewModel: {
-      type: 'onlinevote_viewport_model'
+      type: 'onlinevote_ballotbox_model'
     },
-    listeners:{
+    listeners: {
       boxReady: 'onBoxReady'
     },
     items: [
@@ -24,6 +24,42 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
             glyph: 'xf055@FontAwesome' ,
             tooltip: 'Eine Wahlrune anlegen',
             handler: 'onAppend'
+          },
+          {
+            //type:'add',
+            glyph: 'xf13e@FontAwesome' ,
+            tooltip: 'Einen privaten Schlüssel importieren',
+            handler: 'onUpload'
+          },
+          {
+            //type:'add',
+            glyph: 'xf15c@FontAwesome' ,
+            tooltip: 'Bericht abrufen',
+            handler: 'pzReport'
+          },
+          {
+            //type:'add',
+            glyph: 'xf0c6@FontAwesome' ,
+            tooltip: 'Berechtigungen prüfen',
+            handler: 'sync_blockedvoters'
+          },
+          {
+            //type:'add',
+            glyph: 'xf12d@FontAwesome' ,
+            tooltip: 'Wählerkennung entfernen',
+            handler: 'remove_voter_references'
+          },
+          {
+            //type:'add',
+            glyph: 'xf00a@FontAwesome' ,
+            tooltip: 'Entschlüsseln',
+            handler: 'decrypt'
+          },
+          {
+            //type:'add',
+            glyph: 'f042@FontAwesome' ,
+            tooltip: 'Auszählen',
+            handler: 'countVotes'
           }
         ],
         items: [

@@ -1,24 +1,24 @@
-Ext.define('Tualo.routes.Ballotbox',{
+Ext.define('Tualo.routes.Decryption',{
     statics: {
         load: async function() {
             return [
                 {
-                    name: 'Onlinewahl Urnen',
-                    path: '#onlinevote/ballotbox'
+                    name: 'Onlinewahl Entschlüsseln',
+                    path: '#onlinevote/decryption'
                 }
             ]
         }
     }, 
-    url: 'onlinevote/ballotbox',
+    url: 'onlinevote/decryption',
     handler: {
         action: function( ){
             console.log('action');
 
-            Ext.getApplication().addView('Tualo.OnlineVote.Ballotbox');
+            Ext.getApplication().addView('Tualo.OnlineVote.Decryption');
         },
         before: function ( action,cnt) {
             console.log('before');
-            let fn = Ext.require, txt = 'Tualo.OnlineVote'+'.Ballotbox';
+            let fn = Ext.require, txt = 'Tualo.OnlineVote'+'.Decryption';
             fn(txt,function(){
                 console.log('resume');
                 action.resume();
