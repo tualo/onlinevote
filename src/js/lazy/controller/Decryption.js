@@ -110,13 +110,13 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             vm = me.getViewModel(),
             store = vm.getStore('pgpkeys'),
             countKeys = 0,
-            total = 0,
+            progressMax = 0,
             encrypted = 0,
             countPriatveKeys = 0;
         store.each(function (rec) {
             countKeys++;
             if (rec.get('has_privatekey') == "vorhanden") {
-                total+=rec.get('total')*1-rec.get('blocked')*1;
+                progressMax+=rec.get('total')*1-rec.get('blocked')*1;
                 encrypted+=rec.get('encrypted')*1;
                 countPriatveKeys++;
             }
@@ -240,8 +240,8 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             c = l.activeItem.itemId,
             i = l.activeItem.itemId.split('card-')[1],
             next = parseInt(i, 10) + incr;
-
         if (c == 'card-0') {
+            l.setActiveItem(next);
             me.getView().down('#card-prev').setDisabled(next === 0);
             me.getView().down('#card-next').setDisabled(next === 5);
         }else if (c == 'card-1') {
@@ -267,6 +267,8 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         }else if (c == 'card-4') {
             me.decrypt();
             me.calcKeys();
+            me.getView().down('#card-prev').setDisabled(false);
+            me.getView().down('#card-next').setDisabled(false);
         }else if (c == 'card-5') {
             me.count();
             me.getView().down('#card-prev').setDisabled(next === 0);
