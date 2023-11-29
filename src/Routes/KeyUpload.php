@@ -83,9 +83,7 @@ class KeyUpload implements IRoute
                             TualoApplication::result('fingerprint', $fingerprints);
 
 
-                            if (strpos($file, 'PRIVATE KEY') === false) {
-                                throw new Exception("Invalid Key File");
-                            }
+                            
                             $found = false;
                             $list = $db->direct('select fingerprint from pgpkeys', []);
                             foreach ($list as $element) {

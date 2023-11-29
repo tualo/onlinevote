@@ -113,7 +113,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             countPriatveKeys = 0;
         store.each(function (rec) {
             countKeys++;
-            if (rec.get('privatekey') != "") {
+            if (rec.get('has_privatekey') == "vorhanden") {
                 countPriatveKeys++;
             }
         });
