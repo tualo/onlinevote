@@ -183,7 +183,9 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
     },
 
     countVotes: function (res) {
-        let next = true;
+        let next = true,
+        me = this,
+        l = me.getView().down('#panel').getLayout();
         if (typeof res == 'object') {
             if (res.count == 0) {
                 next = 0;
@@ -205,6 +207,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         this.getViewModel().getStore('pgpkeys').load({
                             callback: function () {
                                 me.calcKeys();
+                                l.setActiveItem(6);
                             }
                         });
                     } else {
@@ -301,9 +304,9 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             me.getView().down('#card-prev').setDisabled(true);
             me.getView().down('#card-next').setDisabled(true);
         }else if (c == 'card-5') {
-            me.count();
-            me.getView().down('#card-prev').setDisabled(next === 0);
-            me.getView().down('#card-next').setDisabled(next === 6);
+            me.countVotes();
+            me.getView().down('#card-prev').setDisabled(true);
+            me.getView().down('#card-next').setDisabled(true);
         }else if (c == 'card-6') {
             me.getView().down('#card-prev').setDisabled(true);
             me.getView().down('#card-next').setDisabled(true)
