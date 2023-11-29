@@ -21,4 +21,4 @@ require_once "Routes/RemoveVoterReference.php";
 require_once "Routes/SyncBlockedVoters.php";
 require_once "Routes/Decrypt.php";
 require_once "Routes/Count.php";
-
+require_once "Routes/KeyUpload.php";

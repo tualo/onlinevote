@@ -50,7 +50,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         var form = btn.up('form');
                         if (form.getForm().isValid()) {
                             form.getForm().submit({
-                                url: "wm/pgp/upload",
+                                url: "onlinevote/pgp/upload",
                                 timeout: 600000,
                                 scope: this,
                                 waitMsg: 'Die Datei wird hochgeladen...',
