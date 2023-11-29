@@ -37,7 +37,7 @@ class SyncBlockedVoters implements IRoute
                     select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
                 ",[],'text','v');
 
-                $url = $o['remote-erp/url'];
+                $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
                 $blocked_voters = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
                 if ($blocked_voters === false) throw new Exception("Fehler beim Abrufen der blockierten Wähler (" . APIRequestHelper::$last_error_message . ")");
                 $res = DSCreateRoute::createRequest($db, $tablename, $blocked_voters);
