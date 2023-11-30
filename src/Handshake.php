@@ -24,9 +24,9 @@ class Handshake
             union
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
             union 
-            select stoptime v,'stoptime' text from wm_loginpage_settings where stoptime<now() and id = 1
+            select stoptime v,'stoptime' text from wm_loginpage_settings where  id = 1
             union 
-            select starttime v,'starttime' text from wm_loginpage_settings where stoptime<now() and id = 1
+            select starttime v,'starttime' text from wm_loginpage_settings where  id = 1
         ",[],'text','v');
         if ($o['api']==1){
             $result = $o;
