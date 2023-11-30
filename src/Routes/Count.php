@@ -28,7 +28,7 @@ class Count implements IRoute
 
                 $candidates = $db->direct('select id,0 stimmen from kandidaten', [], 'id');
 
-                $list = $db->direct('select ballotpaper from  ballotbox_encrypted  where keyname in (select min(keyname) from ballotbox_encrypted) and isvalid=1');
+                $list = $db->direct('select ballotpaper from  ballotbox_decrypted  where keyname in (select min(keyname) from ballotbox_decrypted) and isvalid=1');
 
                 foreach ($list as $elm) {
                     $x = json_decode($elm['ballotpaper'], true);
