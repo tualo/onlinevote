@@ -80,6 +80,7 @@ Ext.define('Tualo.OnlineVote.Decryption', {
                             +'<span>Einen Moment bitte ...</span>'
                             +'<br>'
                             +'<span>{decrypted} von {progressMax} Stimmzetteln entschlüsselt</span>'
+                            +'<span>{estimatedTimeText}</span>'
                             +'</p></div>'
                         },
                         

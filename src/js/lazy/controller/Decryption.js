@@ -201,14 +201,14 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         let me = this,
             vm = me.getViewModel(),
             progressMax = vm.get('progressMax'),
-            decrypted = vm.set('decrypted'),
+            decrypted = vm.get('decrypted'),
             remaining = progressMax-decrypted;
         if (me.decryptTimeTable.length>10){
-            const sumTime = me.decryptTimeTable.reduce((a, b) => a.time + b.time, 0);
-            const countTime = me.decryptTimeTable.reduce((a, b) => a.count + b.count, 0);
+            const sumTime = me.decryptTimeTable.map((a)=>a.time).reduce((a, b) => a + b, 0);
+            const countTime = me.decryptTimeTable.map((a)=>a.count).reduce((a, b) => a + b, 0);
             const avgTime = sumTime / countTime;
-            const estimatedTime = avgTime * remaining;
-            console.log('estimatedTime',estimatedTime/1000/60);
+            const estimatedTime = avgTime * remaining / me.decryptProcesses;
+            vm.set('estimatedTime',estimatedTime);
         }
     },
             
