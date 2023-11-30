@@ -23,6 +23,10 @@ class State implements IRoute{
                 App::result('php_time',date('Y-m-d H:i:s'));
                 App::result('db_time',$db->singleValue('select now() as n',[],'n'));
 
+                App::result('active_voters',$db->singleValue('
+                select count(*) c from voters where contact > now() + interval - 15 minute and completed=0
+                ',[],'c'));
+
 
                 Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');
                 App::result('success',true);

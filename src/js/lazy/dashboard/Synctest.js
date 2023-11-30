@@ -95,6 +95,12 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                             xtype: 'panel',
                             html: 'Die Datenbank- und Webserverzeit weicht '+ Math.round((php_time-db_time)/1000) +' Sekunden voneinander ab'
                         });
+
+
+                        me.add({
+                            xtype: 'panel',
+                            html: 'Es gibt derzeit '+ data.active_voters +' aktive Wähler'
+                        });
         
                     }
                 },
