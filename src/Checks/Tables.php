@@ -33,7 +33,10 @@ class Tables  extends PostCheck {
             'blocked_synced' => [ ],
             'stimmzettel_stimmzettel_fusstexte'=>[ ],
             'stimmzettel_fusstexte'=>[ ],
-            'username_count'=>[ ]
+            'username_count'=>[ ],
+            
+            'kandidaten_stimmen'=>[ ],
+            'view_readtable_kandidaten_stimmen'=>[ ],
         ];
         self::tableCheck('ds',$tables,
             "please run the following command: `./tm install-sql-onlinevote --client ".$clientdb->dbname."`",

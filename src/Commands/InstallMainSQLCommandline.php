@@ -150,6 +150,10 @@ class InstallMainSQLCommandline implements ICommandline{
 
             'install/blocked_voters'    => 'setup blocked_voters',
             'install/blocked_synced'=> 'setup blocked_synced',
+
+            'install/kandidaten_stimmen'    => 'setup kandidaten_stimmen',
+            'install/kandidaten_stimmen.ds'    => 'setup kandidaten_stimmen.ds',
+            
             // immer zum schluss
             'install/ds_fill'    => 'refreshing ds data',
 
