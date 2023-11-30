@@ -46,7 +46,8 @@ class Decrypt implements IRoute
                 $list = $db->direct('
                 select 
                     rand() random,
-                    ballotbox.*
+                    ballotbox.*,
+                    pgpkeys.privatekey
                 from 
                     ballotbox
                     join pgpkeys
