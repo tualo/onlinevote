@@ -148,10 +148,14 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         }
     },
 
+    decryptProcesses: 6,
+    decryptTimeTable: [],
+
     decrypt: function (res) {
         let next = true,
             me = this,
-            l = me.getView().down('#panel').getLayout();
+            l = me.getView().down('#panel').getLayout(),
+            starttime = (new Date()).getTime();
         if (typeof res == 'object') {
             if (res.count == 0) {
                 next = 0;
@@ -172,8 +176,16 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 scope: this,
                 json: function (o) {
                     if (o.success == true) {
+                        let endtime = (new Date()).getTime();
+                        me.decryptTimeTable.push({
+                            count: o.count,
+                            start: starttime,
+                            end: endtime,
+                            time: endtime - starttime
+                        });
                         me.refreshPGPKEYS();
                         this.calcKeys();
+                        this.calcEstimatedTime();
                         this.decrypt(o);
                     } else {
                         this.getView().down('#card-next').setDisabled(true);
@@ -184,6 +196,22 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             });
         }
     },
+
+    calcEstimatedTime: function () {
+        let me = this,
+            vm = me.getViewModel(),
+            progressMax = vm.get('progressMax'),
+            decrypted = vm.set('decrypted'),
+            remaining = progressMax-decrypted;
+        if (me.decryptTimeTable.length>10){
+            const sumTime = me.decryptTimeTable.reduce((a, b) => a.time + b.time, 0);
+            const countTime = me.decryptTimeTable.reduce((a, b) => a.count + b.count, 0);
+            const avgTime = sumTime / countTime;
+            const estimatedTime = avgTime * remaining;
+            console.log('estimatedTime',estimatedTime/1000/60);
+        }
+    },
+            
 
     countVotes: function (res) {
         let next = true,
@@ -302,12 +330,12 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             me.getView().down('#card-prev').setDisabled(next === 0);
             me.getView().down('#card-next').setDisabled(next === 5);
         }else if (c == 'card-4') {
+            me.decryptTimeTable=[];
+
+            for(let i=0;i<me.decryptProcesses;i++){
             me.decrypt();
-            me.decrypt();
-            me.decrypt();
-            me.decrypt();
-            me.decrypt();
-            me.decrypt();
+            }
+
             me.calcKeys();
             me.getView().down('#card-prev').setDisabled(true);
             me.getView().down('#card-next').setDisabled(true);
