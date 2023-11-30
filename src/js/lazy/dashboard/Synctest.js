@@ -23,7 +23,7 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                 xtype: 'panel',
                                 html: 'Der Remote-Server ist erreichbar!'
                             })
-                        }else if (data.remoteError===truea){
+                        }else if (data.remoteError===true){
                             me.add({
                                 xtype: 'panel',
                                 html: 'Der Remote-Server ist nicht erreichbar!'

@@ -33,6 +33,7 @@ class Handshake
         if ($o['api']==1){
             $result = $o;
             $result['api_token_url'] = $result['api_url'].'~/'.$result['api_token'].'/' ;
+            if (isset($result['interrupted'])) $result['interrupted'] = $result['interrupted']==1;
         }
         return $result;
     }
