@@ -39,7 +39,11 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                             let stop = Ext.util.Format.date( new Date(data.stoptime), 'd.m.Y H:i:s');
                             me.add({
                                 xtype: 'panel',
-                                html: 'Der Wahlzeitraum ('+ start +' bis '+stop+') ist konfiguriert!'
+                                html: [
+                                    'Wahlzeitraum:',
+                                    start,
+                                    stop
+                                ].join('<br>')
                             })
                         }
                         me.add({
