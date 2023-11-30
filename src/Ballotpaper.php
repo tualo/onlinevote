@@ -206,10 +206,20 @@ class Ballotpaper {
         $this->filled=$candidates;
     }
 
+    public function setContactTime():void{
+        $stateMachine = WMStateMachine::getInstance();
+        $db = $stateMachine->db();
+        $sql = 'update voters set contact = now() where voter_id = {voter_id} and stimmzettel = {stimmzettel}';
+        $db->direct($sql,[
+            'voter_id'      =>  $this->getVoterId(),
+            'stimmzettel'   =>  ((string)$this->getBallotpaperId()).'|0'
+        ]);
+    }
 
     public function register():void{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
+        // alter table voters add contact datetime default current_timestamp
         $sql = 'insert into voters (
             voter_id,
             stimmzettel,
