@@ -24,9 +24,9 @@ class Handshake
             union
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
             union 
-            select stoptime v,'stoptime' from wm_loginpage_settings where stoptime<now() and id = 1
+            select stoptime v,'stoptime' text from wm_loginpage_settings where stoptime<now() and id = 1
             union 
-            select starttime v,'starttime' from wm_loginpage_settings where stoptime<now() and id = 1
+            select starttime v,'starttime' text from wm_loginpage_settings where stoptime<now() and id = 1
         ",[],'text','v');
         if ($o['api']==1){
             $result = $o;
@@ -38,6 +38,8 @@ class Handshake
     public static function pingRemote():bool{
         $params = self::parameter();
         if (!isset($params['api_url'])) return false;
+        if (!isset($params['api_token'])) return false;
+        if (!isset($params['api_private'])) return false;
 
         $message = (Uuid::uuid4())->toString();
         $ping_result = APIRequestHelper::query( $params['api_url'].'~/'.$params['api_token'].'/papervote/ping',[
