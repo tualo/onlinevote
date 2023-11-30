@@ -19,10 +19,10 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
                 autoLoad: true,
             },
             axes: [{
-                type: 'numeric3d',
+                type: 'numeric',
                 position: 'left',
                 minimum: 0,
-                fields: ['total', 'encrypted','blocked'],
+                fields: ['total', 'decrypted','blocked'],
                 title: {
                     text: 'Anzahl',
                     fontSize: 15
@@ -36,7 +36,7 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
                     }
                 }
             }, {
-                type: 'category3d',
+                type: 'category',
                 position: 'bottom',
                 title: {
                     text: 'Urnen',
@@ -45,9 +45,9 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
                 fields: 'keyid'
             }],
             series: {
-                type: 'bar3d',
+                type: 'bar',
                 xField: 'keyid',
-                yField: ['total', 'encrypted','blocked']
+                yField: ['total', 'decrypted','blocked']
             }
         }]
     }
