@@ -40,7 +40,7 @@ class Handshake
         if (!isset($params['api_url'])) return false;
 
         $message = (Uuid::uuid4())->toString();
-        $ping_result = APIRequestHelper::query( $params['api_url'].'~/'.$params['token'].'/papervote/ping',[
+        $ping_result = APIRequestHelper::query( $params['api_url'].'~/'.$params['api_token'].'/papervote/ping',[
             'message'=>$message,
             'signature'=>TualoApplicationPGP::sign($params['api_private'],$message)
         ]);
