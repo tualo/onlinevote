@@ -37,12 +37,49 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                         }else{
                             let start = Ext.util.Format.date( new Date(data.starttime), 'd.m.Y H:i:s');
                             let stop = Ext.util.Format.date( new Date(data.stoptime), 'd.m.Y H:i:s');
+
+
+                            if (
+                                (new Date(data.starttime)).getTime()>(new Date(data.stoptime)).getTime()
+                            ){
+                                me.add({
+                                    xtype: 'panel',
+                                    html: '<span style="color:red;">Der Wahlzeitraum ist fehlerhaft konfiguriert!</span>'
+                                });
+                            }else{
+
+
+                                if (
+                                    (new Date(data.starttime)).getTime()<=Date.now() &&
+                                    (new Date(data.stoptime)).getTime()>=Date.now()
+                                ){
+                                    me.add({
+                                        xtype: 'panel',
+                                        html: 'Der Wahlzeitraum ist aktiv!'
+                                    })
+                                }else if (
+                                    (new Date(data.starttime)).getTime()>Date.now()
+                                ){
+                                    me.add({
+                                        xtype: 'panel',
+                                        html: 'Der Wahlzeitraum ist noch nicht aktiv!'
+                                    })
+                                }else if (
+                                    (new Date(data.stoptime)).getTime()<Date.now()
+                                ){
+                                    me.add({
+                                        xtype: 'panel',
+                                        html: 'Der Wahlzeitraum ist abgelaufen!'
+                                    })
+                                }
+                            }
+
                             me.add({
                                 xtype: 'panel',
                                 html: [
                                     'Wahlzeitraum:',
-                                    start,
-                                    stop
+                                    '<b>Start: '+start+'</b>',
+                                    '<b>Ende: '+stop+'</b>',
                                 ].join('<br>')
                             })
                         }
@@ -56,7 +93,7 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
 
                         me.add({
                             xtype: 'panel',
-                            html: 'Die Datenbank- und Webserverzeit weicht '+ Math.round((php_time-db_time)/1000) +' Sekunden voneinander ab!'
+                            html: 'Die Datenbank- und Webserverzeit weicht '+ Math.round((php_time-db_time)/1000) +' Sekunden voneinander ab'
                         });
         
                     }
