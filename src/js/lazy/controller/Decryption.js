@@ -133,6 +133,21 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         // me.getView().down('#panel').getComponent('card-4').getComponent('progressbar').updateText( decrypted+' von '+progressMax+' Stimmzetteln entschlüsselt');
     },
 
+    refreshPGPKEYSJob: false,
+
+    refreshPGPKEYS: function () {
+        var me = this;
+        if (me.refreshPGPKEYSJob===false){
+            me.refreshPGPKEYSJob=true;
+            me.getViewModel().getStore('pgpkeys').load({
+                callback: function () {
+                    me.refreshPGPKEYSJob=false;
+                    me.calcKeys();
+                }
+            });
+        }
+    },
+
     decrypt: function (res) {
         let next = true,
             me = this,
@@ -141,11 +156,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             if (res.count == 0) {
                 next = 0;
                 this.getViewModel().set('showwait',false);
-                this.getViewModel().getStore('pgpkeys').load({
-                    callback: function () {
-                        me.calcKeys();
-                    }
-                });
+                me.refreshPGPKEYS();
                 l.setActiveItem(5);
                 me.getView().down('#card-prev').setDisabled(true);
                 me.getView().down('#card-next').setDisabled(false);
@@ -161,20 +172,12 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 scope: this,
                 json: function (o) {
                     if (o.success == true) {
-                        this.getViewModel().getStore('pgpkeys').load({
-                            callback: function () {
-                                me.calcKeys();
-                            }
-                        });
+                        me.refreshPGPKEYS();
                         this.calcKeys();
                         this.decrypt(o);
                     } else {
                         this.getView().down('#card-next').setDisabled(true);
-                        this.getViewModel().getStore('pgpkeys').load({
-                            callback: function () {
-                                me.calcKeys();
-                            }
-                        });
+                        me.refreshPGPKEYS();
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
                 }
