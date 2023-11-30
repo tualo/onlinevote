@@ -83,6 +83,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
                                 name: 'stopdate',
                                 flex: 1,
                                 format: 'd.m.Y',
+                                submitFormat: 'Y-m-d',
                                 bind: {
                                     value: '{stopdate}'
                                 }
