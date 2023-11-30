@@ -18,6 +18,7 @@ Ext.define('Tualo.OnlineVote.controller.Settings', {
                 vm.set('stopdate', Ext.util.Format.date( new Date(data.stoptime), 'Y-m-d') );
             }
         }
+        view.enable();
     },
     save: async function(btn){
         let me = this,
