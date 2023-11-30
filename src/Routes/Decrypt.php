@@ -45,29 +45,26 @@ class Decrypt implements IRoute
                 */
                 $list = $db->direct('
                 select 
-                rand() random,
-                                        pgpkeys.privatekey,
-                                        ballotbox.*,
-                                        ballotbox_decrypted.id ballotbox_decrypted_id
-                                    from 
-                                        (select * from view_readtable_pgpkeys_intern where invalid=0)  pgpkeys 
-                                        join ballotbox  
-                                            on pgpkeys.privatekey<>"" and pgpkeys.keyname = ballotbox.keyname
-                                        left join ballotbox_decrypted 
-                                            on (ballotbox.`id`,ballotbox.`keyname`) = (ballotbox_decrypted.`id`,ballotbox_decrypted.`keyname`)
-                                    where 
-                                         blocked=0
-                                        and ballotbox.saveerror=0
-                                        and ballotbox_decrypted.id is null
-                                    order by random asc
-                    limit 5
+                    rand() random,
+                    pgpkeys.privatekey,
+                    ballotbox.*,
+                    ballotbox_decrypted.id ballotbox_decrypted_id
+                from 
+                    (select * from view_readtable_pgpkeys_intern where invalid=0)  pgpkeys 
+                    join ballotbox  
+                        on pgpkeys.privatekey<>"" and pgpkeys.keyname = ballotbox.keyname
+                    left join ballotbox_decrypted 
+                        on (ballotbox.`id`,ballotbox.`keyname`) = (ballotbox_decrypted.`id`,ballotbox_decrypted.`keyname`)
+                where 
+                        blocked=0
+                    and ballotbox.saveerror=0
+                    and ballotbox_decrypted.id is null
+                order by random asc
+                limit 5
                 ');
 
                 foreach ($list as $elm) {
-
-                
                     $decrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper'],'MESSAGE'));
-
                     $elm['ballotpaper'] = $decrypted;
                     $db->direct('insert ignore into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid})  ', $elm);
                 }

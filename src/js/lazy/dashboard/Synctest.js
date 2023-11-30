@@ -6,25 +6,38 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
     alias: 'part.tualodashboard_onlinevote_synctest',
  
     viewTemplate: {
-        layout: 'fit',
         title: 'Synctest',
-        
+        layout:{
+            type: 'vbox',
+            align: 'center'
+        },
         items: [
             {
                 xtype: 'panel',
                 listeners: {
                     boxready: async function(me){
-                        let data = await fetch('./onlinevote/syncsetup').then((response)=>{return response.json()});
+                        let data = await fetch('./onlinevote/state').then((response)=>{return response.json()});
                         console.log(data);
                         if (data.success){
                             me.add({
                                 xtype: 'panel',
-                                html: 'Synctest.. OK!'
+                                html: 'Der Server ist erreichbar!'
                             })
                         }else{
                             me.add({
                                 xtype: 'panel',
-                                html: 'Synctest.. ERROR!'
+                                html: 'Der Server ist nicht erreichbar!'
+                            })
+                        }
+                        if (data.starttime==null){
+                            me.add({
+                                xtype: 'panel',
+                                html: 'Der Wahlzeitraum ist nicht konfiguriert!'
+                            })
+                        }else{
+                            me.add({
+                                xtype: 'panel',
+                                html: 'Der Wahlzeitraum ('+data.starttime+' bis '+data.stoptime+') ist konfiguriert!'
                             })
                         }
         
