@@ -18,6 +18,9 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
                 type:'pgpkeys_store',
                 autoLoad: true,
             },
+            legend: {
+                docked: 'bottom'
+            },
             axes: [{
                 type: 'numeric',
                 position: 'left',
