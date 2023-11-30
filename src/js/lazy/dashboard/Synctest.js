@@ -6,7 +6,7 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
     alias: 'part.tualodashboard_onlinevote_synctest',
  
     viewTemplate: {
-        title: 'Synctest',
+        title: 'Status',
         layout:{
             type: 'vbox',
             align: 'center'
