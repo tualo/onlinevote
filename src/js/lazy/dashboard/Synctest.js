@@ -35,11 +35,25 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                 html: 'Der Wahlzeitraum ist nicht konfiguriert!'
                             })
                         }else{
+                            let start = Ext.util.Format.date( new Date(data.starttime), 'd.m.Y H:i:s');
+                            let stop = Ext.util.Format.date( new Date(data.stoptime), 'd.m.Y H:i:s');
                             me.add({
                                 xtype: 'panel',
-                                html: 'Der Wahlzeitraum ('+data.starttime+' bis '+data.stoptime+') ist konfiguriert!'
+                                html: 'Der Wahlzeitraum ('+ start +' bis '+stop+') ist konfiguriert!'
                             })
                         }
+                        me.add({
+                            xtype: 'panel',
+                            html: 'Der Webserver hat die Zeitzone: '+data.timezone
+                        });
+        
+                        let php_time = (new Date(data.php_time)).getTime();
+                        let db_time = (new Date(data.db_time)).getTime();
+
+                        me.add({
+                            xtype: 'panel',
+                            html: 'Die Datenbank- und Webserverzeit weicht '+ Math.round((php_time-db_time)/1000) +' Sekunden voneinander ab!'
+                        });
         
                     }
                 },
