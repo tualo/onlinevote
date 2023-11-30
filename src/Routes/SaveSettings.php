@@ -16,7 +16,7 @@ class SaveSettings implements IRoute{
             try{
                 $input=file_get_contents('php://input');
                 $data = json_decode($input,true);
-                if (!is_null($data)) throw new \Exception('Paramterfehler!');
+                if (is_null($data)) throw new \Exception('Paramterfehler!');
                 $session = App::get('session');
                 $db = $session->getDB();
 
