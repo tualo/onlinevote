@@ -21,7 +21,7 @@ class State implements IRoute{
                 App::result('stoptime',isset($param['stoptime'])?$param['stoptime']:null);
                 App::result('timezone',date_default_timezone_get());
                 App::result('php_time',date('Y-m-d H:i:s'));
-                App::result('db_time',$db->direct('select now() as n',[],'n'));
+                App::result('db_time',$db->singleValue('select now() as n',[],'n'));
 
 
                 Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');
