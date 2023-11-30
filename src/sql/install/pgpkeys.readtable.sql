@@ -24,7 +24,7 @@ from
             ) AS `x`,
             `ballotbox_blockchain`.`id` AS `bbid`,
             `ballotbox_blockchain`.`hash_value` AS `hash_value`,
-            if(`ballotbox_decrypted`.`id` is null, 0, 1) AS `decrypted`
+            ballotbox.`decrypted`
         from
             (
                 (
@@ -34,12 +34,6 @@ from
                             `ballotbox_blockchain`.`ballotpaper_id`,
                             `ballotbox_blockchain`.`keyname`
                         ) = (`ballotbox`.`id`, `ballotbox`.`keyname`)
-                    )
-                )
-                left join `ballotbox_decrypted` on(
-                    (`ballotbox`.`id`, `ballotbox`.`keyname`) = (
-                        `ballotbox_decrypted`.`id`,
-                        `ballotbox_decrypted`.`keyname`
                     )
                 )
             )
