@@ -10,3 +10,10 @@ CREATE TABLE IF NOT EXISTS `ballotbox_decrypted` (
   KEY `idx_ballotbox_decrypted_pgpkeys` (`keyname`),
   CONSTRAINT `fk_ballotbox_decrypted_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+
+
+call addFieldIfNotExists("ballotbox","decrypted","tinyint default 0") ;
+call addFieldIfNotExists("ballotbox_decrypted","ts","timestamp default current_timestamp") ;
+
+call `create_index`(database(),'ballotbox','idx_ballotbox_decrypted','decrypted');
