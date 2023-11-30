@@ -23,3 +23,4 @@ require_once "Routes/Decrypt.php";
 require_once "Routes/Count.php";
 require_once "Routes/KeyUpload.php";
 require_once "Routes/State.php";
+require_once "Routes/SaveSettings.php";

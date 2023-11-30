@@ -19,7 +19,32 @@ Ext.define('Tualo.OnlineVote.controller.Settings', {
             }
         }
     },
-    save:   function(){
+    save: async function(btn){
+        let me = this,
+            view = me.getView(),
+            vm = view.getViewModel();
+            view.disable();
+        let o = await fetch('./onlinevote/savesesstings',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                interrupted: vm.get('interrupted'),
+                starttime: vm.get('startdate')+' '+vm.get('starttime'),
+                stoptime: vm.get('stopdate')+' '+vm.get('stoptime')
+            })
+        }).then((response)=>{return response.json()});
+        if (o.success==false){
+            Ext.toast({
+                html: o.msg,
+                title: 'Fehler',
+                align: 't',
+                iconCls: 'fa fa-warning'
+            });
+        }
+
+        view.enable();
     }
 
 });
