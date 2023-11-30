@@ -24,6 +24,7 @@ class SetupHandshake implements IRoute{
         if (isset($_REQUEST['api_username']))
         if (isset($_REQUEST['api_password']))
         if (isset($_REQUEST['api_client']))
+        
         if ($api_result = APIRequestHelper::query( $_REQUEST['api_url'], [
             'username' => $_REQUEST['api_username'],
             'password' => $_REQUEST['api_password'],
@@ -56,6 +57,7 @@ class SetupHandshake implements IRoute{
                     'domain'    => $_SERVER['SERVER_NAME'],
                     'uri'       => substr($_SERVER['SCRIPT_URI'],0,-1*strlen('/onlinevote/setuphandshake')),
                 ];
+                APIRequestHelper::enableCookie(true);
                 if (self::remoteLogin()===true){
 
                     $token = $session->registerOAuth(

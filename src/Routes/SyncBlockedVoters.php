@@ -39,7 +39,7 @@ class SyncBlockedVoters implements IRoute
                 ",[],'text','v');
 
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
-                $blocked_voters = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
+                $blocked_voters = APIRequestHelper::query($url . 'ds/' . $tablename . '/read?limit=1000000');
                 if ($blocked_voters === false) throw new Exception("Fehler beim Abrufen der blockierten Wähler (" . APIRequestHelper::$last_error_message . ")");
 
 

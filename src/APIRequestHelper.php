@@ -9,6 +9,11 @@ class APIRequestHelper {
     public static $last_error_message = '';
     public static $last_data = '';
     public static $last_rawdata = '';
+    public static $usecookie = false;
+
+    public static function enableCookie($val=true){
+        self::$usecookie = $val;
+    }
     
     
     public static function query($url,  $post=NULL){
@@ -52,9 +57,11 @@ class APIRequestHelper {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         if ( !is_null($post) ) curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
-        $cookie_file = App::get('tempPath').'/api_cookie';
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
-        if (file_exists($cookie_file)) curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+        if(self::$usecookie){
+            $cookie_file = App::get('tempPath').'/api_cookie';
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
+            if (file_exists($cookie_file)) curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+        }
 
         $data = curl_exec($ch);
         self::$last_rawdata=$data;
