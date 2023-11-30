@@ -17,8 +17,8 @@ class SaveSettings implements IRoute{
                 $input=file_get_contents('php://input');
                 $data = json_decode($input,true);
                 if (is_null($data)) throw new \Exception('Paramterfehler!');
-                $session = App::get('session');
-                $db = $session->getDB();
+                
+                if ($data['starttime']>=$data['stoptime']) throw new \Exception('Der Start muss vor dem Ende liegen!');
 
                 $table = DSTable::instance('wm_loginpage_settings');
                 $table->insert([
