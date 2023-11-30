@@ -69,7 +69,7 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                 ){
                                     me.add({
                                         xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist <span style="color: orange;font-weight: bold;">abgelaufen/span>!'
+                                        html: 'Der Wahlzeitraum ist <span style="color: orange;font-weight: bold;">abgelaufen</span>!'
                                     })
                                 }
                             }
