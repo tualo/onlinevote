@@ -15,7 +15,11 @@ Ext.define('Tualo.OnlineVote.models.Decryption', {
         estimatedTimeText: function(get){
             let time = get('estimatedTime');
             if (time){
-                return 'ca. '+Math.round(time)+' Minuten verbleiben';
+                if(Math.round(time)>0){
+                    return 'ca. '+Math.round(time)+' Minuten verbleiben';
+                }else{
+                    return 'wenige Sekunden verbleiben';
+                }
             }
             return '';
         }

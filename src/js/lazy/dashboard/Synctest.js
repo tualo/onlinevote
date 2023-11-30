@@ -5,47 +5,78 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
     extend: 'Ext.dashboard.Part',
     alias: 'part.tualodashboard_onlinevote_synctest',
  
+    
     viewTemplate: {
         title: 'Status',
-        layout:{
-            type: 'vbox',
-            align: 'center'
-        },
         items: [
             {
-                xtype: 'panel',
+                xtype: 'grid',
+                store: {
+                    type: 'json',
+                    fields: [
+                        {name: 'id', type: 'int'},
+                        {name: 'name', type: 'string'},
+                        {name: 'value', type: 'string'},
+                        {name: 'color', type: 'string'},
+                        {name: 'bold', type: 'boolean'}
+                    ]
+                },
+                //height: 500,
+                //border: true,
+                hideHeaders: true,
+                columns: [
+                    { text: 'Name',  dataIndex: 'name', flex: 1 },
+                    { text: 'Wert', dataIndex: 'value', flex: 1, align: 'right' ,renderer: function(value,meta,record){
+                        if (record.get('bold')){
+                            return '<span style="font-weight: bold;color:'+record.get('color')+';">'+value+'</span>';
+                        }else{
+                            return '<span style="color:'+record.get('color')+';">'+value+'</span>';
+                        }
+                    }}
+                //   { text: 'Farbe', dataIndex: 'color', flex: 1 },
+                //   { text: 'Fett', dataIndex: 'bold', flex: 1 }
+                ],
                 listeners: {
                     boxready: async function(me){
-                        let data = await fetch('./onlinevote/state').then((response)=>{return response.json()});
-                        console.log(data);
+                        let data = await fetch('./onlinevote/state').then((response)=>{return response.json()}),
+                            list = [];
                         if (data.remoteError===false){
-                            me.add({
-                                xtype: 'panel',
-                                html: 'Der Remote-Server ist erreichbar!'
-                            })
-                        }else if (data.remoteError===true){
-                            me.add({
-                                xtype: 'panel',
-                                html: 'Der Remote-Server ist nicht erreichbar!'
-                            })
+                            list.push({
+                                name: 'Remote-Server',
+                                value: 'erreichbar',
+                                color: 'green',
+                                bold: false
+                            });
                         }
+                        if (data.remoteError===true){
+                            list.push({
+                                name: 'Remote-Server',
+                                value: 'nicht erreichbar',
+                                color: 'red',
+                                bold: true
+                            });
+                        }   
                         if (data.starttime==null){
-                            me.add({
-                                xtype: 'panel',
-                                html: 'Der Wahlzeitraum ist nicht konfiguriert!'
-                            })
+                            list.push({
+                                name: 'Wahlzeitraum',
+                                value: 'nicht konfiguriert',
+                                color: 'red',
+                                bold: true
+                            });
                         }else{
                             let start = Ext.util.Format.date( new Date(data.starttime), 'd.m.Y H:i:s');
                             let stop = Ext.util.Format.date( new Date(data.stoptime), 'd.m.Y H:i:s');
 
-
                             if (
                                 (new Date(data.starttime)).getTime()>(new Date(data.stoptime)).getTime()
                             ){
-                                me.add({
-                                    xtype: 'panel',
-                                    html: '<span style="color:red;">Der Wahlzeitraum ist fehlerhaft konfiguriert!</span>'
+                                list.push({
+                                    name: 'Wahlzeitraum',
+                                    value: 'fehlerhaft konfiguriert',
+                                    color: 'red',
+                                    bold: true
                                 });
+ 
                             }else{
 
 
@@ -53,57 +84,73 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                     (new Date(data.starttime)).getTime()<=Date.now() &&
                                     (new Date(data.stoptime)).getTime()>=Date.now()
                                 ){
-                                    me.add({
-                                        xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist <span style="color: green;font-weight: bold;">aktiv</span>!'
-                                    })
+                                    list.push({
+                                        name: 'Wahl',
+                                        value: 'aktiv',
+                                        color: 'green',
+                                        bold: true
+                                    });
+
                                 }else if (
                                     (new Date(data.starttime)).getTime()>Date.now()
                                 ){
-                                    me.add({
-                                        xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist noch <span style="color: darkgrey;font-weight: bold;">nicht aktiv</span>!'
-                                    })
+                                    list.push({
+                                        name: 'Wahl',
+                                        value: 'nicht gestartet',
+                                        color: 'darkgrey',
+                                        bold: true
+                                    });
                                 }else if (
                                     (new Date(data.stoptime)).getTime()<Date.now()
                                 ){
-                                    me.add({
-                                        xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist <span style="color: orange;font-weight: bold;">abgelaufen</span>!'
-                                    })
+                                    list.push({
+                                        name: 'Wahl',
+                                        value: 'beendet',
+                                        color: 'orange',
+                                        bold: true
+                                    });
                                 }
                             }
 
-                            me.add({
-                                xtype: 'panel',
-                                html: [
-                                    'Wahlzeitraum:',
-                                    ' <span style="font-weight: bold;">Start: '+start+'</span>',
-                                    ' <span style="font-weight: bold;">Ende: '+stop+'</span>',
-                                ].join('<br>')
-                            })
+                            list.push({
+                                name: 'Start',
+                                value: start,
+                                color: 'black',
+                                bold: true
+                            });
+
+                            list.push({
+                                name: 'Ende',
+                                value: stop,
+                                color: 'black',
+                                bold: true
+                            });
+
                         }
-                        me.add({
-                            xtype: 'panel',
-                            html: 'Der Webserver hat die Zeitzone: '+data.timezone
-                        });
-        
-                        let php_time = (new Date(data.php_time)).getTime();
-                        let db_time = (new Date(data.db_time)).getTime();
+                       
 
-                        me.add({
-                            xtype: 'panel',
-                            html: 'Die Datenbank- und Webserverzeit weicht '+ Math.round((php_time-db_time)/1000) +' Sekunden voneinander ab'
+                        list.push({ 
+                            name: 'Webserver-Zeitzone',
+                            value: ''+data.timezone,
+                            color: 'black',
+                            bold: false
                         });
-
-
-                        me.add({
-                            xtype: 'panel',
-                            html: 'Es gibt derzeit '+ data.active_voters +' aktive Wähler'
+                        list.push({
+                            name: 'Zeitabweichung',
+                            value: Math.abs(Math.round((new Date(data.php_time)).getTime()-(new Date(data.db_time)).getTime())/1000)+' Sekunden',
+                            color: (Math.round(Math.abs(Math.round((new Date(data.php_time)).getTime()-(new Date(data.db_time)).getTime())/1000)/100)>0?'red':'black'),
+                            bold: false
                         });
-        
+                        list.push({
+                            name: 'aktive Wähler',
+                            value: data.active_voters,
+                            color: 'black',
+                            bold: false
+                        });
+                        
+                        me.getStore().loadData(list);
                     }
-                },
+                }
             }
         ]
     }
