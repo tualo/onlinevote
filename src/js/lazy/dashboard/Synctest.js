@@ -55,21 +55,21 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                 ){
                                     me.add({
                                         xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist aktiv!'
+                                        html: 'Der Wahlzeitraum ist <span style="color: green;font-weight: bold;">aktiv</span>!'
                                     })
                                 }else if (
                                     (new Date(data.starttime)).getTime()>Date.now()
                                 ){
                                     me.add({
                                         xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist noch nicht aktiv!'
+                                        html: 'Der Wahlzeitraum ist noch <span style="color: darkgrey;font-weight: bold;">nicht aktiv</span>!'
                                     })
                                 }else if (
                                     (new Date(data.stoptime)).getTime()<Date.now()
                                 ){
                                     me.add({
                                         xtype: 'panel',
-                                        html: 'Der Wahlzeitraum ist abgelaufen!'
+                                        html: 'Der Wahlzeitraum ist <span style="color: orange;font-weight: bold;">abgelaufen/span>!'
                                     })
                                 }
                             }
@@ -78,8 +78,8 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                                 xtype: 'panel',
                                 html: [
                                     'Wahlzeitraum:',
-                                    '<b>Start: '+start+'</b>',
-                                    '<b>Ende: '+stop+'</b>',
+                                    ' <span style="font-weight: bold;">Start: '+start+'</span>',
+                                    ' <span style="font-weight: bold;">Ende: '+stop+'</span>',
                                 ].join('<br>')
                             })
                         }
