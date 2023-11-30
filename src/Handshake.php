@@ -27,6 +27,8 @@ class Handshake
             select stoptime v,'stoptime' text from wm_loginpage_settings where  id = 1
             union 
             select starttime v,'starttime' text from wm_loginpage_settings where  id = 1
+            union 
+            select interrupted v,'interrupted' text from wm_loginpage_settings where  id = 1
         ",[],'text','v');
         if ($o['api']==1){
             $result = $o;

@@ -19,16 +19,24 @@ class State implements IRoute{
                 $param = Handshake::parameter();
                 App::result('starttime',isset($param['starttime'])?$param['starttime']:null);
                 App::result('stoptime',isset($param['stoptime'])?$param['stoptime']:null);
+                App::result('interrupted',isset($param['interrupted'])?$param['interrupted']:false);
                 App::result('timezone',date_default_timezone_get());
                 App::result('php_time',date('Y-m-d H:i:s'));
                 App::result('db_time',$db->singleValue('select now() as n',[],'n'));
 
-                App::result('active_voters',$db->singleValue('
-                select count(*) c from voters where contact > now() + interval - 15 minute and completed=0
-                ',[],'c'));
+                try{
+                    App::result('active_voters',$db->singleValue('
+                    select count(*) c from voters where contact > now() + interval - 15 minute and completed=0
+                    ',[],'c'));
+                }catch(\Exception $e){
 
+                }
 
-                Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');
+                try{
+                    Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');
+                }catch(\Exception $e){
+                    App::result('remoteError',true);
+                }
                 App::result('success',true);
              }catch(\Exception $e){
                  App::result('msg', $e->getMessage());

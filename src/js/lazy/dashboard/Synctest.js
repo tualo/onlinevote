@@ -18,12 +18,12 @@ Ext.define('Tualo.OnlineVote.dashboard.Synctest', {
                     boxready: async function(me){
                         let data = await fetch('./onlinevote/state').then((response)=>{return response.json()});
                         console.log(data);
-                        if (data.success){
+                        if (data.remoteError===false){
                             me.add({
                                 xtype: 'panel',
                                 html: 'Der Remote-Server ist erreichbar!'
                             })
-                        }else{
+                        }else if (data.remoteError===true){
                             me.add({
                                 xtype: 'panel',
                                 html: 'Der Remote-Server ist nicht erreichbar!'
