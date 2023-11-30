@@ -46,15 +46,14 @@ class Decrypt implements IRoute
                 $list = $db->direct('
                 select 
                     rand() random,
-                    pgpkeys.privatekey,
                     ballotbox.*
                 from 
                     ballotbox
-                    join   (select * from view_readtable_pgpkeys_intern where invalid=0)  pgpkeys 
-                        on pgpkeys.privatekey<>"" and pgpkeys.keyname = ballotbox.keyname
-                        and ballotbox.decrypted=0
+                    join pgpkeys
+                    on pgpkeys.privatekey<>"" and pgpkeys.keyname = ballotbox.keyname
                 where 
                         blocked=0
+                    and ballotbox.decrypted=0
                     and ballotbox.saveerror=0
                 order by random asc
                 limit 5
