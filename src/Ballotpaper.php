@@ -219,7 +219,7 @@ class Ballotpaper {
     public function register():void{
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
-        // alter table voters add contact datetime default current_timestamp
+        
         $sql = 'insert into voters (
             voter_id,
             stimmzettel,
