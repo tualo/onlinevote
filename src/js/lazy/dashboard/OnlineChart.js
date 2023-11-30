@@ -22,7 +22,7 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
                 type: 'numeric',
                 position: 'left',
                 minimum: 0,
-                fields: ['total', 'decrypted','blocked'],
+                fields: [ 'encrypted', 'decrypted','blocked'],
                 title: {
                     text: 'Anzahl',
                     fontSize: 15
@@ -47,7 +47,7 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
             series: {
                 type: 'bar',
                 xField: 'keyid',
-                yField: ['total', 'decrypted','blocked']
+                yField: ['encrypted', 'decrypted','blocked']
             }
         }]
     }

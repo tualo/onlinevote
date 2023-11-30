@@ -71,7 +71,12 @@ select
     ifnull(`view_readtable_pgpkeys_valid`.`invalid`, 0) AS `invalid`,
     ifnull(`view_readtable_pgpkeys_valid`.`total`, 0) AS `total`,
     ifnull(`view_readtable_pgpkeys_valid`.`blocked`, 0) AS `blocked`,
-    ifnull(`view_readtable_pgpkeys_valid`.`decrypted`, 0) AS `decrypted`
+    ifnull(`view_readtable_pgpkeys_valid`.`decrypted`, 0) AS `decrypted`,
+    (
+        ifnull(`view_readtable_pgpkeys_valid`.`total`, 0) -
+        ifnull(`view_readtable_pgpkeys_valid`.`blocked`, 0) -
+        ifnull(`view_readtable_pgpkeys_valid`.`decrypted`, 0)
+    ) AS `encrypted`
 from
     (
         `pgpkeys`
