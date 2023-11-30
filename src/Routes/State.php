@@ -34,6 +34,7 @@ class State implements IRoute{
 
                 try{
                     Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');
+                    App::result('remoteError',false);
                 }catch(\Exception $e){
                     App::result('remoteError',true);
                 }
