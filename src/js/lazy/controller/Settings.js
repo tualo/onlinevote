@@ -25,6 +25,11 @@ Ext.define('Tualo.OnlineVote.controller.Settings', {
             view = me.getView(),
             vm = view.getViewModel();
             view.disable();
+        if (vm.get('stopdate') instanceof Date) vm.set('stopdate', Ext.util.Format.date( vm.get('stopdate'), 'Y-m-d') );
+        if (vm.get('startdate') instanceof Date) vm.set('startdate', Ext.util.Format.date( vm.get('startdate'), 'Y-m-d') );
+        if (vm.get('stoptime') instanceof Date) vm.set('stoptime', Ext.util.Format.date( vm.get('stoptime'), 'H:i:s') );
+        if (vm.get('starttime') instanceof Date) vm.set('starttime', Ext.util.Format.date( vm.get('starttime'), 'H:i:s') );
+        
         let o = await fetch('./onlinevote/savesesstings',{
             method: 'POST',
             headers: {
