@@ -208,7 +208,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
             const countTime = me.decryptTimeTable.map((a)=>a.count).reduce((a, b) => a + b, 0);
             const avgTime = sumTime / countTime;
             const estimatedTime = avgTime * remaining / me.decryptProcesses;
-            vm.set('estimatedTime',estimatedTime);
+            vm.set('estimatedTime',estimatedTime/1000/60);
         }
     },
             
