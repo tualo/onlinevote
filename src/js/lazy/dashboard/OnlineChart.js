@@ -21,17 +21,7 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
             legend: {
                 docked: 'bottom'
             },
-            listeners: {
-                boxReady: function(){
-                    console.log('boxReady');
-                    let me = this;
-                    me.setSeries([
-                        me.getSeriesConfig('encrypted', 'Verschlüsselt'),
-                        me.getSeriesConfig('decrypted', 'Entschlüsselt'),
-                        me.getSeriesConfig('blocked', 'Blockiert')
-                    ]);
-                }
-            },
+            
             axes: [{
                 type: 'numeric',
                 position: 'left',
@@ -61,6 +51,7 @@ Ext.define('Tualo.OnlineVote.dashboard.OnlineChart', {
             series: {
                 type: 'bar',
                 xField: 'keyid',
+                title: ['Verschlüsselt', 'Entschlüsselt','Gesperrt'],
                 yField: ['encrypted', 'decrypted','blocked']
             }
         }]
