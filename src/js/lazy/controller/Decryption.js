@@ -148,7 +148,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
         }
     },
 
-    decryptProcesses: 16,
+    decryptProcesses: 32,
     decryptTimeTable: [],
 
     decrypt: function (res) {
