@@ -34,7 +34,7 @@ class Image implements IRoute{
 
             list($mime,$data) =  explode(',',$imagedata);
             $etag=md5($data);
-            App::contenttype( $mime );
+            App::contenttype( str_replace('data:','',$mime) );
 
 
             // header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
