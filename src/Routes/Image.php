@@ -8,12 +8,17 @@ use Tualo\Office\DS\DSFiles;
 class Image implements IRoute{
     public static function register(){
 
-        BasicRoute::add('/tualocms/page/onlinevote/portrait/(?P<id>[\/.\w\d\-\_\.]+)'.'',function($matches){
+
+        BasicRoute::add('/tualocms/page/onlinevote/(?P<type>[\/.\w\d\-\_\.]+)/(?P<id>[\/.\w\d\-\_\.]+)'.'',function($matches){
 
 
-
-            $image = DSFiles::instance('kandidaten_bilder');
-            $imagedata = $image->getBase64('id',$matches['id'],true);
+            if($matches['type']=='kandidaten_bilder'){
+                $image = DSFiles::instance('kandidaten_bilder');
+                $imagedata = $image->getBase64('id',$matches['id'],true);
+            }else if($matches['type']=='img'){
+                $image = DSFiles::instance('tualocms_bilder');
+                $imagedata = $image->getBase64('titel',$matches['id'],true);
+            }
             $image_error = $image->getError();
             if ($image_error!=''){
                 
