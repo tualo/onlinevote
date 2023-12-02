@@ -28,7 +28,7 @@ INSERT  IGNORE INTO `ds_column_list_label` (`table_name`, `column_name`, `langua
 ('kandidaten_bilder','__file_size','DE','Größe','tualodisplayfilesize','',5,'','','',0,1,'',0,1.00,'','end','','NULL'),
 ('kandidaten_bilder','__file_type','DE','__file_type','gridcolumn','',11,'','','',1,1,'',0,1.00,'','left','','NULL');
 INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `language`, `label`, `xtype`, `field_path`, `position`, `hidden`, `active`, `allowempty`, `fieldgroup`, `flex`, `hint`) VALUES ('kandidaten_bilder','bild','DE','bild','displayfield','Allgemein',6,1,0,0,'1',1.00,'\'\''),
-('kandidaten_bilder','ctime','DE','Anlage','tualodisplaydatefield','Allgemein/Angaben',4,0,1,1,'1',1.00,'\'\''),
+('kandidaten_bilder','ctime','DE','Anlage','tualodatetimedisplayfield','Allgemein/Angaben',4,0,1,1,'1',1.00,'\'\''),
 ('kandidaten_bilder','file_id','DE','file_id','displayfield','Allgemein',12,1,0,0,'1',1.00,'\'\''),
 ('kandidaten_bilder','hash','DE','hash','displayfield','Allgemein',8,1,0,0,'1',1.00,'\'\''),
 ('kandidaten_bilder','id','DE','ID','displayfield','Allgemein/Angaben',0,0,1,1,'1',1.00,'\'\''),
