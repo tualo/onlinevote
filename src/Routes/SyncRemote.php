@@ -45,6 +45,7 @@ class SyncRemote implements IRoute
         BasicRoute::add('/onlinevote/syncremote', function () {
             TualoApplication::contenttype('application/json');
             try {
+                ini_set('memory_limit', '4096M');
 
                 $session = TualoApplication::get('session');
                 $config = TualoApplication::get('configuration');
