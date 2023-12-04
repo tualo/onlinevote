@@ -5,6 +5,7 @@ Ext.define('Tualo.OnlineVote.controller.Syncform', {
     onReady: async function () {
         let me = this,
             view = me.getView(),
+            vm = view.getViewModel(),
             setup = await fetch('./onlinevote/syncsetup').then((response)=>{return response.json()}),
             state = await fetch('./onlinevote/state').then((response)=>{return response.json()});
         if (setup.success==false){
