@@ -3,17 +3,25 @@ Ext.define('Tualo.OnlineVote.Syncform', {
     alias: 'widget.onlinevote_syncform',
      
     listeners:{
-      boxReady: 'onBoxReady'
+      boxReady: 'onReady'
     },
     defaults: {
         anchor: '100%'
     },
+    controller: 'onlinevote_syncform_controller',
+    viewModel: {
+        type: 'onlinevote_syncform_model'
+    },
+    requires: [
+        'Tualo.OnlineVote.controller.Syncform',
+        'Tualo.OnlineVote.models.Syncform'
+    ],
     bodyPadding: '25px',
     disabled: true,
     items: [
         {
             xtype: 'textfield',
-            value: 'https://ihk-vollversammlungswahl.de/current/',
+            value: 'https://wahl.software/wm/',
             fieldLabel: 'URL',
             name: 'api_url'
         },
@@ -35,6 +43,12 @@ Ext.define('Tualo.OnlineVote.Syncform', {
             value: '',
             fieldLabel: 'System',
             name: 'api_client'
+        },
+        {
+            xtype: 'hiddenfield',
+            value: '',
+            fieldLabel: 'Token',
+            name: 'api_token'
         }
 
     ],
@@ -47,34 +61,7 @@ Ext.define('Tualo.OnlineVote.Syncform', {
         },
         {
             text: "Sync",
-            handler: function(btn){
-
-                Tualo.Ajax.request({
-                    url: './onlinevote/syncremote',
-                    showWait: true,
-                    timeout: 300000,
-                    scope: this,
-
-                    json: function(o){
-                        if (o.success==false){
-                            Ext.toast({
-                                html: o.msg,
-                                title: 'Fehler',
-                                align: 't',
-                                iconCls: 'fa fa-warning'
-                            });
-                        }else{
-                            Ext.toast({
-                                html: "Sync erfolgreich",
-                                title: 'OK',
-                                align: 't',
-                            }); 
-                        }
-                        console.log(o.success);
-                    }
-                  });
-
-            }
+            handler: 'sync'
         },
         {
             text: "Einrichten",

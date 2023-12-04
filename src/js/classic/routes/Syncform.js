@@ -12,12 +12,18 @@ Ext.define('Tualo.routes.Syncform',{
     url: 'onlinevote/syncform',
     handler: {
         action: function( ){
+            console.log('action');
+
             Ext.getApplication().addView('Tualo.OnlineVote.Syncform');
         },
         before: function ( action,cnt) {
-            Ext.require('Tualo.OnlineVote.Viewport',function(){
+            console.log('before');
+            let fn = Ext.require, txt = 'Tualo.OnlineVote'+'.Syncform';
+            fn(txt,function(){
+                console.log('resume');
                 action.resume();
             },this);
         }
+
     }
 });
