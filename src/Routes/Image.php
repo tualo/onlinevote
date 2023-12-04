@@ -12,7 +12,7 @@ class Image implements IRoute{
         BasicRoute::add('/tualocms/page/onlinevote/(?P<type>[\/.\w\d\-\_\.]+)/(?P<id>[\/.\w\d\-\_\.]+)'.'',function($matches){
 
 
-            if($matches['type']=='kandidaten_bilder'){
+            if($matches['type']=='portrait'){
                 $image = DSFiles::instance('kandidaten_bilder');
                 $imagedata = $image->getBase64('id',$matches['id'],true);
             }else if($matches['type']=='img'){
