@@ -38,6 +38,41 @@ class Handshake
         return $result;
     }
 
+    public static function testRemote():bool{
+        $remote_data = [];
+        $session = App::get('session');
+        $db = $session->getDB();
+
+        $o = $db->directMap("
+            select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
+            union 
+            select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
+            union
+            select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
+            union
+            select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
+        ",[],'text','v');
+
+        $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
+        
+        $table_list = $db->direct('select table_name from wm_sync_tables order by position asc');
+        foreach ($table_list as $table_row) {
+            set_time_limit(300);
+            $tablename = $table_row['table_name'];
+            $remote_data[$tablename] = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1');
+            if($remote_data[$tablename]===false){
+                throw new \Exception('error on '.$tablename);
+            }
+        }
+        $tablename = 'blocked_voters';
+        
+        $blocked_voters = APIRequestHelper::query($url . 'ds/' . $tablename . '/read?limit=1000000');
+        if ($blocked_voters === false) throw new \Exception("Fehler beim Abrufen der blockierten Wähler (" . APIRequestHelper::$last_error_message . ")");
+
+        
+        return true;
+    }
+
     public static function pingRemote():bool{
         $params = self::parameter();
         if (!isset($params['api_url'])) return false;
