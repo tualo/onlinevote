@@ -173,16 +173,23 @@ class Init {
 
             if ($wm_wahlschein_register['starttime']>$current){
                 throw new VotingNotStarted();
-            }else if ($wm_wahlschein_register['stoptime']<$current){
-                if ($wm_wahlschein_register['stoptime']<$currentExtended){
-                    throw new VotingStopped();
-                }else if (
-                    in_array($wmstate->getCurrentState(), ['Tualo\Office\OnlineVote\States\Login','Tualo\Office\OnlineVote\States\failures\VotingStopped'])
-                ){
-                    throw new VotingStopped();
-                }
-                // throw new VotingStopped();
-            }else if ($wm_wahlschein_register['interrupted']==1){ 
+            }
+
+            if ($wm_wahlschein_register['stoptime']<$currentExtended){
+                throw new VotingStopped();
+            }
+
+            if (
+                ($wm_wahlschein_register['stoptime']<$current) &&
+                in_array($wmstate->getCurrentState(), [
+                    'Tualo\Office\OnlineVote\States\Login',
+                    'Tualo\Office\OnlineVote\States\failures\VotingStopped'
+                ])
+            ){
+                throw new VotingStopped();
+            }
+            
+            if ($wm_wahlschein_register['interrupted']==1){ 
                 throw new VotingInterrupted();
             }
 
