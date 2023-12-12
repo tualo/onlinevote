@@ -166,11 +166,20 @@ class Init {
             $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1',array(),'');
             if ($wm_wahlschein_register==false) throw new \Exception('No wm_loginpage_settings found!');
             
+            $stop_offset = intval( App::configuration('onlinevote','backgroundStopSeconds','0') );
             $current = date('Y-m-d H:i:s',time());
+
+            $currentExtended = date('Y-m-d H:i:s',time() - $stop_offset );
+
             if ($wm_wahlschein_register['starttime']>$current){
                 throw new VotingNotStarted();
             }else if ($wm_wahlschein_register['stoptime']<$current){
-                throw new VotingStopped();
+                if ($wm_wahlschein_register['stoptime']<$currentExtended){
+                    throw new VotingStopped();
+                }else if ('Tualo\Office\OnlineVote\States\Login'==$wmstate->getCurrentState()){
+                    throw new VotingStopped();
+                }
+                // throw new VotingStopped();
             }else if ($wm_wahlschein_register['interrupted']==1){ 
                 throw new VotingInterrupted();
             }
