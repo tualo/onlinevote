@@ -176,7 +176,9 @@ class Init {
             }else if ($wm_wahlschein_register['stoptime']<$current){
                 if ($wm_wahlschein_register['stoptime']<$currentExtended){
                     throw new VotingStopped();
-                }else if ('Tualo\Office\OnlineVote\States\Login'==$wmstate->getCurrentState()){
+                }else if (
+                    in_array($wmstate->getCurrentState(), ['Tualo\Office\OnlineVote\States\Login','Tualo\Office\OnlineVote\States\failures\VotingStopped'])
+                ){
                     throw new VotingStopped();
                 }
                 // throw new VotingStopped();
