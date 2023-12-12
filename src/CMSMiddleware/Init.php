@@ -183,7 +183,8 @@ class Init {
                 ($wm_wahlschein_register['stoptime']<$current) &&
                 in_array($wmstate->getCurrentState(), [
                     'Tualo\Office\OnlineVote\States\Login',
-                    'Tualo\Office\OnlineVote\States\failures\VotingStopped'
+                    'Tualo\Office\OnlineVote\States\failures\VotingStopped',
+                    'Tualo\Office\OnlineVote\States\SaveCompleted'
                 ])
             ){
                 throw new VotingStopped();
