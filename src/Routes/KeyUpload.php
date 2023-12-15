@@ -27,6 +27,8 @@ class KeyUpload implements IRoute
             $db = $session->getDB();
             try {
 
+                $stop_offset = intval( TualoApplication::configuration('onlinevote','backgroundStopSeconds','0') );
+                // use interval add secnid
                 if ($db->singleRow('select stoptime from wm_loginpage_settings where stoptime<now() and id = 1', []) === false) {
                     throw new Exception("Der Schlüssel kann erst nach dem Ende der Wahlfrist hochgeladen werden");
                 }
