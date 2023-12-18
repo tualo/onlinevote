@@ -97,7 +97,8 @@ class Voter
                     }
 
                     $vd = $bp->getVoterData();
-                    if (isset($vd['einzel'])) $this->allowEditName = $vd['einzel'].'';
+                    if (isset($vd['einzel']) && ($vd['einzel'].''>$this->allowEditName) ) $this->allowEditName = $vd['einzel'].'';
+
                     $this->addAvailableBallotpaper($bp);
                 }
             }
