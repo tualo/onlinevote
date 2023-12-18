@@ -41,7 +41,7 @@ class Legitimation implements State{
                     $stateMachine->voter()->setLastName($_REQUEST['lastname']);
                 }
                 if (isset($_REQUEST['firstname']) && is_string($_REQUEST['firstname'])){
-                    $stateMachine->voter()->setLastName($_REQUEST['firstname']);
+                    $stateMachine->voter()->setFirstName($_REQUEST['firstname']);
                 }
                 if (isset($_REQUEST['birthdate']) && is_string($_REQUEST['birthdate'])){
                     $stateMachine->voter()->setBirthdate($_REQUEST['birthdate']);
