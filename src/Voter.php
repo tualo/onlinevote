@@ -53,6 +53,7 @@ class Voter
     private string $lastname = "";
     private string $birthdate = "";
     private string $confirmed_birthdate = "";
+    private string $allowEditName = "";
 
 
     private bool $loggedIn = false;
@@ -71,6 +72,7 @@ class Voter
         $this->username = isset($json['username']) ? $json['username'] : '';
         $this->pwhash = isset($json['pwhash']) ? $json['pwhash'] : '';
 
+        
         $this->id = isset($json['id']) ? $json['id'] : '';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])) {
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'], true);
@@ -93,6 +95,9 @@ class Voter
                         App::logger('Voter(function fromJSON)')->error('canvote ist 1, aber die stimmabgabe ist bereits in der urne');
                         throw new VoterUnsyncException('canvote ist 1, aber die stimmabgabe ist bereits in der urne. Wahlschein: ' . $bp->getVoterId());
                     }
+                    
+                    $vd = $bp->getVoterData();
+                    if (isset($vd['einzel'])) $this->allowEditName = $vd['einzel'];
                     $this->addAvailableBallotpaper($bp);
                 }
             }
@@ -113,6 +118,11 @@ class Voter
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getAllowEditName(): string
+    {
+        return $this->allowEditName;
     }
 
     public function getSigners(): array
