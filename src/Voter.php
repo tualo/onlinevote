@@ -95,9 +95,9 @@ class Voter
                         App::logger('Voter(function fromJSON)')->error('canvote ist 1, aber die stimmabgabe ist bereits in der urne');
                         throw new VoterUnsyncException('canvote ist 1, aber die stimmabgabe ist bereits in der urne. Wahlschein: ' . $bp->getVoterId());
                     }
-                    
+
                     $vd = $bp->getVoterData();
-                    if (isset($vd['einzel'])) $this->allowEditName = $vd['einzel'];
+                    if (isset($vd['einzel'])) $this->allowEditName = $vd['einzel'].'';
                     $this->addAvailableBallotpaper($bp);
                 }
             }
