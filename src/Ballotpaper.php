@@ -311,6 +311,7 @@ class Ballotpaper {
             $db->direct('start transaction;');
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach($pgpkeys as $keyitem){
+                set_time_limit(60);
                 $hash = $keyitem;
 
                 $hash['ballotpaper']    =   TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled)),'MESSAGE');
@@ -335,7 +336,11 @@ class Ballotpaper {
                 $record = APIRequestHelper::query($url,[
                     'voter_id' =>$this->getVoterId(),
                     'ballotpaper_id' => $this->getBallotpaperId(),
-                    'signature' => TualoApplicationPGP::sign($_SESSION['api_private'],(string)$this->getVoterId())
+                    'signature' => TualoApplicationPGP::sign($_SESSION['api_private'],(string)$this->getVoterId()),
+                    'phonenumber'   => (string)$stateMachine->voter()->getPhonenumber(),
+                    'first_name'   => (string)$stateMachine->voter()->getFirstName(),
+                    'last_name'   => (string)$stateMachine->voter()->getLastName(),
+                    'birthdate'     => (string)$stateMachine->voter()->getBirthdate()
                 ]);
                 if ($record===false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
                 if ($record['success']==false) throw new RemoteBallotpaperSaveException($record['msg']);
