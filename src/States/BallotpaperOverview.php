@@ -113,7 +113,7 @@ class BallotpaperOverview implements State{
             if (
                 isset($_SESSION['saving_ballotpaper']) 
             ){ 
-                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper_loop_id']);
+                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper']);
                 throw new BallotPaperIsSavingException(); 
             }
             sleep(10);

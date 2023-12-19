@@ -47,6 +47,7 @@ class Ballotpaper implements State{
             isset($_REQUEST['send']) && 
             $_REQUEST['send']=1
         ){
+            if (isset($_SESSION['saving_ballotpaper'])) unset($_SESSION['saving_ballotpaper']);
             // kreuze lesen
             if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
             $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
