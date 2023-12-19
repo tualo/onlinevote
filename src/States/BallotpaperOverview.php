@@ -6,6 +6,7 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
+use Tualo\Office\OnlineVote\Exceptions\BallotPaperIsSavingException;
 
 class BallotpaperOverview implements State{
 
@@ -47,6 +48,9 @@ class BallotpaperOverview implements State{
         }else  if (
             isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
+            if (isset($_SESSION['saving_ballotpaper'])){ throw new BallotPaperIsSavingException(); }
+            $_SESSION['saving_ballotpaper'] = 1;
+
             App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
             $storedVotes = $stateMachine->voter()->getCurrentBallotpaper()->getVotes();
@@ -56,6 +60,7 @@ class BallotpaperOverview implements State{
             if (count($stateMachine->voter()->availableBallotpapers())==0){
                 $stateMachine->voter(true);
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompleted';
+                unset($_SESSION['saving_ballotpaper']);
             }else{
                 if (
                     $stateMachine->voter()->getGroupedVote() &&

@@ -19,7 +19,7 @@ use Tualo\Office\OnlineVote\Exceptions\VotingNotStarted;
 use Tualo\Office\OnlineVote\Exceptions\VotingStopped;
 use Tualo\Office\OnlineVote\Exceptions\InvalidVote;
 use Tualo\Office\OnlineVote\Exceptions\VotingInterrupted;
-
+use Tualo\Office\OnlineVote\Exceptions\BallotPaperIsSavingException;
 
 use Tualo\Office\Basic\TualoApplication as App;
 
@@ -269,6 +269,12 @@ class Init {
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\InvalidVote' );
             App::logger('OnlineVote(InvalidVote)')->error($e->getMessage());
+            
+            
+        }catch(BallotPaperIsSavingException $e ){
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\BallotpaperOverview' );
+            App::logger('OnlineVote(BallotPaperIsSavingException)')->error($e->getMessage());
             
             
         }catch(\Exception $e ){
