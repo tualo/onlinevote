@@ -72,6 +72,40 @@ class BallotpaperOverview implements State{
             return $nextState;
     }
 
+    public function lockedSaving($stateMachine){
+        $db = $stateMachine->db();
+        $locked = $db->singleRow('
+            select 
+                session_id 
+            from 
+                voter_sessions_save_state 
+            where 
+                session_id={session_id} 
+        ',  [
+            'session_id' => session_id()
+        ]);
+        return ($locked!==false);
+    }
+
+    public function lockSaving($stateMachine){
+        $db = $stateMachine->db();
+        $db->direct('
+            insert into voter_sessions_save_state (session_id,created_at) values ({session_id},now())
+        ',  [
+            'session_id' => session_id()
+        ]);
+    }
+
+    public function unlockSaving($stateMachine){
+        $db = $stateMachine->db();
+        $db->direct('
+            delete from voter_sessions_save_state  where session_id = {session_id} 
+        ',  [
+            'session_id' => session_id()
+        ]);
+    }
+    
+
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
@@ -87,46 +121,19 @@ class BallotpaperOverview implements State{
         }else  if (
             isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
-            /*
-            //nur bekannt während des script durchlaufes
-            if (!isset($_GLOBAL['saving_ballotpaper_loop_id'])){ $_GLOBAL['saving_ballotpaper_loop_id']= (Uuid::uuid4())->toString();}
-
-            App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id '.$_GLOBAL['saving_ballotpaper_loop_id']);
-
-            if (
-                isset($_SESSION['saving_ballotpaper']) &&
-                $_SESSION['saving_ballotpaper']<>$_GLOBAL['saving_ballotpaper_loop_id']
-            ){ 
-                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper_loop_id']);
-                throw new BallotPaperIsSavingException(); 
-            }
-            $_SESSION['saving_ballotpaper'] = $_GLOBAL['saving_ballotpaper_loop_id'];
-            App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper '.$_SESSION['saving_ballotpaper']);
-            session_commit();session_start( );
-
-            App::logger('BallotpaperOverview(SAVING)')->warning('testing saving_ballotpaper '.$_SESSION['saving_ballotpaper']);
-
             
-
-            App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
-            */
-            if (
-                isset($_SESSION['saving_ballotpaper']) 
-            ){ 
+            if ( $this->lockedSaving($stateMachine)  ){ 
                 App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper']);
                 throw new BallotPaperIsSavingException(); 
             }
             sleep(10);
-
-            $_SESSION['saving_ballotpaper'] =  (Uuid::uuid4())->toString();
-            session_commit();session_start();
+            $this->lockSaving($stateMachine);
             App::logger('BallotpaperOverview(SAVING)')->warning('start transsition loop '.$_SESSION['saving_ballotpaper']);
 
             $nextState = $this->transition_loop($stateMachine,$request,$result);
 
             App::logger('BallotpaperOverview(SAVING)')->warning('stop transsition loop '.$_SESSION['saving_ballotpaper']);
-            unset($_SESSION['saving_ballotpaper']);
-            session_commit();session_start();
+            $this->unlockSaving($stateMachine);
             
         }
         
