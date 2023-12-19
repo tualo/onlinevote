@@ -7,7 +7,7 @@ use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperIsSavingException;
-
+use Ramsey\Uuid\Uuid;
 class BallotpaperOverview implements State{
 
     public function prepare(&$request,&$result):string {
@@ -48,8 +48,17 @@ class BallotpaperOverview implements State{
         }else  if (
             isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
-            if (isset($_SESSION['saving_ballotpaper'])){ throw new BallotPaperIsSavingException(); }
-            $_SESSION['saving_ballotpaper'] = 1;
+            //nur bekannt während des script durchlaufes
+            if (!isset($_GLOBAL['saving_ballotpaper_loop_id'])){ $_GLOBAL['saving_ballotpaper_loop_id']= (Uuid::uuid4())->toString();}
+
+            if (
+                isset($_SESSION['saving_ballotpaper']) &&
+                $_SESSION['saving_ballotpaper']<>$_GLOBAL['saving_ballotpaper_loop_id']
+            ){ 
+                throw new BallotPaperIsSavingException(); 
+            }
+            $_SESSION['saving_ballotpaper'] = $_GLOBAL['saving_ballotpaper_loop_id'];
+            session_commit();session_start( );
 
             App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
@@ -61,6 +70,7 @@ class BallotpaperOverview implements State{
                 $stateMachine->voter(true);
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompleted';
                 unset($_SESSION['saving_ballotpaper']);
+                session_commit();session_start( );
             }else{
                 if (
                     $stateMachine->voter()->getGroupedVote() &&
@@ -84,6 +94,9 @@ class BallotpaperOverview implements State{
                     App::logger('BallotpaperOverview(State)')->debug('setVotesIntern to '.print_r($storedVotes,true));
 
                     return $this->transition($request,$result);
+                }else{
+                    unset($_SESSION['saving_ballotpaper']);
+                    session_commit();session_start( );
                 }
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompletedChooseBallotpaper';
             }

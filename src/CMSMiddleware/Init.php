@@ -273,7 +273,7 @@ class Init {
             
         }catch(BallotPaperIsSavingException $e ){
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\BallotpaperOverview' );
+            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BallotPaperIsSaving' );
             App::logger('OnlineVote(BallotPaperIsSavingException)')->error($e->getMessage());
             
             
