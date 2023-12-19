@@ -90,7 +90,7 @@ class BallotpaperOverview implements State{
     public function lockSaving($stateMachine){
         $db = $stateMachine->db();
         $db->direct('
-            insert into voter_sessions_save_state (session_id,created_at) values ({session_id},now())
+            replace voter_sessions_save_state (session_id,created_at) values ({session_id},now())
         ',  [
             'session_id' => session_id()
         ]);
@@ -128,9 +128,9 @@ class BallotpaperOverview implements State{
             $this->lockSaving($stateMachine);
             sleep(10);
 
-            App::logger('BallotpaperOverview(SAVING)')->warning('start transsition loop ');
+            App::logger('BallotpaperOverview(SAVING)')->warning('start transition loop ');
             $nextState = $this->transition_loop($stateMachine,$request,$result);
-            App::logger('BallotpaperOverview(SAVING)')->warning('stop transsition loop ');
+            App::logger('BallotpaperOverview(SAVING)')->warning('stop transition loop ');
 
             $this->unlockSaving($stateMachine);
             

@@ -35,6 +35,16 @@ class Ballotpaper implements State{
         return $stateMachine->getNextState();
     }
 
+
+    public function unlockSaving($stateMachine){
+        $db = $stateMachine->db();
+        $db->direct('
+            delete from voter_sessions_save_state  where session_id = {session_id} 
+        ',  [
+            'session_id' => session_id()
+        ]);
+    }
+
     public function transition(&$request,&$result):string {
         $stateMachine = WMStateMachine::getInstance();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
@@ -47,7 +57,7 @@ class Ballotpaper implements State{
             isset($_REQUEST['send']) && 
             $_REQUEST['send']=1
         ){
-            if (isset($_SESSION['saving_ballotpaper'])) unset($_SESSION['saving_ballotpaper']);
+            $this->unlockSaving($stateMachine);
             // kreuze lesen
             if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
             $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
