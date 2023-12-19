@@ -121,20 +121,18 @@ class BallotpaperOverview implements State{
         }else  if (
             isset($_REQUEST['save']) && $_REQUEST['save']==1
         ){
-            /*
             if ( $this->lockedSaving($stateMachine)  ){ 
-                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper']);
+                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error)');
                 throw new BallotPaperIsSavingException(); 
             }
-            sleep(10);
             $this->lockSaving($stateMachine);
-            */
+            sleep(10);
+
             App::logger('BallotpaperOverview(SAVING)')->warning('start transsition loop ');
-
             $nextState = $this->transition_loop($stateMachine,$request,$result);
-
             App::logger('BallotpaperOverview(SAVING)')->warning('stop transsition loop ');
-//            $this->unlockSaving($stateMachine);
+
+            $this->unlockSaving($stateMachine);
             
         }
         
