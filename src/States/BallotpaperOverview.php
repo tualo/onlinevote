@@ -33,34 +33,8 @@ class BallotpaperOverview implements State{
         return $stateMachine->getNextState();
     }
 
-    public function transition(&$request,&$result):string {
-        $stateMachine = WMStateMachine::getInstance();
-        if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
-        if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
-        if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
 
-        $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
-        App::logger('BallotpaperOverview(State)')->debug(json_encode($_REQUEST) );
-        if (
-            isset($_REQUEST['correct']) && $_REQUEST['correct']==1
-        ){
-            $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
-        }else  if (
-            isset($_REQUEST['save']) && $_REQUEST['save']==1
-        ){
-            //nur bekannt während des script durchlaufes
-            if (!isset($_GLOBAL['saving_ballotpaper_loop_id'])){ $_GLOBAL['saving_ballotpaper_loop_id']= (Uuid::uuid4())->toString();}
-
-            if (
-                isset($_SESSION['saving_ballotpaper']) &&
-                $_SESSION['saving_ballotpaper']<>$_GLOBAL['saving_ballotpaper_loop_id']
-            ){ 
-                throw new BallotPaperIsSavingException(); 
-            }
-            $_SESSION['saving_ballotpaper'] = $_GLOBAL['saving_ballotpaper_loop_id'];
-            session_commit();session_start( );
-
-            App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
+    public function transition_loop($stateMachine, &$request,&$result):string {
             $ballotpaperId = $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId();
             $storedVotes = $stateMachine->voter()->getCurrentBallotpaper()->getVotes();
             $stateMachine->voter()->getCurrentBallotpaper()->save( );
@@ -69,14 +43,12 @@ class BallotpaperOverview implements State{
             if (count($stateMachine->voter()->availableBallotpapers())==0){
                 $stateMachine->voter(true);
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompleted';
-                unset($_SESSION['saving_ballotpaper']);
-                session_commit();session_start( );
             }else{
                 if (
                     $stateMachine->voter()->getGroupedVote() &&
                     count($stateMachine->voter()->availableBallotpapers($ballotpaperId))>0
                 ){
-                    set_time_limit(600);
+                    set_time_limit(60);
                     $hashMap = $stateMachine->voter()->getCurrentBallotpaper()->getHashMap();
                     $idMap = $stateMachine->voter()->getCurrentBallotpaper()->getIdMap();
 
@@ -93,13 +65,69 @@ class BallotpaperOverview implements State{
 
                     App::logger('BallotpaperOverview(State)')->debug('setVotesIntern to '.print_r($storedVotes,true));
 
-                    return $this->transition($request,$result);
-                }else{
-                    unset($_SESSION['saving_ballotpaper']);
-                    session_commit();session_start( );
+                    return $this->transition_loop($stateMachine,$request,$result);
                 }
                 $nextState = 'Tualo\Office\OnlineVote\States\SaveCompletedChooseBallotpaper';
             }
+            return $nextState;
+    }
+
+    public function transition(&$request,&$result):string {
+        $stateMachine = WMStateMachine::getInstance();
+        if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
+        if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
+        if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
+
+        $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
+        App::logger('BallotpaperOverview(State)')->debug(json_encode($_REQUEST) );
+        if (
+            isset($_REQUEST['correct']) && $_REQUEST['correct']==1
+        ){
+            $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
+        }else  if (
+            isset($_REQUEST['save']) && $_REQUEST['save']==1
+        ){
+            /*
+            //nur bekannt während des script durchlaufes
+            if (!isset($_GLOBAL['saving_ballotpaper_loop_id'])){ $_GLOBAL['saving_ballotpaper_loop_id']= (Uuid::uuid4())->toString();}
+
+            App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id '.$_GLOBAL['saving_ballotpaper_loop_id']);
+
+            if (
+                isset($_SESSION['saving_ballotpaper']) &&
+                $_SESSION['saving_ballotpaper']<>$_GLOBAL['saving_ballotpaper_loop_id']
+            ){ 
+                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper_loop_id']);
+                throw new BallotPaperIsSavingException(); 
+            }
+            $_SESSION['saving_ballotpaper'] = $_GLOBAL['saving_ballotpaper_loop_id'];
+            App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper '.$_SESSION['saving_ballotpaper']);
+            session_commit();session_start( );
+
+            App::logger('BallotpaperOverview(SAVING)')->warning('testing saving_ballotpaper '.$_SESSION['saving_ballotpaper']);
+
+            
+
+            App::logger('BallotpaperOverview(State)')->debug('saving ballotpaper');
+            */
+            if (
+                isset($_SESSION['saving_ballotpaper']) 
+            ){ 
+                App::logger('BallotpaperOverview(SAVING)')->warning('saving_ballotpaper_loop_id (before error) '.$_SESSION['saving_ballotpaper_loop_id']);
+                throw new BallotPaperIsSavingException(); 
+            }
+            sleep(10);
+
+            $_SESSION['saving_ballotpaper'] =  (Uuid::uuid4())->toString();
+            session_commit();session_start();
+            App::logger('BallotpaperOverview(SAVING)')->warning('start transsition loop '.$_SESSION['saving_ballotpaper']);
+
+            $nextState = $this->transition_loop($stateMachine,$request,$result);
+
+            App::logger('BallotpaperOverview(SAVING)')->warning('stop transsition loop '.$_SESSION['saving_ballotpaper']);
+            unset($_SESSION['saving_ballotpaper']);
+            session_commit();session_start();
+            
         }
         
         App::logger('BallotpaperOverview(State)')->debug("here" );
