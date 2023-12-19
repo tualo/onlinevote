@@ -126,7 +126,7 @@ class BallotpaperOverview implements State{
                 throw new BallotPaperIsSavingException(); 
             }
             $this->lockSaving($stateMachine);
-            sleep(10);
+            // sleep(10);
 
             App::logger('BallotpaperOverview(SAVING)')->warning('start transition loop ');
             $nextState = $this->transition_loop($stateMachine,$request,$result);
