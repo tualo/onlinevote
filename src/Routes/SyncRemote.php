@@ -46,38 +46,23 @@ class SyncRemote implements IRoute
             TualoApplication::contenttype('application/json');
             try {
                 ini_set('memory_limit', '4096M');
-
+                TualoApplication::result('state', __LINE__);
                 $session = TualoApplication::get('session');
                 $config = TualoApplication::get('configuration');
                 $db = $session->getDB();
                 set_time_limit(300);
                 $o = $db->directMap("
-            select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
-            union 
-            select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
-            union
-            select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
-            union
-            select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
-        ", [], 'text', 'v');
+                    select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
+                    union 
+                    select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
+                    union
+                    select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
+                    union
+                    select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
+                ", [], 'text', 'v');
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
-                /*
-        $tablename = 'stimmzettel';
-        $stimmzettel = WMRequestHelper::query($url.'/ds/'.$tablename.'/read?limit=1000000');
-
-        $tablename = 'stimmzettelgruppen';
-        $stimmzettelgruppen = WMRequestHelper::query($url.'/ds/'.$tablename.'/read?limit=1000000');
-
-        $tablename = 'kandidaten';
-        $kandidaten = WMRequestHelper::query($url.'/ds/'.$tablename.'/read?limit=1000000');
-
-        $tablename = 'wahlbezirk';
-        $wahlbezirk = WMRequestHelper::query($url.'/ds/'.$tablename.'/read?limit=1000000');
-        
-        $tablename = 'wahlgruppe';
-        $wahlgruppe = WMRequestHelper::query($url.'/ds/'.$tablename.'/read?limit=1000000');
-        */
-
+                TualoApplication::result('state', __LINE__);
+               
                 $remote_data = [];
                 $table_list = $db->direct('select table_name from wm_sync_tables order by position asc');
                 foreach ($table_list as $table_row) {
@@ -88,6 +73,7 @@ class SyncRemote implements IRoute
                         throw new \Exception('error on '.$tablename);
                     }
                 }
+                TualoApplication::result('state', __LINE__);
 
                 $db->autocommit(false);
                 foreach ($table_list as $table_row) {
@@ -100,6 +86,7 @@ class SyncRemote implements IRoute
                         $db->direct('delete from `' . $table_row['table_name'] . '`');
                     }
                 }
+                TualoApplication::result('state', __LINE__);
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
                         
@@ -108,6 +95,7 @@ class SyncRemote implements IRoute
                         $table->insert($remote_data[$table_row['table_name']]['data']);
                     }
                 }
+                TualoApplication::result('state', __LINE__);
 
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
@@ -121,9 +109,11 @@ class SyncRemote implements IRoute
                         }
                     }
                 }
+                TualoApplication::result('state', __LINE__);
 
                 $db->direct("update stimmzettel set farbe='rgb(101,172,101)' where farbe is null");
                 $db->commit();
+                TualoApplication::result('state', __LINE__);
 
 
                 TualoApplication::result('success', true);
