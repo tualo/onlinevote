@@ -72,6 +72,7 @@ class SyncRemote implements IRoute
                     if($remote_data[$tablename]===false){
                         throw new \Exception('error on '.$tablename);
                     }
+                    $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
 
@@ -85,6 +86,7 @@ class SyncRemote implements IRoute
                     }else{
                         $db->direct('delete from `' . $table_row['table_name'] . '`');
                     }
+                    $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
                 foreach ($table_list as $table_row) {
@@ -94,6 +96,7 @@ class SyncRemote implements IRoute
                         $table = DSTable::instance($table_row['table_name']);
                         $table->insert($remote_data[$table_row['table_name']]['data']);
                     }
+                    $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
 
@@ -106,6 +109,7 @@ class SyncRemote implements IRoute
                             }catch(Exception $e){
                                 
                             }
+                            $db->direct('select table_name from `ds` limit 1');
                         }
                     }
                 }
