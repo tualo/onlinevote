@@ -44,9 +44,12 @@ class SyncRemote implements IRoute
 
         BasicRoute::add('/onlinevote/syncremote', function () {
             TualoApplication::contenttype('application/json');
+            $start = time();
             try {
                 ini_set('memory_limit', '4096M');
+
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
                 $session = TualoApplication::get('session');
                 $config = TualoApplication::get('configuration');
                 $db = $session->getDB();
@@ -62,6 +65,7 @@ class SyncRemote implements IRoute
                 ", [], 'text', 'v');
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
                
                 $remote_data = [];
                 $table_list = $db->direct('select table_name from wm_sync_tables order by position asc');
@@ -75,6 +79,7 @@ class SyncRemote implements IRoute
                     $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
 
                 $db->autocommit(false);
                 foreach ($table_list as $table_row) {
@@ -89,6 +94,7 @@ class SyncRemote implements IRoute
                     $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
                         
@@ -99,6 +105,7 @@ class SyncRemote implements IRoute
                     $db->direct('select table_name from `ds` limit 1');
                 }
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
 
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
@@ -114,10 +121,12 @@ class SyncRemote implements IRoute
                     }
                 }
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
 
                 $db->direct("update stimmzettel set farbe='rgb(101,172,101)' where farbe is null");
                 $db->commit();
                 TualoApplication::result('state', __LINE__);
+                TualoApplication::result('seconds',time() - $start);
 
 
                 TualoApplication::result('success', true);
