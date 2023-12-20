@@ -37,6 +37,7 @@ class Tables  extends PostCheck {
             
             'kandidaten_stimmen'=>[ ],
             'view_readtable_kandidaten_stimmen'=>[ ],
+            'voter_sessions_save_state'=>[ ],
         ];
         self::tableCheck('ds',$tables,
             "please run the following command: `./tm install-sql-onlinevote --client ".$clientdb->dbname."`",

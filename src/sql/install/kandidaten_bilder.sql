@@ -16,6 +16,7 @@ OR REPLACE VIEW `view_readtable_kandidaten_bilder` AS
 select
   `kandidaten_bilder`.`id` AS `id`,
   `kandidaten_bilder`.`kandidat` AS `kandidat`,
+  `kandidaten_bilder`.`file_id`,
   `kandidaten_bilder`.`typ` AS `typ`,
   `ds_files`.`name` AS `__file_name`,
   `ds_files`.`path` AS `path`,
