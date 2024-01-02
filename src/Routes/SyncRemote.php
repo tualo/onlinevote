@@ -95,6 +95,7 @@ class SyncRemote implements IRoute
                 }
                 TualoApplication::result('state', __LINE__);
                 TualoApplication::result('seconds',time() - $start);
+                
                 foreach ($table_list as $table_row) {
                     $newData = [];
                     foreach($remote_data[$table_row['table_name']]['data'] as $row){
@@ -104,6 +105,7 @@ class SyncRemote implements IRoute
                     }
                     $remote_data[$table_row['table_name']]['data'] = $newData;
                 }
+
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
                         
