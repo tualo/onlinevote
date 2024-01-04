@@ -893,3 +893,5 @@ VALUES
         0
     ),
     ('_default_', 'wm_loginpage_settings', 1, 0, 0, 0, 0);
+
+INSERT  IGNORE INTO `ds_access` (`role`, `table_name`, `read`, `write`, `delete`, `append` ) VALUES ('wahl_leitung','wm_loginpage_settings',1,1,1,1);

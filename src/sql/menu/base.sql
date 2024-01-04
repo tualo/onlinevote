@@ -5,6 +5,7 @@ INSERT IGNORE INTO SESSIONDB.`macc_groups` VALUES
 ('wahl_auswertungen',1,NULL,'unkategorisiert'),
 ('wahl_auszaehlung',1,NULL,'unkategorisiert'),
 ('wahl_nachzaehlung',1,NULL,'unkategorisiert'),
+('wahl_leitung',1,NULL,'unkategorisiert'),
 ('wahl_ruecklauf',1,NULL,'unkategorisiert');
 
 INSERT IGNORE INTO SESSIONDB.`macc_menu` VALUES
@@ -12,7 +13,12 @@ INSERT IGNORE INTO SESSIONDB.`macc_menu` VALUES
 ('173aa82e-6e3d-11ee-883c-c6832147e484','Onlinewahl-Einstellungen','',NULL,'',0,NULL,'',0,1,'fa fa-globe',''),
 ('28208bd4-5b84-11ee-86a9-c6832147e485','Abgabetyp','',NULL,'',1,NULL,'e101dd3a-5b82-11ee-86a9-c6832147e485',0,1,'entypo et-hand','#ds/abgabetyp'),
 ('2859604e-6e3f-11ee-883c-c6832147e484','Stimmzettelzeilen','',NULL,'',0,NULL,'173aa82e-6e3d-11ee-883c-c6832147e484',0,1,'fa fa-list','#ds/bp_row'),
+
 ('3244ea30-6e3d-11ee-883c-c6832147e484','Synchronisation','',NULL,'',0,NULL,'173aa82e-6e3d-11ee-883c-c6832147e484',0,1,'typcn typcn-arrow-sync','#onlinevote/syncform'),
+('3244ea30-6e3d-11ee-883c-c6832147e48a','Wahlzeitraum','',NULL,'',0,NULL,'173aa82e-6e3d-11ee-883c-c6832147e484',0,1,'entypo et-clock','#onlinevote/settings'),
+('3244ea30-6e3d-11ee-883c-c6832147e48b','Urnen','',NULL,'',0,NULL,'173aa82e-6e3d-11ee-883c-c6832147e484',0,1,'entypo et-box','#onlinevote/ballotbox'),
+('3244ea30-6e3d-11ee-883c-c6832147e48c','Entschlüsseln','',NULL,'',0,NULL,'173aa82e-6e3d-11ee-883c-c6832147e484',0,1,'fa fa-unlock','#onlinevote/decryption'),
+
 ('3fca8a32-5b84-11ee-86a9-c6832147e485','Wahlscheinstatus','',NULL,'',2,NULL,'e101dd3a-5b82-11ee-86a9-c6832147e485',0,1,'entypo et-text-document-inverted','#ds/wahlscheinstatus'),
 ('5c60bf04-5b84-11ee-86a9-c6832147e485','Wahltyp','',NULL,'',0,NULL,'e101dd3a-5b82-11ee-86a9-c6832147e485',0,1,'x-fa fa-circle','#ds/wahltyp'),
 ('705d1d7c-5b84-11ee-86a9-c6832147e485','Stimmzettelgruppen','',NULL,'',3,NULL,'e101dd3a-5b82-11ee-86a9-c6832147e485',0,1,'fa fa-file-text','#ds/stimmzettelgruppen'),
@@ -26,9 +32,15 @@ INSERT IGNORE INTO SESSIONDB.`macc_menu` VALUES
 INSERT IGNORE INTO SESSIONDB.`rolle_menu` VALUES
 ('0bd562a6-5b84-11ee-86a9-c6832147e485','wahl_administration',NULL),
 ('173aa82e-6e3d-11ee-883c-c6832147e484','wahl_administration',NULL),
+('173aa82e-6e3d-11ee-883c-c6832147e484','wahl_leitung',NULL),
 ('28208bd4-5b84-11ee-86a9-c6832147e485','wahl_administration',NULL),
 ('2859604e-6e3f-11ee-883c-c6832147e484','wahl_administration',NULL),
 ('3244ea30-6e3d-11ee-883c-c6832147e484','wahl_administration',NULL),
+
+('3244ea30-6e3d-11ee-883c-c6832147e48a','wahl_leitung',NULL),
+('3244ea30-6e3d-11ee-883c-c6832147e48b','wahl_leitung',NULL),
+('3244ea30-6e3d-11ee-883c-c6832147e48c','wahl_leitung',NULL),
+
 ('3fca8a32-5b84-11ee-86a9-c6832147e485','wahl_administration',NULL),
 ('5c60bf04-5b84-11ee-86a9-c6832147e485','wahl_administration',NULL),
 ('705d1d7c-5b84-11ee-86a9-c6832147e485','wahl_administration',NULL),
