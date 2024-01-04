@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `kandidaten` (
   `personen_identnummer` varchar(15) DEFAULT NULL,
   `geburtsdatum` date DEFAULT NULL,
   `geschlecht` varchar(5) DEFAULT NULL,
-  `andrede` varchar(100) DEFAULT NULL,
+  `anrede` varchar(100) DEFAULT NULL,
   `geburtsjahr` varchar(5) DEFAULT NULL,
   `branche` varchar(255) DEFAULT NULL,
   `losung_verloren` tinyint(4) DEFAULT 0,
@@ -40,3 +40,5 @@ CREATE TABLE IF NOT EXISTS `kandidaten` (
   KEY `fk_kandidaten_stimmzettelgruppen` (`stimmzettelgruppen`),
   CONSTRAINT `fk_kandidaten_stimmzettelgruppen` FOREIGN KEY (`stimmzettelgruppen`) REFERENCES `stimmzettelgruppen` (`ridx`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+call addFieldIfNotExists('kandidaten','anrede','varchar(100) default ""');
