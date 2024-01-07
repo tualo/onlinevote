@@ -155,6 +155,7 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/kandidaten_stimmen.ds'    => 'setup kandidaten_stimmen.ds',
 
             'install/voter_sessions_save_state'    => 'setup voter_sessions_save_state',
+            'install/dashboards'    => 'setup dashboards',
             
             // immer zum schluss
             'install/ds_fill'    => 'refreshing ds data',
