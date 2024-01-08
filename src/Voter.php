@@ -54,6 +54,7 @@ class Voter
     private string $birthdate = "";
     private string $confirmed_birthdate = "";
     private string $allowEditName = "";
+    private string $last_state = "unknown";
 
 
     private bool $loggedIn = false;
@@ -114,6 +115,11 @@ class Voter
         $this->lastname = isset($json['lastname']) ? $json['lastname'] : '';
         $this->birthdate = isset($json['birthdate']) ? $json['birthdate'] : '';
         $this->confirmed_birthdate = isset($json['confirmed_birthdate']) ? $json['confirmed_birthdate'] : '-----';
+    }
+
+    public function getLastState(): string
+    {
+        return $this->last_state;
     }
 
     public function getId(): string
@@ -244,6 +250,13 @@ class Voter
         App::logger('Voter(login)')->info(json_encode($record));
         if ($record !== false) {
             $this->fromJSON($record);
+
+            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
+                $this->loggedIn = true;
+                $this->registerSession();
+                return 'ok';
+            }
+
             // todo: check if it is ok to say allready-voted before login and password check
             if (count($this->available_ballotpapers) == 0) {
                 $stateMachine = WMStateMachine::getInstance();
@@ -260,16 +273,13 @@ class Voter
                     'voter_id' => $this->getId()
                 ]);
                 if ($voterVotedOnline === false) {
+                    $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'] : 'unknown';
                     return 'allready-voted-offline';
                 } else {
                     return 'allready-voted-online';
                 }
             }
-            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
-                $this->loggedIn = true;
-                $this->registerSession();
-                return 'ok';
-            }
+            
         }
 
         $db = WMStateMachine::getInstance()->db();
