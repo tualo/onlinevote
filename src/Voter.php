@@ -251,11 +251,8 @@ class Voter
         if ($record !== false) {
             $this->fromJSON($record);
 
-            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
-                $this->loggedIn = true;
-                $this->registerSession();
-                return 'ok';
-            }
+            if (crypt($password, $record['pwhash']) != $record['pwhash']) return 'error';
+
 
             // todo: check if it is ok to say allready-voted before login and password check
             if (count($this->available_ballotpapers) == 0) {
@@ -278,6 +275,12 @@ class Voter
                 } else {
                     return 'allready-voted-online';
                 }
+            }
+
+            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
+                $this->loggedIn = true;
+                $this->registerSession();
+                return 'ok';
             }
             
         }
