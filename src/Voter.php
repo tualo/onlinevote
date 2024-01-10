@@ -251,37 +251,34 @@ class Voter
         if ($record !== false) {
             $this->fromJSON($record);
 
-            if (crypt($password, $record['pwhash']) != $record['pwhash']) return 'error';
+            if (crypt($password, $record['pwhash']) == $record['pwhash']){
+                // todo: check if it is ok to say allready-voted before login and password check
+                if (count($this->available_ballotpapers) == 0) {
+                    $stateMachine = WMStateMachine::getInstance();
+                    $db = $stateMachine->db();
 
-
-            // todo: check if it is ok to say allready-voted before login and password check
-            if (count($this->available_ballotpapers) == 0) {
-                $stateMachine = WMStateMachine::getInstance();
-                $db = $stateMachine->db();
-
-                $voterVotedOnline = $db->singleRow('
-                    select
-                        distinct voter_id 
-                    from 
-                        ballotbox 
-                    where 
-                        voter_id = {voter_id}
-                ', [
-                    'voter_id' => $this->getId()
-                ]);
-                if ($voterVotedOnline === false) {
-                    $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'] : 'unknown';
-                    return 'allready-voted-offline';
-                } else {
-                    return 'allready-voted-online';
+                    $voterVotedOnline = $db->singleRow('
+                        select
+                            distinct voter_id 
+                        from 
+                            ballotbox 
+                        where 
+                            voter_id = {voter_id}
+                    ', [
+                        'voter_id' => $this->getId()
+                    ]);
+                    if ($voterVotedOnline === false) {
+                        $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'] : 'unknown';
+                        return 'allready-voted-offline';
+                    } else {
+                        return 'allready-voted-online';
+                    }
                 }
-            }
-
-            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
                 $this->loggedIn = true;
                 $this->registerSession();
                 return 'ok';
             }
+            
             
         }
 
