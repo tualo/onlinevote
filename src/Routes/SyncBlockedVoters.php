@@ -52,11 +52,20 @@ class SyncBlockedVoters implements IRoute
 
                 $db->direct('update ballotbox set blocked=0');
                 $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel_id) in (select voter_id,stimmzettel from blocked_voters)');
+                $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel) in (select voter_id,stimmzettel from blocked_voters)');
+
+                /*
+                    $c1 = $db->singleValue('select count(*) c from ballotbox where blocked=1 and keyname = (select min(keyname) kn from ballotbox )',[],'c');
+                    $c2 = $db->singleValue('select count(*) c from blocked_voters where blocked=0',[],'c');
+
+                    if ($c1!=$c2) throw new Exception("Fehler bei der Synchronisation der blockierten Wähler (c1=$c1, c2=$c2)");
+                */
 
                 $db->direct('replace into blocked_synced (id,ts,count) values (1,now(),{count})',['count'=>count($blocked_voters['data'])]);
                 $db->commit();
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
+                $db->rollback();
                 TualoApplication::result('msg', $e->getMessage());
             }
             TualoApplication::contenttype('application/json');
