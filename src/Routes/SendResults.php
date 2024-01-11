@@ -46,7 +46,7 @@ class SendResults implements IRoute
                     throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
                 }
                 
-                $tablename = 'onlinestimmzettel';
+                $tablename = 'view_ballotbox_decrypted_sum';
                 $table = DSTable::instance($tablename);
                 $data = $table->read()->get();
 
@@ -55,7 +55,7 @@ class SendResults implements IRoute
                 if($remote_data===false){
                     throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
                 }
-                $remote_data = APIRequestHelper::query($url . '/ds/onlinestimmzettel/create',json_encode($data));
+                $remote_data = APIRequestHelper::query($url . '/ds/ballotbox_decrypted_sum/create',json_encode($data));
                 if($remote_data===false){
                     throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
                 }

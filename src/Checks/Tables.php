@@ -34,6 +34,7 @@ class Tables  extends PostCheck {
             'stimmzettel_stimmzettel_fusstexte'=>[ ],
             'stimmzettel_fusstexte'=>[ ],
             'username_count'=>[ ],
+            'view_ballotbox_decrypted_sum'=>[ ],
             
             'kandidaten_stimmen'=>[ ],
             'view_readtable_kandidaten_stimmen'=>[ ],

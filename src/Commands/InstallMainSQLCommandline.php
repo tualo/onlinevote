@@ -154,6 +154,9 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/kandidaten_stimmen'    => 'setup kandidaten_stimmen',
             'install/kandidaten_stimmen.ds'    => 'setup kandidaten_stimmen.ds',
 
+            'install/view_ballotbox_decrypted_sum'    => 'setup view_ballotbox_decrypted_sum',
+            'install/view_ballotbox_decrypted_sum.ds'    => 'setup view_ballotbox_decrypted_sum.ds',
+
             'install/voter_sessions_save_state'    => 'setup voter_sessions_save_state',
             'install/dashboards'    => 'setup dashboards',
             
