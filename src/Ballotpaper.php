@@ -321,7 +321,7 @@ class Ballotpaper {
                 $hash['token']          =   $this->getSecretToken();
                 $hash['voter_id']       =   $this->getVoterId();
 
-                if ( App::configuration('onlinevote','errorOnInvalidVote','0') == '1' ) throw new InvalidVote("Ungültige Stimme");
+                if ( App::configuration('onlinevote','errorOnInvalidVote','0') == '1' &&  $hash['isvalid']==0 ) throw new InvalidVote("Ungültige Stimme");
 
                 $db->direct('
                 insert into ballotbox 
