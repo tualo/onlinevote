@@ -11,7 +11,10 @@ create or replace view view_readtable_kandidaten_stimmen as
 select 
     kandidaten_stimmen.id,
     kandidaten_stimmen.stimmen,
+    0 kostenstelle,
+    kandidaten_stimmen.stimmen anzahl,
     kandidaten.barcode,
+    kandidaten.barcode name,
     kandidaten.vorname,
     kandidaten.nachname,
     kandidaten.titel,
@@ -20,3 +23,5 @@ from
 kandidaten_stimmen
 join kandidaten on kandidaten.id = kandidaten_stimmen.id
 join stimmzettelgruppen on kandidaten.stimmzettelgruppen = stimmzettelgruppen.ridx;
+
+call fill_ds_column('view_readtable_kandidaten_stimmen');

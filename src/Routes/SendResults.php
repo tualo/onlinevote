@@ -35,9 +35,15 @@ class SendResults implements IRoute
                 $tablename = 'kandidaten_stimmen';
                 $table = DSTable::instance($tablename);
                 $data = $table->read()->get();
-                $remote_data = APIRequestHelper::query($url . '/ds/onlinekandidaten/create',$data);
+
+                $remote_data = APIRequestHelper::query($url . '/papervote/reset/onlinekandidaten');
                 if($remote_data===false){
-                    throw new \Exception('error on '.$tablename);
+                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
+                }
+
+                $remote_data = APIRequestHelper::query($url . '/ds/onlinekandidaten/create',json_encode($data));
+                if($remote_data===false){
+                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
                 }
                 TualoApplication::result('remote_data', $remote_data);
                 TualoApplication::result('success', true);
