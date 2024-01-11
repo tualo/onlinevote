@@ -234,11 +234,29 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                 showWait: true,
                 scope: this,
                 json: function (o) {
+
                     if (o.success == true) {
-                        this.getViewModel().getStore('pgpkeys').load({
-                            callback: function () {
-                                me.calcKeys();
-                                l.setActiveItem(6);
+                        Tualo.Ajax.request({
+                            url: './onlinevote/sendresults',
+                            showWait: true,
+                            scope: this,
+                            json: function (o) {
+                                if (o.success == true) {
+                                    this.getViewModel().getStore('pgpkeys').load({
+                                        callback: function () {
+                                            me.calcKeys();
+                                            l.setActiveItem(6);
+                                        }
+                                    });
+                                } else {
+                                    this.getViewModel().getStore('pgpkeys').load({
+                                        callback: function () {
+                                            me.calcKeys();
+                                        }
+                                    });
+                                    this.getView().down('#card-next').setDisabled(true);
+                                    //this.download(name+'-private.key.asc',privateKeyArmored); 
+                                }
                             }
                         });
                     } else {
@@ -250,6 +268,7 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                         this.getView().down('#card-next').setDisabled(true);
                         //this.download(name+'-private.key.asc',privateKeyArmored); 
                     }
+                    
                 }
             });
     },
