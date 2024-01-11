@@ -158,10 +158,10 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/view_ballotbox_decrypted_sum.ds'    => 'setup view_ballotbox_decrypted_sum.ds',
 
             'install/reportfiles_typen'=> 'setup reportfiles_typen',
-            'install/reportfiles_typen.ds'=> 'setup reportfiles_typen.ds',
+            //'install/reportfiles_typen.ds'=> 'setup reportfiles_typen.ds',
 
             'install/reportfiles'    => 'setup reportfiles',
-            'install/reportfiles.ds'    => 'setup reportfiles.ds',
+//            'install/reportfiles.ds'    => 'setup reportfiles.ds',
 
             'install/pruefziffer.pug.templates'    => 'setup pruefziffer.pug.templates',
 
