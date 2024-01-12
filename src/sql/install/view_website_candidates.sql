@@ -10,5 +10,5 @@ select
 from
     `kandidaten`
     left join kandidaten_bilder on kandidaten_bilder.kandidat = kandidaten.ridx
-        and typ = 1;
+    and kandidaten_bilder.typ = 1;
         

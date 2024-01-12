@@ -315,6 +315,7 @@ class Voter
             } else if ($record['success'] == false) {
                 return false;
             } else {
+                if (! isset($record['data'])) return false;
                 $record = $record['data'];
             }
         } catch (\Exception $e) {
