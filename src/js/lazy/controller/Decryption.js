@@ -249,6 +249,12 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                                         }
                                     });
                                 } else {
+                                    Ext.toast({
+                                        html: o.msg,
+                                        title: 'Fehler',
+                                        align: 't',
+                                        iconCls: 'fa fa-warning'
+                                    });
                                     this.getViewModel().getStore('pgpkeys').load({
                                         callback: function () {
                                             me.calcKeys();
@@ -260,6 +266,12 @@ Ext.define('Tualo.OnlineVote.controller.Decryption', {
                             }
                         });
                     } else {
+                        Ext.toast({
+                            html: o.msg,
+                            title: 'Fehler',
+                            align: 't',
+                            iconCls: 'fa fa-warning'
+                        });
                         this.getViewModel().getStore('pgpkeys').load({
                             callback: function () {
                                 me.calcKeys();

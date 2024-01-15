@@ -74,7 +74,7 @@ class SyncRemote implements IRoute
                     $tablename = $table_row['table_name'];
                     $remote_data[$tablename] = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
                     if($remote_data[$tablename]===false){
-                        throw new \Exception('error on '.$tablename);
+                        throw new \Exception('error on '.$tablename.' '.APIRequestHelper::$last_error_message);
                     }
                     $db->direct('select table_name from `ds` limit 1');
                 }
@@ -112,6 +112,7 @@ class SyncRemote implements IRoute
                     }else{
                         $table = DSTable::instance($table_row['table_name']);
                         $table->insert($remote_data[$table_row['table_name']]['data']);
+                        if ($table->error()) throw new \Exception($table->errorMessage());
                     }
                     $db->direct('select table_name from `ds` limit 1');
                 }
