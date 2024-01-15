@@ -116,6 +116,7 @@ class SyncRemote implements IRoute
                     }
                     $db->direct('select table_name from `ds` limit 1');
                 }
+                
                 TualoApplication::result('state', __LINE__);
                 TualoApplication::result('seconds',time() - $start);
 
