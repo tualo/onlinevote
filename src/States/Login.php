@@ -13,6 +13,8 @@ use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOffline;
 
 class Login implements State {
 
+    
+
     public static function login($username,$password,&$nextState):bool{
         $stateMachine = WMStateMachine::getInstance();
         $stateMachine->logger('Login(State)')->info( "login  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." ");
@@ -91,7 +93,7 @@ class Login implements State {
                 throw new VoterLoginFailed('Laut RemoteSystem bereits gewählt');
             }
         }else{
-            $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
+            $stateMachine->logger('Login(State)')->warning( "not in login state  from ".$stateMachine->ip().' / '.$stateMachine->proxyIP()." - ".$stateMachine->getCurrentState()." - ".$stateMachine->getNextState()." - ".__LINE__." ".__FILE__." ");
         }
         // $stateMachine->logger('Login(State)')->error('remove me in production '." - ".__LINE__." ".__FILE__." ");
         return $nextState;

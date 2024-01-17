@@ -96,13 +96,40 @@ class WMStateMachine {
         return $this->_ip;
     }
 
+    public static function proxyIP():string{
+        if (isset($_SERVER['X-DDOSPROXY'])) return $_SERVER['X-DDOSPROXY'];
+        return '';
+    }
+
     public function usernamefield(bool $reset=false):string{
-        if ($reset===true) $this->_usernamefield=  (Uuid::uuid4())->toString();
+        if (!isset($_SESSION['lastreset_usernamefield_time'])){
+            $_SESSION['lastreset_usernamefield_time'] =time()-10000;
+        }
+        if ($reset===true){
+            if (
+                (intval($_SESSION['lastreset_usernamefield_time']) < time() - 15 ) ||
+                ($this->_usernamefield=='')
+            ){
+                $this->_usernamefield=  (Uuid::uuid4())->toString();
+                $_SESSION['lastreset_usernamefield_time'] =time();
+            }
+        }
         return $this->_usernamefield;
     }
 
     public function passwordfield(bool $reset=false):string{
-        if ($reset===true) $this->_passwordfield =  (Uuid::uuid4())->toString();
+        if (!isset($_SESSION['lastreset_passwordfield_time'])){
+            $_SESSION['lastreset_passwordfield_time'] =time()-10000;
+        }
+        if ($reset===true){
+            if (
+                (intval($_SESSION['lastreset_passwordfield_time']) < time() - 15 ) ||
+                ($this->_passwordfield=='')
+            ){
+                $this->_passwordfield=  (Uuid::uuid4())->toString();
+                $_SESSION['lastreset_passwordfield_time'] =time();
+            }
+        }
         return $this->_passwordfield;
     }
 
