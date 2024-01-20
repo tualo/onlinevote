@@ -3,8 +3,6 @@ Ext.define('Tualo.OnlineVote.controller.Ballotbox', {
     alias: 'controller.onlinevote_ballotbox_controller',
 
     onBoxReady: function(){
-        console.log('onBoxReady');
-        //this.generateKey('Urne 1, '+this.defaultName());
     },
 
     onAppend: function(){

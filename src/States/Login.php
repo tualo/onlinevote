@@ -56,6 +56,13 @@ class Login implements State {
         ){
             $result['p1'] = $_REQUEST[$stateMachine->usernamefield()];
             $result['p2'] = $_REQUEST[$stateMachine->passwordfield()];
+
+            unset($_SESSION['lastreset_usernamefield_time']);
+            unset($_SESSION['lastreset_passwordfield_time']);
+            
+            $stateMachine->usernamefield(true);
+            $stateMachine->passwordfield(true);
+
             $stateMachine->logger('Login(State)')->info("user and pw read  from ".$stateMachine->ip()." - ".__LINE__." ".__FILE__." ");
         }else if (
             isset($_REQUEST['c']) && 

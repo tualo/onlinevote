@@ -7,5 +7,10 @@ CREATE TABLE IF NOT EXISTS `ballotbox_blockchain` (
   `ballotpaper_id` varchar(36) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_ballotbox_blockchain_pgpkeys` (`keyname`),
-  CONSTRAINT `fk_ballotbox_blockchain_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_ballotbox_blockchain_pgpkeys` 
+  FOREIGN KEY (`keyname`) 
+  REFERENCES `pgpkeys` (`keyname`) 
+  ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+

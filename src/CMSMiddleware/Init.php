@@ -284,6 +284,7 @@ class Init {
         }
         App::logger('OnlineVote')->debug(__LINE__);
         
+        
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);
 

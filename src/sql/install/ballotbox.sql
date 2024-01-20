@@ -11,13 +11,15 @@ CREATE TABLE IF NOT EXISTS `ballotbox` (
   `isvalid` tinyint(4) DEFAULT 0,
   `stimmzettel_id` varchar(10) DEFAULT '',
   PRIMARY KEY (`id`,`keyname`),
-  KEY `idx_ballotbox_pgpkeys` (`keyname`),
+  KEY `idx_ballotbox_voter_id` (`voter_id`),
   KEY `idx_ballotbox_keyname` (`keyname`),
   KEY `idx_ballotbox_saveerror` (`saveerror`),
   KEY `idx_ballotbox_blocked` (`blocked`),
   KEY `idx_ballotbox_saveerrorid` (`saveerrorid`),
   CONSTRAINT `fk_ballotbox_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+
 DELIMITER  //
 CREATE OR REPLACE TRIGGER trigger_ballotbox_ai
 AFTER INSERT
