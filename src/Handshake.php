@@ -17,17 +17,17 @@ class Handshake
         $db = $session->getDB();
         $o = $db->directMap("
             select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
-            union 
+            union  all
             select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
-            union
+            union all
             select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
-            union
+            union all
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
-            union 
+            union  all
             select stoptime v,'stoptime' text from wm_loginpage_settings where  id = 1
-            union 
+            union  all
             select starttime v,'starttime' text from wm_loginpage_settings where  id = 1
-            union 
+            union all
             select interrupted v,'interrupted' text from wm_loginpage_settings where  id = 1
         ",[],'text','v');
         if ($o['api']==1){
@@ -45,11 +45,11 @@ class Handshake
 
         $o = $db->directMap("
             select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
-            union 
+            union all
             select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
-            union
+            union all
             select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
-            union
+            union all
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
         ",[],'text','v');
 

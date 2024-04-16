@@ -11,11 +11,11 @@ class InitApiUse /*extends CMSMiddleWare*/{
 
         $o = $db->directMap("
             select if(property<>'',1,0) v,'api' text FROM system_settings WHERE system_settings_id = 'remote-erp/url' 
-            union 
+            union all
             select property v,'api_url' text FROM system_settings WHERE system_settings_id = 'remote-erp/url'
-            union
+            union all
             select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
-            union
+            union all
             select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
         ",[],'text','v');
         if ($o['api']==1){

@@ -55,6 +55,7 @@ class APIRequestHelper {
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_NOBODY, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
         // fix link 11 missed acceptance
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));

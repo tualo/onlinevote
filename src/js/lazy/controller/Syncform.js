@@ -38,6 +38,7 @@ Ext.define('Tualo.OnlineVote.controller.Syncform', {
             });
             view.disable();
         }
+        
         if ((new Date(state.starttime))<=(new Date())){
             view.disable();
             Ext.toast({
