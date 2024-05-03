@@ -1,8 +1,5 @@
 DELIMITER  //
-set FOREIGN_KEY_CHECKS=0//
-alter table ds_renderer_stylesheet modify classname varchar(150)//
-alter table ds_renderer_stylesheet_attributes modify classname varchar(150)//
-set FOREIGN_KEY_CHECKS=1//
+
 
 call addFieldIfNotExists("ds_renderer_stylesheet_attributes","group","integer") //
 
