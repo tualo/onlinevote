@@ -27,7 +27,7 @@ class Tables  extends PostCheck {
             'voters'=>[ ],
             
             'ballotbox_blockchain'=>[ ],
-            'ballotbox_encrypted'=>[ ],
+            'ballotbox_decrypted'=>[ ],
             'pgpkeys'=>[ ],
             'blocked_voters' => [ ],
             'blocked_synced' => [ ],
