@@ -25,9 +25,9 @@ class State implements IRoute{
                 App::result('db_time',$db->singleValue('select now() as n',[],'n'));
 
                 try{
-                    App::result('active_voters',$db->singleValue('
+                    App::result('active_voters',intval($db->singleValue('
                     select count(*) c from voters where contact > now() + interval - 15 minute and completed=0
-                    ',[],'c'));
+                    ',[],'c')));
                 }catch(\Exception $e){
 
                 }
