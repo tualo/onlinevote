@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `wm_sync_tables` (
 
 
 insert ignore into wm_sync_tables(table_name,position) values ('ds_files',8);
+insert ignore into wm_sync_tables(table_name,position) values ('ds_files_data',11);
 insert ignore into wm_sync_tables(table_name,position) values ('kandidaten',7);
 insert ignore into wm_sync_tables(table_name,position) values ('kandidaten_bilder',10);
 insert ignore into wm_sync_tables(table_name,position) values ('kandidaten_bilder_typen',9);
