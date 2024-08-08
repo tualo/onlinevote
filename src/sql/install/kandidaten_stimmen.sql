@@ -24,4 +24,5 @@ kandidaten_stimmen
 join kandidaten on kandidaten.id = kandidaten_stimmen.id
 join stimmzettelgruppen on kandidaten.stimmzettelgruppen = stimmzettelgruppen.ridx;
 
+call fill_ds('view_readtable_kandidaten_stimmen');
 call fill_ds_column('view_readtable_kandidaten_stimmen');
