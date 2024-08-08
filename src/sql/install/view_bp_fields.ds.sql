@@ -6,4 +6,7 @@ INSERT  IGNORE INTO `ds_column_list_label` (`table_name`, `column_name`, `langua
 ('view_bp_fields','data_type','DE','','gridcolumn',NULL,0,NULL,NULL,NULL,0,1,NULL,0,NULL,NULL,NULL,NULL,'NULL');
 INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `language`, `label`, `xtype`, `field_path`, `position`, `hidden`, `active`, `allowempty`, `fieldgroup`, `flex`, `hint`) VALUES ('view_bp_fields','column_name','DE','{column_name}','displayfield','Allgemein',0,0,1,NULL,NULL,NULL,'\'\''),
 ('view_bp_fields','data_type','DE','{column_name}','displayfield','Allgemein',0,0,1,NULL,NULL,NULL,'\'\'');
-INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('view_bp_fields','stimmzettelfelder','column_name','column_name','');
+
+
+
+INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('view_bp_fields','column_name','column_name','column_name','');

@@ -491,7 +491,7 @@ VALUES
         'column_field',
         'DE',
         'Datenfeld',
-        'combobox_view_bp_fields_stimmzettelfelder',
+        'combobox_view_bp_fields_column_name',
         'Allgemein',
         0,
         0,

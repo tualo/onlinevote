@@ -98,4 +98,5 @@ from
         on view_readtable_pgpkeys_valid.keyname = pgpkeys.keyname;
 ;
 
+call fill_ds('pgpkeys');
 call fill_ds_column('pgpkeys');
