@@ -44,6 +44,7 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-onlinevote',
             'import-onlinevote',
             'import-onlinevote-page',
+            'configuration --section scss --key cmd --value $(which sencha)',
             'compile'
         ];
         foreach($installCommands as $cmdString){
