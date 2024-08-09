@@ -22,6 +22,12 @@ class Setup extends BaseSetup implements ISetupCommandline{
         PostCheck::formatPrintLn(['blue'], "Installing all needed for onlinevote module");
         PostCheck::formatPrintLn(['blue'], "===========================================");
         
+        exec(implode(' ',['which','scss']),$result,$return_code);
+        $sass_cmd = $result[0];
+
+        exec(implode(' ',['which','sencha']),$result,$return_code);
+        $sencha_cmd = $result[0];
+
         $installCommands = [
             'install-sessionsql-bsc-main',
             'install-sql-sessionviews',
@@ -36,7 +42,7 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-monaco',
             'install-sql-dashboard',
             'install-sql-bootstrap',
-            'configuration --section scss --key cmd --value $(which sass)',
+            'configuration --section scss --key cmd --value '.$sass_cmd,
             'import-bootstrap-scss',
             'install-sql-bootstrap-menu',
             'install-sql-cms',
@@ -44,7 +50,8 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-onlinevote',
             'import-onlinevote',
             'import-onlinevote-page',
-            'configuration --section scss --key cmd --value $(which sencha)',
+            'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
+            'configuration --section ext-compiler --key require --value ""',
             'compile'
         ];
         foreach($installCommands as $cmdString){
