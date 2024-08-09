@@ -43,7 +43,8 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-cms-menu',
             'install-sql-onlinevote',
             'import-onlinevote',
-            'import-onlinevote-page'
+            'import-onlinevote-page',
+            'compile'
         ];
         foreach($installCommands as $cmdString){
             self::performInstall($cmdString,$clientName);
