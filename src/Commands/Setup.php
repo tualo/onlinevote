@@ -2,14 +2,11 @@
 namespace Tualo\Office\OnlineVote\Commands;
 use Garden\Cli\Cli;
 use Garden\Cli\Args;
-use phpseclib3\Math\BigInteger\Engines\PHP;
 use Tualo\Office\Basic\ISetupCommandline;
-use Tualo\Office\ExtJSCompiler\Helper;
-use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\PostCheck;
-use Tualo\Office\Basic\CommandLineInstallSessionSQL;
+use Tualo\Office\Basic\BaseSetupCommand as BaseSetup;
 
-class Setup implements ISetupCommandline{
+class Setup extends BaseSetup implements ISetupCommandline{
 
     public static function getCommandName(): string { return 'onlinevote'; }
     public static function getCommandDescription(): string { return 'perform a complete onlinevote setup'; }
@@ -22,8 +19,8 @@ class Setup implements ISetupCommandline{
         $clientName = $args->getOpt('client');
         if( is_null($clientName) ) $clientName = '';
         
-        PostCheck::formatPrintLn(['blue'], "Installing all needed SQL procedures for onlinevote module");
-        PostCheck::formatPrintLn(['blue'], "==========================================================");
+        PostCheck::formatPrintLn(['blue'], "Installing all needed for onlinevote module");
+        PostCheck::formatPrintLn(['blue'], "===========================================");
         
         $installCommands = [
             'install-sessionsql-bsc-main',
@@ -54,20 +51,5 @@ class Setup implements ISetupCommandline{
 
     }
 
-    public static function performInstall(string $cmdString,string $clientName) {
-        $cmd = explode(' ',$cmdString);
-        $cmd[] = '--client='.$clientName;
-        $classes = get_declared_classes();
-        foreach($classes as $cls){
-            $class = new \ReflectionClass($cls);
-            if ( $class->implementsInterface('Tualo\Office\Basic\ICommandline') ) {
-                if($cmd[0]==$cls::getCommandName()){
-                    $cli = new Cli();
-                    $cls::setup($cli);
-                    $args = $cli->parse(['./tm',...$cmd], true);
-                    $cls::run($args);
-                }
-            }
-        }
-    }
+    
 }
