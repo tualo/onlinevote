@@ -64,7 +64,8 @@ class Setup implements ISetupCommandline{
                 if($cmd[0]==$cls::getCommandName()){
                     $cli = new Cli();
                     $cls::setup($cli);
-                    $cls::run(['./tm',...$cmd]);
+                    $args = $cli->parse($cmd, true);
+                    $cls::run($args);
                 }
             }
         }
