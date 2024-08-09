@@ -32,7 +32,7 @@ class Setup extends BaseSetup implements ISetupCommandline{
         $installCommands = [
             'configuration --section scss --key cmd --value '.$sass_cmd,
             'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
-            'configuration --section ext-compiler --key require --value ""',
+            // 'configuration --section ext-compiler --key requires --value "exporter"',
         ];
         foreach($installCommands as $cmdString){
             self::performInstall($cmdString,'');
