@@ -28,6 +28,16 @@ class Setup extends BaseSetup implements ISetupCommandline{
         exec(implode(' ',['which','sencha']),$result,$return_code);
         $sencha_cmd = $result[0];
 
+
+        $installCommands = [
+            'configuration --section scss --key cmd --value '.$sass_cmd,
+            'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
+            'configuration --section ext-compiler --key require --value ""',
+        ];
+        foreach($installCommands as $cmdString){
+            self::performInstall($cmdString,'');
+        }
+
         $installCommands = [
             'install-sessionsql-bsc-main',
             'install-sql-sessionviews',
@@ -42,7 +52,6 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-monaco',
             'install-sql-dashboard',
             'install-sql-bootstrap',
-            'configuration --section scss --key cmd --value '.$sass_cmd,
             'import-bootstrap-scss',
             'install-sql-bootstrap-menu',
             'install-sql-cms',
@@ -50,10 +59,9 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-onlinevote',
             'import-onlinevote',
             'import-onlinevote-page',
-            'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
-            'configuration --section ext-compiler --key require --value ""',
             'compile'
         ];
+ 
         foreach($installCommands as $cmdString){
             self::performInstall($cmdString,$clientName);
         }
