@@ -72,9 +72,14 @@ class SyncRemote implements IRoute
                 foreach ($table_list as $table_row) {
                     set_time_limit(300);
                     $tablename = $table_row['table_name'];
-                    $remote_data[$tablename] = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
-                    if($remote_data[$tablename]===false){
-                        throw new \Exception('error on '.$tablename.' '.APIRequestHelper::$last_error_message);
+
+                    if ($tablename == 'ds_files_data'){
+                        // nicht einlesen, da daten zu groß sein können
+                    }else{
+                        $remote_data[$tablename] = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?limit=1000000');
+                        if($remote_data[$tablename]===false){
+                            throw new \Exception('error on '.$tablename.' '.APIRequestHelper::$last_error_message);
+                        }
                     }
                     $db->direct('select table_name from `ds` limit 1');
                 }
@@ -84,6 +89,17 @@ class SyncRemote implements IRoute
                 $db->autocommit(false);
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files'){
+
+                        $run=true;
+                        $run_index=0;
+                        while($run){
+                            $run_index++;
+                            $db->direct('delete from `' . $table_row['table_name'] . '_data` where file_id in (select file_id from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder") limit 10');
+                            TualoApplication::result('affected_rows', $db->mysqli->affected_rows);
+                            $run=$db->mysqli->affected_rows!=0;
+                            $db->commit();
+                            if ($run_index>50000) $run=false;
+                        }                        
                         $db->direct('delete from `' . $table_row['table_name'] . '_data` where file_id in (select file_id from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder") ');
                         $db->direct('delete from `' . $table_row['table_name'] . '` where table_name="kandidaten_bilder"');
                     }else if ($table_row['table_name'] == 'ds_files_data'){
@@ -98,12 +114,15 @@ class SyncRemote implements IRoute
                 
                 foreach ($table_list as $table_row) {
                     $newData = [];
-                    foreach($remote_data[$table_row['table_name']]['data'] as $row){
-                        if (isset($row['__file_name'])) unset($row['__file_name']);
-                        if (isset($row['__file_data'])) unset($row['__file_data']);
-                        $newData[] = $row;
+                    if ($table_row['table_name'] != 'ds_files_data'){
+                        
+                        foreach($remote_data[$table_row['table_name']]['data'] as $row){
+                            if (isset($row['__file_name'])) unset($row['__file_name']);
+                            if (isset($row['__file_data'])) unset($row['__file_data']);
+                            $newData[] = $row;
+                        }
+                        $remote_data[$table_row['table_name']]['data'] = $newData;
                     }
-                    $remote_data[$table_row['table_name']]['data'] = $newData;
                 }
 
                 foreach ($table_list as $table_row) {
@@ -119,17 +138,30 @@ class SyncRemote implements IRoute
                 
                 TualoApplication::result('state', __LINE__);
                 TualoApplication::result('seconds',time() - $start);
+                $db->commit();
 
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data'){
-                        foreach($remote_data[$table_row['table_name']]['data'] as $row){
-                            try{
-                                $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
-                                $db->direct($sql,$row);
-                            }catch(Exception $e){
-                                
+
+
+                        $lastCount=-1;
+                        $currentPage=0;
+                        $tablename = $table_row['table_name'];
+
+                        while($lastCount!=0){
+                            $currentPage++;
+                            $remote_data[$table_row['table_name']]  = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?page='.$currentPage.'&limit=10');
+                            $lastCount = count($remote_data[$table_row['table_name']]['data']);
+                            foreach($remote_data[$table_row['table_name']]['data'] as $row){
+                                try{
+                                    $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
+                                    $db->direct($sql,$row);
+                                }catch(Exception $e){
+                                    
+                                }
+                                $db->direct('select table_name from `ds` limit 1');
                             }
-                            $db->direct('select table_name from `ds` limit 1');
+                            $db->commit();
                         }
                     }
                 }

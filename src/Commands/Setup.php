@@ -59,7 +59,7 @@ class Setup extends BaseSetup implements ISetupCommandline{
             'install-sql-onlinevote',
             'import-onlinevote',
             'import-onlinevote-page',
-            'compile'
+            // 'compile'
         ];
  
         foreach($installCommands as $cmdString){
