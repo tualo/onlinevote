@@ -22,20 +22,37 @@ class Setup extends BaseSetup implements ISetupCommandline{
         PostCheck::formatPrintLn(['blue'], "Installing all needed for onlinevote module");
         PostCheck::formatPrintLn(['blue'], "===========================================");
         
+        $sass_cmd = '';
+        $sencha_cmd = '';
+
         exec(implode(' ',['which','scss']),$result,$return_code);
-        $sass_cmd = $result[0];
+        if ($return_code!==0){
+            PostCheck::formatPrintLn(['red'], "sass not found");
+            
+        }else{
+            PostCheck::formatPrintLn(['green'], "sass found");
+            $sass_cmd = $result[0];
+        }
 
         exec(implode(' ',['which','sencha']),$result,$return_code);
-        $sencha_cmd = $result[0];
+        if ($return_code!==0){
+            PostCheck::formatPrintLn(['red'], "sencha not found");
+        }else{
+            PostCheck::formatPrintLn(['green'], "sencha found");
+            $sencha_cmd = $result[0];
+        }
 
-
-        $installCommands = [
-            'configuration --section scss --key cmd --value '.$sass_cmd,
-            'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
-            // 'configuration --section ext-compiler --key requires --value "exporter"',
-        ];
-        foreach($installCommands as $cmdString){
-            self::performInstall($cmdString,'');
+        if ($sass_cmd==='' || $sencha_cmd===''){
+            PostCheck::formatPrintLn(['red'], "Please install sass and sencha cmd");
+        }else{
+            $installCommands = [
+                'configuration --section scss --key cmd --value '.$sass_cmd,
+                'configuration --section ext-compiler --key sencha_compiler_command --value '. $sencha_cmd,
+                // 'configuration --section ext-compiler --key requires --value "exporter"',
+            ];
+            foreach($installCommands as $cmdString){
+                self::performInstall($cmdString,'');
+            }
         }
 
         $installCommands = [
