@@ -21,6 +21,7 @@ class Ballotpaper {
     private array $voter_data;
     private int $canvote;
     private string $state;
+    private string $ts;
     private string $secret_token;
     private array $filled=[];
     private bool $is_valid =false;
@@ -31,7 +32,7 @@ class Ballotpaper {
     private array $config = [];
     private array $configgroups = [];
     
-    private static array $required_attributes = ['voter_id','ballotpaper_id','canvote','state','ballotpaper_name','voter_data'];
+    private static array $required_attributes = ['voter_id','ballotpaper_id','canvote','state','ballotpaper_name','voter_data','ts'];
 
     public static function getInstanceFromJSON($json):Ballotpaper {
         $instance = new self();
@@ -46,6 +47,7 @@ class Ballotpaper {
         $instance->setVoterData(is_string($json['voter_data'])?json_decode($json['voter_data'],true):$json['voter_data']);
         $instance->setCanvote(intval($json['canvote']));
         $instance->setState($json['state']);
+        $instance->setTs($json['ts']);
 
 
 
@@ -65,6 +67,7 @@ class Ballotpaper {
     }
 
     protected function setVoterId(int $voter_id){  $this->voter_id = $voter_id; }
+    protected function setTs(string $ts){  $this->ts = $ts; }
     protected function setBallotpaperId(int $ballotpaper_id){  $this->ballotpaper_id = $ballotpaper_id; }
     protected function setBallotpaperName(string $ballotpaper_name){  $this->ballotpaper_name = $ballotpaper_name; }
     protected function setVoterData(array $voter_data){  $this->voter_data = $voter_data; }
@@ -74,6 +77,7 @@ class Ballotpaper {
     protected function setSecretToken(string $secret_token){  $this->secret_token = $secret_token; }
 
     public function getVoterId( ):int{ return $this->voter_id; }
+    public function getTs( ):string{ return $this->ts; }
     public function getBallotpaperId( ):int{ return $this->ballotpaper_id; }
     public function getBallotpaperName( ):string{ return $this->ballotpaper_name; }
     public function getVoterData( ):array{ return $this->voter_data; }
