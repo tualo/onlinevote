@@ -9,6 +9,6 @@ select
     `kandidaten`.*
 from
     `kandidaten`
-    left join kandidaten_bilder on kandidaten_bilder.kandidat = kandidaten.ridx
-    and kandidaten_bilder.typ = 1;
+    left join `kandidaten_bilder` on `kandidaten_bilder`.`kandidat` = `kandidaten`.`id`
+    and `kandidaten_bilder`.`typ` = 1;
         

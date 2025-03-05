@@ -41,7 +41,7 @@ INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `langua
 ('kandidaten_bilder','__file_name','DE','Dateiname','displayfield','Allgemein/Angaben',2,0,1,1,'1',1.00,'\'\''),
 ('kandidaten_bilder','__file_size','DE','Größe','displayfield','Allgemein/Angaben',5,0,1,0,'1',1.00,'\'\''),
 ('kandidaten_bilder','__file_type','DE','__file_type','displayfield','Allgemein',11,1,0,0,'1',1.00,'\'\'');
-INSERT  IGNORE INTO `ds_reference_tables` (`table_name`, `reference_table_name`, `columnsdef`, `constraint_name`, `active`, `searchable`, `autosync`, `position`, `path`, `existsreal`, `tabtitle`) VALUES ('kandidaten_bilder','kandidaten','{\"kandidat\":\"ridx\"}','kandidaten_bilder_ibfk_1',1,0,0,999,'',1,''),
+INSERT  IGNORE INTO `ds_reference_tables` (`table_name`, `reference_table_name`, `columnsdef`, `constraint_name`, `active`, `searchable`, `autosync`, `position`, `path`, `existsreal`, `tabtitle`) VALUES ('kandidaten_bilder','kandidaten','{\"kandidat\":\"id\"}','kandidaten_bilder_ibfk_1',1,0,0,999,'',1,''),
 ('kandidaten_bilder','kandidaten_bilder_typen','{\"typ\":\"id\"}','kandidaten_bilder_ibfk_2',0,0,0,999,'',1,'');
 INSERT  IGNORE INTO `ds_access` (`role`, `table_name`, `read`, `write`, `delete`, `append`, `existsreal`) VALUES ('administration','kandidaten_bilder',1,1,1,1,1),
 ('_default_','kandidaten_bilder',1,0,0,0,1);

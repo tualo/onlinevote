@@ -1,12 +1,4 @@
 DELIMITER ;
-CREATE TABLE IF NOT EXISTS `wm_sync_tables` (
-  `table_name` varchar(128) NOT NULL,
-  `position` int(11) DEFAULT 0,
-  `last_sync` datetime DEFAULT NULL,
-  PRIMARY KEY (`table_name`)
-) ;
-
-
 insert ignore into wm_sync_tables(table_name,position) values ('ds_files',8);
 insert ignore into wm_sync_tables(table_name,position) values ('ds_files_data',11);
 insert ignore into wm_sync_tables(table_name,position) values ('kandidaten',7);

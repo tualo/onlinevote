@@ -8,7 +8,7 @@ INSERT  IGNORE INTO `ds_column` (`table_name`, `column_name`, `default_value`, `
 ('wahlgruppe','kurzbezeichnung','',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlgruppe','login','{:getSessionUser()}',0,0,'',0,0,'','','NO','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlgruppe','name','',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
-('wahlgruppe','ridx','{RIDX}',0,0,'null|null',0,0,'','','YES','NO',1,'','varchar','UNI','varchar(12)',12,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
+('wahlgruppe','id','{ID}',0,0,'null|null',0,0,'','','YES','NO',1,'','varchar','UNI','varchar(12)',12,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlgruppe','update_date','{DATE}',0,0,'null',0,0,'','','NO','NO',1,'','date','','date',NULL,NULL,NULL,NULL,'select,insert,update,references',1,0,'',''),
 ('wahlgruppe','update_time','{TIME}',0,0,'null',0,0,'','','YES','NO',1,'','time','','time',NULL,NULL,NULL,NULL,'select,insert,update,references',1,0,'',''),
 ('wahlgruppe','zuweisungsschluessel','0',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'','');
@@ -16,7 +16,7 @@ INSERT  IGNORE INTO `ds_column_list_label` (`table_name`, `column_name`, `langua
 ('wahlgruppe','id','DE','ID','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
 ('wahlgruppe','kostenstelle','DE','kostenstelle','gridcolumn','',999,'','','',1,1,'',0,1.00,'ASC','left','',''),
 ('wahlgruppe','name','DE','Name','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
-('wahlgruppe','ridx','DE','RIDX','gridcolumn','',999,'','','',1,1,'',0,1.00,'ASC','left','','');
+('wahlgruppe','id','DE','ID','gridcolumn','',999,'','','',1,1,'',0,1.00,'ASC','left','','');
 INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `language`, `label`, `xtype`, `field_path`, `position`, `hidden`, `active`, `allowempty`, `fieldgroup`, `flex`, `hint`) VALUES ('wahlgruppe','aktiv','DE','Aktiv','checkbox','Allgemein',3,0,1,1,'',1.00,''),
 ('wahlgruppe','id','DE','ID','numberfield','Allgemein',0,0,1,1,'',1.00,''),
 ('wahlgruppe','insert_date','DE','insert_date','displayfield','Allgemein',8,1,1,1,'',1.00,''),
@@ -25,9 +25,9 @@ INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `langua
 ('wahlgruppe','kurzbezeichnung','DE','Kurz','textfield','Allgemein',6,0,1,1,'',1.00,''),
 ('wahlgruppe','login','DE','login','displayfield','Allgemein',9,1,1,1,'',1.00,''),
 ('wahlgruppe','name','DE','Name','textfield','Allgemein',5,0,1,1,'',1.00,''),
-('wahlgruppe','ridx','DE','RIDX','displayfield','Allgemein',2,1,0,1,'',1.00,''),
+('wahlgruppe','id','DE','ID','displayfield','Allgemein',2,1,0,1,'',1.00,''),
 ('wahlgruppe','update_date','DE','update_date','displayfield','Allgemein',7,1,1,1,'',1.00,''),
 ('wahlgruppe','update_time','DE','update_time','displayfield','Allgemein',10,1,1,1,'',1.00,''),
 ('wahlgruppe','zuweisungsschluessel','DE','Schlüssel','textfield','Allgemein',4,0,1,1,'',1.00,'');
-INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('wahlgruppe','RIDX','ridx','name',NULL);
+INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('wahlgruppe','ID','id','name',NULL);
 INSERT  IGNORE INTO `ds_access` (`role`, `table_name`, `read`, `write`, `delete`, `append`, `existsreal`) VALUES ('administration','wahlgruppe',1,1,1,1,1);

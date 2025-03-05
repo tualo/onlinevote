@@ -8,7 +8,7 @@ INSERT  IGNORE INTO `ds_column` (`table_name`, `column_name`, `default_value`, `
 ('wahlbezirk','kurzbezeichnung','',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlbezirk','login','{:getSessionUser()}',0,0,'',0,0,'','','NO','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlbezirk','name','',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
-('wahlbezirk','ridx','{RIDX}',0,0,'null|null',0,0,'','','YES','NO',1,'','varchar','UNI','varchar(12)',12,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
+('wahlbezirk','id','{ID}',0,0,'null|null',0,0,'','','YES','NO',1,'','varchar','UNI','varchar(12)',12,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'',''),
 ('wahlbezirk','update_date','{DATE}',0,0,'null',0,0,'','','NO','NO',1,'','date','','date',NULL,NULL,NULL,NULL,'select,insert,update,references',1,0,'',''),
 ('wahlbezirk','update_time','{TIME}',0,0,'null',0,0,'','','YES','NO',1,'','time','','time',NULL,NULL,NULL,NULL,'select,insert,update,references',1,0,'',''),
 ('wahlbezirk','zuweisungsschluessel','0',0,0,'',0,0,NULL,NULL,'YES','NO',1,'','varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,0,'','');
@@ -16,15 +16,15 @@ INSERT  IGNORE INTO `ds_column_list_label` (`table_name`, `column_name`, `langua
 ('wahlbezirk','id','DE','ID','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
 ('wahlbezirk','kostenstelle','DE','kostenstelle','gridcolumn','',0,'','','',1,1,'',0,1.00,'','left','','NULL'),
 ('wahlbezirk','name','DE','Name','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
-('wahlbezirk','ridx','DE','RIDX','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
+('wahlbezirk','id','DE','ID','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','',''),
 ('wahlbezirk','zuweisungsschluessel','DE','Schlüssel','gridcolumn','',999,NULL,'',NULL,0,1,'',0,1.00,'ASC','left','','');
 INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `language`, `label`, `xtype`, `field_path`, `position`, `hidden`, `active`, `allowempty`, `fieldgroup`, `flex`, `hint`) VALUES ('wahlbezirk','aktiv','DE','Aktiv','checkbox','Allgemein',2,0,1,1,'',1.00,''),
 ('wahlbezirk','id','DE','ID','displayfield','Allgemein',0,0,1,1,'',1.00,''),
 ('wahlbezirk','kostenstelle','DE','kostenstelle','displayfield','Allgemein',0,0,1,1,'',1.00,''),
 ('wahlbezirk','kurzbezeichnung','DE','Kurz','textfield','Allgemein',4,0,1,1,'',1.00,''),
 ('wahlbezirk','name','DE','Name','textfield','Allgemein',5,0,1,1,'',1.00,''),
-('wahlbezirk','ridx','DE','RIXD','displayfield','Allgemein',1,0,1,1,'',1.00,''),
+('wahlbezirk','id','DE','RIXD','displayfield','Allgemein',1,0,1,1,'',1.00,''),
 ('wahlbezirk','zuweisungsschluessel','DE','Schlüssel','textfield','Allgemein',3,0,1,1,'',1.00,'');
-INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('wahlbezirk','RIDX','ridx','name',NULL),
-('wahlbezirk','RIXD','ridx','name',NULL);
+INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('wahlbezirk','ID','id','name',NULL),
+('wahlbezirk','RIXD','id','name',NULL);
 INSERT  IGNORE INTO `ds_access` (`role`, `table_name`, `read`, `write`, `delete`, `append`, `existsreal`) VALUES ('administration','wahlbezirk',1,1,1,1,1);
