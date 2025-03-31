@@ -31,33 +31,35 @@ class SendResults implements IRoute
                     select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
                 ", [], 'text', 'v');
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
-                
+
                 $tablename = 'kandidaten_stimmen';
                 $table = DSTable::instance($tablename);
                 $data = $table->read()->get();
 
                 $remote_data = APIRequestHelper::query($url . '/papervote/reset/onlinekandidaten');
-                if($remote_data===false){
-                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
+                if ($remote_data === false) {
+                    throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
 
-                $remote_data = APIRequestHelper::query($url . '/ds/onlinekandidaten/create',json_encode($data));
-                if($remote_data===false){
-                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
+                $remote_data = APIRequestHelper::query($url . '/ds/onlinekandidaten/create', json_encode($data));
+                if ($remote_data === false) {
+                    throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
-                
+
                 $tablename = 'view_ballotbox_decrypted_sum';
                 $table = DSTable::instance($tablename);
                 $data = $table->read()->get();
 
 
                 $remote_data = APIRequestHelper::query($url . '/papervote/reset/onlinestimmzettel');
-                if($remote_data===false){
-                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
+                if ($remote_data === false) {
+                    throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
-                $remote_data = APIRequestHelper::query($url . '/ds/ballotbox_decrypted_sum/create',json_encode($data));
-                if($remote_data===false){
-                    throw new \Exception('error on '.$tablename.' ('.APIRequestHelper::$last_error_message.')');
+
+
+                $remote_data = APIRequestHelper::query($url . '/ds/ballotbox_decrypted_sum/create', json_encode($data));
+                if ($remote_data === false) {
+                    throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
 
                 TualoApplication::result('success', true);
@@ -65,6 +67,5 @@ class SendResults implements IRoute
                 TualoApplication::result('msg', $e->getMessage());
             }
         }, ['get', 'post'], true);
-
     }
 }
