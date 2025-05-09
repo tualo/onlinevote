@@ -1,42 +1,48 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Tualo\Office\OnlineVote\States;
+
 use Tualo\Office\OnlineVote\States\State;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Tualo\Office\OnlineVote\Exceptions\SessionInvalidException;
 use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 
-class Ballotpaper implements State{
+class Ballotpaper implements State
+{
 
-    public function prepare(&$request,&$result):string {
+    public function prepare(&$request, &$result): string
+    {
         $stateMachine = WMStateMachine::getInstance();
         $db = $stateMachine->db();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
         if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
 
-        $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}',[
-            'id'=> $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
+        $result['ballotpaper'] = $db->singleRow('select * from view_website_ballotpaper where id = {id}', [
+            'id' => $stateMachine->voter()->getCurrentBallotpaper()->getBallotpaperId()
         ]);
 
-        $ballotpaper_groups = $db->direct('select view_website_ballotpaper_groups.*,0 __checkcount from view_website_ballotpaper_groups where ballotpaper_id = {id} order by id',$result['ballotpaper']);
-        foreach($ballotpaper_groups as $key=>$ballotpaper_group){
-            try{
-                $ballotpaper_groups[$key]['candidates'] = $db->direct('select * from view_website_candidates where stimmzettelgruppen = concat({id},"|0") order by barcode',$ballotpaper_group);
-            }catch(\Exception $e){
+        $ballotpaper_groups = $db->direct('select view_website_ballotpaper_groups.*,0 __checkcount from view_website_ballotpaper_groups where ballotpaper_id = {id} order by id', $result['ballotpaper']);
+        foreach ($ballotpaper_groups as $key => $ballotpaper_group) {
+            try {
+                $ballotpaper_groups[$key]['candidates'] = $db->direct('select * from view_website_candidates where stimmzettelgruppen = concat({id},"|0") order by barcode', $ballotpaper_group);
+            } catch (\Exception $e) {
                 WMStateMachine::getInstance()->logger('Ballotpaper(State)')->error($e->getMessage());
             }
         }
         $result['ballotpaper_groups'] = $ballotpaper_groups;
-        if ($result['ballotpaper']===false)  throw new \Exception("view_website_ballotpaper is false");
-        if ($result['ballotpaper_groups']===false)  throw new \Exception("view_website_ballotpaper_groups is false");
+        if ($result['ballotpaper'] === false)  throw new \Exception("view_website_ballotpaper is false");
+        if ($result['ballotpaper_groups'] === false)  throw new \Exception("view_website_ballotpaper_groups is false");
 
-        $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($result['ballotpaper'] ,$result['ballotpaper_groups']);
+        $stateMachine->voter()->getCurrentBallotpaper()->setConfiguration($result['ballotpaper'], $result['ballotpaper_groups']);
         return $stateMachine->getNextState();
     }
 
 
-    public function unlockSaving($stateMachine){
+    public function unlockSaving($stateMachine)
+    {
         $db = $stateMachine->db();
         $db->direct('
             delete from voter_sessions_save_state  where session_id = {session_id} 
@@ -45,26 +51,29 @@ class Ballotpaper implements State{
         ]);
     }
 
-    public function transition(&$request,&$result):string {
+    public function transition(&$request, &$result): string
+    {
         $stateMachine = WMStateMachine::getInstance();
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
         if ($stateMachine->voter()->getCurrentBallotpaper()->checkLocal()) throw new BallotPaperAllreadyVotedException();
 
-        if (($nextState = $stateMachine->checkLogout())!='') return $nextState;
+        if (($nextState = $stateMachine->checkLogout()) != '') return $nextState;
         $nextState = 'Tualo\Office\OnlineVote\States\Ballotpaper';
 
         if (
-            isset($_REQUEST['send']) && 
-            $_REQUEST['send']=1
-        ){
+            isset($_REQUEST['send']) &&
+            $_REQUEST['send'] == 1
+        ) {
             $this->unlockSaving($stateMachine);
             // kreuze lesen
-            if(!isset($_REQUEST['candidate'])) $_REQUEST['candidate']=[];
+            if (!isset($_REQUEST['candidate'])) $_REQUEST['candidate'] = [];
+            if (!is_array($_REQUEST['candidate'])) $_REQUEST['candidate'] = [];
+
             $stateMachine->voter()->getCurrentBallotpaper()->setVotes($_REQUEST['candidate']);
             $nextState = 'Tualo\Office\OnlineVote\States\BallotpaperOverview';
         }
-        
-        App::logger('Ballotpaper(State)')->debug("here" );
+
+        App::logger('Ballotpaper(State)')->debug("here");
         return $nextState;
     }
 }

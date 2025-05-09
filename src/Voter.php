@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+// declare(strict_types=1);
 
 namespace Tualo\Office\OnlineVote;
 
@@ -61,9 +61,7 @@ class Voter
     private bool $groupedVote = false;
     // private array $required_attributes = ['voter_id','ballotpaper_id','canvote','state'];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function fromJSON($json): void
     {
@@ -73,7 +71,7 @@ class Voter
         $this->username = isset($json['username']) ? $json['username'] : '';
         $this->pwhash = isset($json['pwhash']) ? $json['pwhash'] : '';
 
-        
+
         $this->id = isset($json['id']) ? $json['id'] : '';
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])) {
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'], true);
@@ -98,7 +96,7 @@ class Voter
                     }
 
                     $vd = $bp->getVoterData();
-                    if (isset($vd['einzel']) && ($vd['einzel'].''>$this->allowEditName) ) $this->allowEditName = $vd['einzel'].'';
+                    if (isset($vd['einzel']) && ($vd['einzel'] . '' > $this->allowEditName)) $this->allowEditName = $vd['einzel'] . '';
 
                     $this->addAvailableBallotpaper($bp);
                 }
@@ -251,7 +249,7 @@ class Voter
         if ($record !== false) {
             $this->fromJSON($record);
 
-            if (crypt($password, $record['pwhash']) == $record['pwhash']){
+            if (crypt($password, $record['pwhash']) == $record['pwhash']) {
                 // todo: check if it is ok to say allready-voted before login and password check
                 if (count($this->available_ballotpapers) == 0) {
                     $stateMachine = WMStateMachine::getInstance();
@@ -278,8 +276,6 @@ class Voter
                 $this->registerSession();
                 return 'ok';
             }
-            
-            
         }
 
         $db = WMStateMachine::getInstance()->db();
