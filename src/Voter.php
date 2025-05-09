@@ -1,6 +1,6 @@
 <?php
 
-// declare(strict_types=1);
+declare(strict_types=1);
 
 namespace Tualo\Office\OnlineVote;
 
@@ -72,7 +72,7 @@ class Voter
         $this->pwhash = isset($json['pwhash']) ? $json['pwhash'] : '';
 
 
-        $this->id = isset($json['id']) ? $json['id'] : '';
+        $this->id = strval(isset($json['id']) ? $json['id'] : '');
         if (isset($json['possible_ballotpapers']) && is_string($json['possible_ballotpapers'])) {
             $json['possible_ballotpapers'] = json_decode($json['possible_ballotpapers'], true);
         }
