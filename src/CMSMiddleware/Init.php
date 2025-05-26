@@ -224,7 +224,7 @@ class Init
             App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
         } catch (SessionInvalidException $e) {
             $result['errorMessage'] = $e->getMessage();
-            header("HTTP/1.1 401 Unauthorized");
+            $result['responsecode'] = 401;
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\SessionInvalid');
             App::logger('OnlineVote(SessionInvalidError)')->error($e->getMessage());
         } catch (BallotPaperAllreadyVotedException $e) {
@@ -233,12 +233,12 @@ class Init
             App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
         } catch (VoterLoginFailed $e) {
             $result['errorMessage'] = $e->getMessage();
-            header("HTTP/1.1 401 Unauthorized");
+            $result['responsecode'] = 401;
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginFailed');
             App::logger('OnlineVote(VoterLoginFailed)')->error($e->getMessage());
         } catch (LoginAllreadyVotedOnline $e) {
             $result['errorMessage'] = $e->getMessage();
-            header("HTTP/1.1 401 Unauthorized");
+            $result['responsecode'] = 401;
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOnline');
             App::logger('OnlineVote(LoginAllreadyVotedOnline)')->error($e->getMessage());
         } catch (LoginAllreadyVotedOffline $e) {
@@ -247,7 +247,7 @@ class Init
             App::logger('OnlineVote(LoginAllreadyVotedOffline)')->error($e->getMessage());
         } catch (BlockedUser $e) {
             $result['errorMessage'] = $e->getMessage();
-            header("HTTP/1.1 401 Unauthorized");
+            $result['responsecode'] = 401;
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\BlockedUser');
             App::logger('OnlineVote(BlockedUser)')->error($e->getMessage());
         } catch (SystemBallotpaperSaveException $e) {
