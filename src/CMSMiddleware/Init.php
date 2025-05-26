@@ -1,5 +1,7 @@
 <?php
+
 namespace Tualo\Office\OnlineVote\CMSMiddleware;
+
 use Tualo\Office\OnlineVote\CIDR;
 use Tualo\Office\OnlineVote\WMStateMachine;
 use Michelf\MarkdownExtra;
@@ -23,44 +25,53 @@ use Tualo\Office\OnlineVote\Exceptions\BallotPaperIsSavingException;
 
 use Tualo\Office\Basic\TualoApplication as App;
 
-class Init {
+class Init
+{
     private static $textsSQL = 'select id,value_plain,value_html from wm_texts where id<>"" ';
-    public static $texts=[];
-    public static function markdownfn():mixed{
-        return function(string $textkey):string{
-            $result = MarkdownExtra::defaultTransform( isset(self::$texts[$textkey])?self::$texts[$textkey]:"{$textkey} not defined" );
-            if (strpos($result,"<p>")===0) $result = substr( $result ,3,-3);
+    public static $texts = [];
+    public static function markdownfn(): mixed
+    {
+        return function (string $textkey): string {
+            $result = MarkdownExtra::defaultTransform(isset(self::$texts[$textkey]) ? self::$texts[$textkey] : "{$textkey} not defined");
+            if (strpos($result, "<p>") === 0) $result = substr($result, 3, -3);
             return $result;
         };
     }
 
-    public static function textfn():mixed{
-        return function(string $textkey):string{
-            $result =  isset(self::$texts[$textkey])?self::$texts[$textkey]:"{$textkey} not defined";
+    public static function textfn(): mixed
+    {
+        return function (string $textkey): string {
+            $result =  isset(self::$texts[$textkey]) ? self::$texts[$textkey] : "{$textkey} not defined";
             return $result;
         };
     }
 
-    public static function db() { return App::get('session')->getDB(); }
-    public static function registerstep($name){
+    public static function db()
+    {
+        return App::get('session')->getDB();
+    }
+    public static function registerstep($name)
+    {
         $db = self::db();
-        $key = $db->singleValue('select uuid() u',[],'u');
-        foreach($_SESSION['pug_session']['step_hash'] as $k=>$n){
-            if ($n==$name) unset($_SESSION['pug_session']['step_hash'][$k]);
+        $key = $db->singleValue('select uuid() u', [], 'u');
+        foreach ($_SESSION['pug_session']['step_hash'] as $k => $n) {
+            if ($n == $name) unset($_SESSION['pug_session']['step_hash'][$k]);
         }
-        $_SESSION['pug_session']['step_hash'][$key]=$name;
-        $_SESSION['pug_session']['step_key'][$name]=$key;
-        $_SESSION['pug_session']['stepuuid']=$key;
+        $_SESSION['pug_session']['step_hash'][$key] = $name;
+        $_SESSION['pug_session']['step_key'][$name] = $key;
+        $_SESSION['pug_session']['stepuuid'] = $key;
     }
 
 
-    public static function _initrun(&$request,&$result){
+    public static function _initrun(&$request, &$result)
+    {
         unset($_SESSION['voter']);
         unset($_SESSION['wm_state']);
     }
 
 
-    public static function  ipCIDRCheck ($IP, $CIDR) {
+    public static function  ipCIDRCheck($IP, $CIDR)
+    {
         list($net, $mask) = explode("/", $CIDR);
         $ip_net = ip2long($net);
         $ip_mask = ~((1 << (32 - $mask)) - 1);
@@ -71,9 +82,10 @@ class Init {
 
 
 
-    
 
-    public static function run(&$request,&$result){
+
+    public static function run(&$request, &$result)
+    {
         @session_start();
 
         //if (isset($_REQUEST['resetsession'])) @session_destroy();
@@ -135,15 +147,15 @@ class Init {
         group by bp_row.row_name
             order by pos
         ');
-        self::_initrun($request,$result);
+        self::_initrun($request, $result);
 
-        App::timing(self::class.' '.__LINE__);
-        InitApiUse::run($request,$result);
-        App::timing(self::class.' '.__LINE__);
-        
-        
-        self::$texts = $result['texts'] = $db->directMap(self::$textsSQL,[],'id','value_plain');
-        App::timing(self::class.' '.__LINE__);
+        App::timing(self::class . ' ' . __LINE__);
+        InitApiUse::run($request, $result);
+        App::timing(self::class . ' ' . __LINE__);
+
+
+        self::$texts = $result['texts'] = $db->directMap(self::$textsSQL, [], 'id', 'value_plain');
+        App::timing(self::class . ' ' . __LINE__);
         $wmstate = WMStateMachine::getInstance();
 
         $wmstate->ip($_SERVER['REMOTE_ADDR']);
@@ -151,140 +163,129 @@ class Init {
 
         App::logger('OnlineVote')->debug(__LINE__);
 
-        if( $wmstate->getCurrentState()=='') $wmstate->setCurrentState('Tualo\Office\OnlineVote\States\Login');
+        if ($wmstate->getCurrentState() == '') $wmstate->setCurrentState('Tualo\Office\OnlineVote\States\Login');
 
-        try{
+        try {
             $class = new \ReflectionClass($wmstate->getCurrentState());
-            if (!$class->hasMethod('transition')){ 
-                App::logger('CMS')->error($wmstate->getCurrentState().' has no run transition');
-            }else{
+            if (!$class->hasMethod('transition')) {
+                App::logger('CMS')->error($wmstate->getCurrentState() . ' has no run transition');
+            } else {
                 $state = new ($wmstate->getCurrentState());
-                $wmstate->setNextState( $state->transition($request,$result) );
+                $wmstate->setNextState($state->transition($request, $result));
             }
 
 
-            $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1',array(),'');
-            if ($wm_wahlschein_register==false) throw new \Exception('No wm_loginpage_settings found!');
-            
-            $stop_offset = intval( App::configuration('onlinevote','backgroundStopSeconds','0') );
-            $current = date('Y-m-d H:i:s',time());
+            $wm_wahlschein_register = $db->singleRow('select * from wm_loginpage_settings where id = 1', array(), '');
+            if ($wm_wahlschein_register == false) throw new \Exception('No wm_loginpage_settings found!');
 
-            $currentExtended = date('Y-m-d H:i:s',time() - $stop_offset );
+            $stop_offset = intval(App::configuration('onlinevote', 'backgroundStopSeconds', '0'));
+            $current = date('Y-m-d H:i:s', time());
 
-            if ($wm_wahlschein_register['starttime']>$current){
+            $currentExtended = date('Y-m-d H:i:s', time() - $stop_offset);
+
+            if ($wm_wahlschein_register['starttime'] > $current) {
                 throw new VotingNotStarted();
             }
 
-            if ($wm_wahlschein_register['stoptime']<$currentExtended){
+            if ($wm_wahlschein_register['stoptime'] < $currentExtended) {
                 throw new VotingStopped();
             }
 
             if (
-                ($wm_wahlschein_register['stoptime']<$current) &&
+                ($wm_wahlschein_register['stoptime'] < $current) &&
                 in_array($wmstate->getCurrentState(), [
                     'Tualo\Office\OnlineVote\States\Login',
                     'Tualo\Office\OnlineVote\States\failures\VotingStopped',
                     'Tualo\Office\OnlineVote\States\SaveCompleted'
                 ])
-            ){
+            ) {
                 throw new VotingStopped();
             }
-            
-            if ($wm_wahlschein_register['interrupted']==1){ 
+
+            if ($wm_wahlschein_register['interrupted'] == 1) {
                 throw new VotingInterrupted();
             }
 
-            $pgpkeysCount = $db->singleValue('select count(*) c from pgpkeys',[],'c');
-            if ($pgpkeysCount==0) throw new PGPKeyMissed('No PGP Keys found!');
-
-        }catch(VoterUnsyncException $e ){
+            $pgpkeysCount = $db->singleValue('select count(*) c from pgpkeys', [], 'c');
+            if ($pgpkeysCount == 0) throw new PGPKeyMissed('No PGP Keys found!');
+        } catch (VoterUnsyncException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\Error' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\Error');
             App::logger('OnlineVote(VoterUnsyncException)')->error($e->getMessage());
-        }catch(RemoteBallotpaperSaveException $e ){
+        } catch (RemoteBallotpaperSaveException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperSave' );
-        }catch(RemoteBallotpaperApiException $e ){
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperSave');
+        } catch (RemoteBallotpaperApiException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperApi' );
-        }catch(SessionBallotpaperSaveException $e ){
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\RemoteBallotpaperApi');
+        } catch (SessionBallotpaperSaveException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SessionBallotpaperSave' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\SessionBallotpaperSave');
             App::logger('OnlineVote(SessionBallotpaperSaveException)')->error($e->getMessage());
-        }catch(SessionInvalidException $e ){
+        } catch (SessionInvalidException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SessionInvalid' );
+            header("HTTP/1.1 401 Unauthorized");
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\SessionInvalid');
             App::logger('OnlineVote(SessionInvalidError)')->error($e->getMessage());
-        }catch(BallotPaperAllreadyVotedException $e ){
+        } catch (BallotPaperAllreadyVotedException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BallotPaperAllreadyVoted' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\BallotPaperAllreadyVoted');
             App::logger('OnlineVote(BallotPaperAllreadyVotedError)')->error($e->getMessage());
-        }catch(VoterLoginFailed $e ){
+        } catch (VoterLoginFailed $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginFailed' );
+            header("HTTP/1.1 401 Unauthorized");
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginFailed');
             App::logger('OnlineVote(VoterLoginFailed)')->error($e->getMessage());
-        }catch(LoginAllreadyVotedOnline $e ){
+        } catch (LoginAllreadyVotedOnline $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOnline' );
+            header("HTTP/1.1 401 Unauthorized");
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOnline');
             App::logger('OnlineVote(LoginAllreadyVotedOnline)')->error($e->getMessage());
-        }catch(LoginAllreadyVotedOffline $e ){
+        } catch (LoginAllreadyVotedOffline $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOffline' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOffline');
             App::logger('OnlineVote(LoginAllreadyVotedOffline)')->error($e->getMessage());
-        }catch(BlockedUser $e ){
+        } catch (BlockedUser $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BlockedUser' );
+            header("HTTP/1.1 401 Unauthorized");
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\BlockedUser');
             App::logger('OnlineVote(BlockedUser)')->error($e->getMessage());
-        }catch(SystemBallotpaperSaveException $e ){
+        } catch (SystemBallotpaperSaveException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\SystemBallotpaperSave' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\SystemBallotpaperSave');
             App::logger('OnlineVote(SystemBallotpaperSaveException)')->error($e->getMessage());
-            
-            
-        }catch(PGPKeyMissed $e ){
+        } catch (PGPKeyMissed $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\PGPKeyMissed' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\PGPKeyMissed');
             App::logger('OnlineVote(PGPKeyMissed)')->error($e->getMessage());
-            
-            
-        }catch(VotingInterrupted $e ){
+        } catch (VotingInterrupted $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingInterrupted' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VotingInterrupted');
             App::logger('OnlineVote(VotingInterrupted)')->error($e->getMessage());
-            
-            
-        }catch(VotingStopped $e ){
+        } catch (VotingStopped $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingStopped' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VotingStopped');
             App::logger('OnlineVote(VotingStopped)')->error($e->getMessage());
-            
-            
-        }catch(VotingNotStarted $e ){
+        } catch (VotingNotStarted $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\VotingNotStarted' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VotingNotStarted');
             App::logger('OnlineVote(VotingNotStarted)')->error($e->getMessage());
-            
-            
-        }catch(InvalidVote $e ){
+        } catch (InvalidVote $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\InvalidVote' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\InvalidVote');
             App::logger('OnlineVote(InvalidVote)')->error($e->getMessage());
-            
-            
-        }catch(BallotPaperIsSavingException $e ){
+        } catch (BallotPaperIsSavingException $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\BallotPaperIsSaving' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\BallotPaperIsSaving');
             App::logger('OnlineVote(BallotPaperIsSavingException)')->error($e->getMessage());
-            
-            
-        }catch(\Exception $e ){
+        } catch (\Exception $e) {
             $result['errorMessage'] = $e->getMessage();
-            $wmstate->setNextState( 'Tualo\Office\OnlineVote\States\failures\Error' );
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\Error');
             App::logger('OnlineVote')->error($e->getMessage());
         }
         App::logger('OnlineVote')->debug(__LINE__);
-        
-        
+
+
         $wmstate->usernamefield(true);
         $wmstate->passwordfield(true);
 
@@ -293,30 +294,29 @@ class Init {
 
 
         // prepare the next state
-        try{
+        try {
             $class = new \ReflectionClass($wmstate->getNextState());
-            if (!$class->hasMethod('prepare')){ 
-                App::logger('CMS')->error($wmstate->getNextState().' has no  prepare');
-            }else{
+            if (!$class->hasMethod('prepare')) {
+                App::logger('CMS')->error($wmstate->getNextState() . ' has no  prepare');
+            } else {
                 $state = new ($wmstate->getNextState());
-                $wmstate->setNextState( $state->prepare($request,$result) );
+                $wmstate->setNextState($state->prepare($request, $result));
             }
-        }catch(\Exception $e ){
+        } catch (\Exception $e) {
             App::logger('OnlineVote')->error($e->getMessage());
         }
 
-        $result['wms'] =$wmstate;
+        $result['wms'] = $wmstate;
         $result['md'] = self::markdownfn();
         $result['txt'] = self::textfn();
 
         $_SESSION['wmstatemachine'] = serialize($wmstate);
 
         if (
-            isset($_REQUEST['correct']) && $_REQUEST['correct']==1
+            isset($_REQUEST['correct']) && $_REQUEST['correct'] == 1
             && ($wmstate->getNextState() == 'Tualo\Office\OnlineVote\States\Ballotpaper')
-        ){
+        ) {
             header('Location: /');
         }
-        
     }
 }
