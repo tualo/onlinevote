@@ -36,16 +36,16 @@ class SyncBlockedVoters implements IRoute
                     select property v,'api_token' text FROM system_settings WHERE system_settings_id = 'remote-erp/token'
                     union all
                     select property v,'api_private' text FROM system_settings WHERE system_settings_id = 'erp/privatekey'
-                ",[],'text','v');
+                ", [], 'text', 'v');
 
                 $url  = $o['api_url'] . '~/' . $o['api_token'] . '/';
-                $blocked_voters = APIRequestHelper::query($url . 'ds/' . $tablename . '/read?limit=1000000');
+                $blocked_voters = APIRequestHelper::query($url . 'papervote/' . $tablename . '/read?limit=1000000');
                 if ($blocked_voters === false) throw new Exception("Fehler beim Abrufen der blockierten Wähler (" . APIRequestHelper::$last_error_message . ")");
 
 
                 $table = DSTable::instance($tablename);
                 $table->insert($blocked_voters['data']);
-                if($table->error())
+                if ($table->error())
                     throw new Exception("Fehler beim Speichern der blockierten Wähler (" . $table->errorMessage() . ")");
 
                 TualoApplication::result('blocked_voters', count($blocked_voters['data']));
@@ -61,7 +61,7 @@ class SyncBlockedVoters implements IRoute
                     if ($c1!=$c2) throw new Exception("Fehler bei der Synchronisation der blockierten Wähler (c1=$c1, c2=$c2)");
                 */
 
-                $db->direct('replace into blocked_synced (id,ts,count) values (1,now(),{count})',['count'=>count($blocked_voters['data'])]);
+                $db->direct('replace into blocked_synced (id,ts,count) values (1,now(),{count})', ['count' => count($blocked_voters['data'])]);
                 $db->commit();
                 TualoApplication::result('success', true);
             } catch (Exception $e) {

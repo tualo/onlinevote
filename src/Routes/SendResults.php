@@ -41,7 +41,7 @@ class SendResults implements IRoute
                     throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
 
-                $remote_data = APIRequestHelper::query($url . '/ds/onlinekandidaten/create', json_encode($data));
+                $remote_data = APIRequestHelper::query($url . '/papervote/onlinekandidaten/create', json_encode($data));
                 if ($remote_data === false) {
                     throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }
@@ -57,7 +57,7 @@ class SendResults implements IRoute
                 }
 
 
-                $remote_data = APIRequestHelper::query($url . '/ds/ballotbox_decrypted_sum/create', json_encode($data));
+                $remote_data = APIRequestHelper::query($url . '/papervote/ballotbox_decrypted_sum/create', json_encode($data));
                 if ($remote_data === false) {
                     throw new \Exception('error on ' . $tablename . ' (' . APIRequestHelper::$last_error_message . ')');
                 }

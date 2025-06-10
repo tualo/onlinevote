@@ -177,7 +177,7 @@ class SyncRemote implements IRoute
 
                         while ($lastCount != 0) {
                             $currentPage++;
-                            $remote_data[$table_row['table_name']]  = APIRequestHelper::query($url . '/ds/' . $tablename . '/read?page=' . $currentPage . '&limit=10');
+                            $remote_data[$table_row['table_name']]  = APIRequestHelper::query($url . '/papervote/' . $tablename . '/read?page=' . $currentPage . '&limit=10');
                             $lastCount = count($remote_data[$table_row['table_name']]['data']);
                             foreach ($remote_data[$table_row['table_name']]['data'] as $row) {
                                 try {
