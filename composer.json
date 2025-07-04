@@ -1,37 +1,40 @@
 {
-    "name": "tualo/onlinevote",
-    "description": "tualo - onlinevote",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Thomas Hoffmann",
-            "email": "thomas.hoffmann@tualo.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Tualo\\Office\\OnlineVote\\": "src/"
-        },
-        "files": ["src/functions.php"]
-    },
-    "scripts": {
-        "pre-update-cmd":[
-            "echo '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><'"
-        ]
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "ramsey/uuid": "*",
-        "phpseclib/phpseclib": "*",
-        "tualo/tualopgp": "*",
-        "tualo/cms": "*",
-        "tualo/bsc": "*",
-        "tualo/tualojs": "*",
-        "tualo/ds": "*",
-        "tualo/monacoeditor": "*",
-        "tualo/bootstrap": "*",
-        "tualo/fontawesome": "*",
-        "michelf/php-markdown": "*"
+  "name": "tualo/onlinevote",
+  "description": "tualo - onlinevote",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Tualo\\Office\\OnlineVote\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "scripts": {
+    "pre-update-cmd": [
+      "echo '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><'"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "ramsey/uuid": "*",
+    "phpseclib/phpseclib": "*",
+    "tualo/tualopgp": "*",
+    "tualo/cms": "*",
+    "tualo/bsc": "*",
+    "tualo/tualojs": "*",
+    "tualo/ds": "^1.0.6",
+    "tualo/monacoeditor": "*",
+    "tualo/bootstrap": "*",
+    "tualo/fontawesome": "*",
+    "michelf/php-markdown": "*"
+  },
+  "version": "1.0.1"
 }
