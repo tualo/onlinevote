@@ -19,7 +19,7 @@ class Login implements State
 
 
 
-    public static function login($username, $password, &$nextState): bool
+    public static function login(string $username, string $password, &$nextState): bool
     {
         $stateMachine = WMStateMachine::getInstance();
         $stateMachine->logger('Login(State)')->info("login  from " . $stateMachine->ip() . " - " . __LINE__ . " " . __FILE__ . " ");
@@ -60,7 +60,9 @@ class Login implements State
 
         if (
             isset($_REQUEST[$stateMachine->usernamefield()]) &&
-            isset($_REQUEST[$stateMachine->passwordfield()])
+            isset($_REQUEST[$stateMachine->passwordfield()]) &&
+            is_string($_REQUEST[$stateMachine->usernamefield()]) &&
+            is_string($_REQUEST[$stateMachine->passwordfield()])
         ) {
             $result['p1'] = $_REQUEST[$stateMachine->usernamefield()];
             $result['p2'] = $_REQUEST[$stateMachine->passwordfield()];
@@ -87,6 +89,7 @@ class Login implements State
             isset($result['p1']) &&
             isset($result['p2']) &&
             isset($_REQUEST['accept']) &&
+            !is_array($_REQUEST['accept']) &&
             ($_REQUEST['accept'] == 1 || $_REQUEST['accept'] == 'on')
         ) {
             $username = $result['p1'];
