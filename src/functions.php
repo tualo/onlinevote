@@ -10,6 +10,7 @@ require_once "Commands/InstallMenu.php";
 require_once "Commands/InstallPagePug.php";
 require_once "Commands/Import.php";
 require_once "Commands/Setup.php";
+require_once "Commands/Security.php";
 
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
