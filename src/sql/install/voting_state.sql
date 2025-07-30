@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `voting_state` (
     constraint check(id = 1),
     phase enum('setup_phase', 'test_phase', 'production_phase','council_phase') NOT NULL,
     primary key (id)
-);
+) //
 insert into voting_state (id, phase) values (1,'setup_phase');
 
 create or replace TRIGGER `trigger_voting_state_insert_bu` BEFORE update ON `voting_state`
