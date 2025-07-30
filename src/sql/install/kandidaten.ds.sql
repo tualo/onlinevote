@@ -31,7 +31,7 @@ INSERT  IGNORE INTO `ds_column` (`table_name`, `column_name`, `default_value`, `
 ('kandidaten','nachruecker','',NULL,NULL,NULL,0,NULL,NULL,NULL,'YES',NULL,1,NULL,'tinyint','','tinyint(4)',NULL,3,0,NULL,'select,insert,update,references',1,NULL,NULL,''),
 ('kandidaten','personen_identnummer','',NULL,NULL,NULL,0,NULL,NULL,NULL,'YES',NULL,1,NULL,'varchar','','varchar(15)',15,NULL,NULL,'utf8mb4','select,insert,update,references',1,NULL,NULL,''),
 ('kandidaten','portrait_url',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'YES',NULL,0,NULL,'varchar','','varchar(64)',64,NULL,NULL,'utf8mb4','select,insert,update,references',1,NULL,NULL,''),
-('kandidaten','ridx','',0,0,'',0,0,'','','YES','',1,'','varchar','UNI','varchar(12)',12,0,0,'utf8mb4','select,insert,update,references',1,0,'',''),
+
 ('kandidaten','sitze',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'YES',NULL,0,NULL,'int','','int(11)',NULL,10,0,NULL,'select,insert,update,references',1,NULL,NULL,''),
 ('kandidaten','stimmzettelgruppen','',NULL,NULL,NULL,0,NULL,NULL,NULL,'YES',NULL,1,NULL,'varchar','MUL','varchar(12)',12,NULL,NULL,'utf8mb4','select,insert,update,references',1,NULL,NULL,''),
 ('kandidaten','stimmzettelgruppen_text',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'YES',NULL,0,NULL,'varchar','','varchar(255)',255,NULL,NULL,'utf8mb4','select,insert,update,references',1,NULL,NULL,''),
@@ -83,7 +83,7 @@ INSERT  IGNORE INTO `ds_column_list_label` (`table_name`, `column_name`, `langua
 ('kandidaten','personen_identnummer','DE','personen_identnummer','gridcolumn','',39,'','','',1,0,'',0,1.00,'','','',''),
 ('kandidaten','portaitbild','DE','Portrait','tualoimagedocumentcolumn','',23,'','','',1,1,'',0,1.00,'','','','NULL'),
 ('kandidaten','portrait_url','DE','portrait_url','gridcolumn','',999,'','','',1,1,'',0,1.00,'','start','','NULL'),
-('kandidaten','ridx','DE','RIDX','gridcolumn','',26,'','','',1,1,'',0,1.00,'ASC','left','',''),
+
 ('kandidaten','sitze','DE','sitze','gridcolumn','',36,'','','',1,0,'',0,1.00,'','','',''),
 ('kandidaten','statement','DE','Statement','gridcolumn','',19,'1','1','1',1,1,'1',0,1.00,'ASC','left','',''),
 ('kandidaten','statement_freigabe','DE','Freigabe','gridcolumn','',21,'','','',1,0,'',0,1.00,'ASC','left','',''),
@@ -143,11 +143,11 @@ INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `langua
 ('kandidaten','nachruecker','DE','nachruecker','checkbox','Auszählung/Entscheidung',49,0,1,1,'',1.00,''),
 ('kandidaten','personen_identnummer','DE','Personen-ID.Nr','textfield','Allgemein/Kandidat',9,0,1,1,'',1.00,''),
 ('kandidaten','portaitbild','DE','Portrait','dsdocumentfield','Bilder',30,0,1,1,'',1.00,''),
-('kandidaten','ridx','DE','RIDX','displayfield','Satzinformationen/Angaben',36,0,1,1,'',1.00,''),
+
 ('kandidaten','sitze','DE','mögliche Sitze','displayfield','Satzinformationen/Angaben',32,1,0,1,'',1.00,''),
 ('kandidaten','statement','DE','Statement','textarea','Zusatz/Satz',25,0,1,1,'',1.00,''),
 ('kandidaten','statement_freigabe','DE','Freigabe','checkbox','Zusatz/Satz',26,0,0,1,'',1.00,''),
-('kandidaten','stimmzettelgruppen','DE','Stimmzettelgruppe','combobox_stimmzettelgruppen_ridx','Allgemein/Stimmzettel',12,0,1,1,'',1.00,''),
+('kandidaten','stimmzettelgruppen','DE','Stimmzettelgruppe','combobox_stimmzettelgruppen_id','Allgemein/Stimmzettel',12,0,1,1,'',1.00,''),
 ('kandidaten','stimmzettelgruppen_text','DE','stimmzettelgruppen_text','displayfield','Allgemein',38,1,0,1,'',1.00,''),
 ('kandidaten','telefon','DE','Telefon','textfield','Allgemein/Kandidat',6,0,1,1,'',1.00,''),
 ('kandidaten','titel','DE','Titel','textfield','Allgemein/Kandidat',2,0,1,1,'',1.00,''),
@@ -159,8 +159,8 @@ INSERT  IGNORE INTO `ds_column_form_label` (`table_name`, `column_name`, `langua
 ('kandidaten','vorname','DE','Vorname','textfield','Allgemein/Kandidat',4,0,1,1,'',1.00,''),
 ('kandidaten','www','DE','Kreuzbild','textfield','Allgemein/Kandidat',8,1,0,1,'',1.00,''),
 ('kandidaten','www2','DE','WWW2','textfield','Zusatz/Satz',27,1,0,1,'',1.00,'');
-INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('kandidaten','RIDX','ridx','name',NULL);
-INSERT  IGNORE INTO `ds_reference_tables` (`table_name`, `reference_table_name`, `columnsdef`, `constraint_name`, `active`, `searchable`, `autosync`, `position`, `path`, `existsreal`, `tabtitle`) VALUES ('kandidaten','stimmzettel','{\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\",\"kandidaten__stimmzettel\":\"stimmzettel__ridx\"}','',0,0,1,99999,'',0,''),
-('kandidaten','stimmzettel','{\"kandidaten__stimmzettel\":\"stimmzettel__ridx\"}','kandidaten_ibfk_1',0,0,1,99999,'',0,''),
-('kandidaten','stimmzettelgruppen','{\"stimmzettelgruppen\":\"ridx\"}','fk_kandidaten_stimmzettelgruppen',1,0,0,999,'',1,'');
+INSERT  IGNORE INTO `ds_dropdownfields` (`table_name`, `name`, `idfield`, `displayfield`, `filterconfig`) VALUES ('kandidaten','id','id','name',NULL);
+INSERT  IGNORE INTO `ds_reference_tables` (`table_name`, `reference_table_name`, `columnsdef`, `constraint_name`, `active`, `searchable`, `autosync`, `position`, `path`, `existsreal`, `tabtitle`) VALUES ('kandidaten','stimmzettel','{\"kandidaten__stimmzettel\":\"stimmzettel__id\" ','',0,0,1,99999,'',0,''),
+('kandidaten','stimmzettel','{\"kandidaten__stimmzettel\":\"stimmzettel__id\"}','kandidaten_ibfk_1',0,0,1,99999,'',0,''),
+('kandidaten','stimmzettelgruppen','{\"stimmzettelgruppen\":\"id\"}','fk_kandidaten_stimmzettelgruppen',1,0,0,999,'',1,'');
 INSERT  IGNORE INTO `ds_access` (`role`, `table_name`, `read`, `write`, `delete`, `append`, `existsreal`) VALUES ('administration','kandidaten',1,1,1,1,1);
