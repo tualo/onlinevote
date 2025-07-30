@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `wm_loginpage_settings` (
   `stoptime` datetime DEFAULT '2020-01-01 10:10:10',
   `interrupted` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ;
+) //
 
 CREATE OR REPLACE TRIGGER `trigger_wm_loginpage_settings_phase_check` BEFORE UPDATE ON `wm_loginpage_settings`
 FOR EACH ROW
