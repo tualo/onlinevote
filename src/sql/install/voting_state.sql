@@ -1,7 +1,8 @@
 DELIMITER //
 CREATE TABLE IF NOT EXISTS `voting_state` (
-    id integer(11) NOT NULL check constraint id = 1,
-    phase varchar(25) enum('setup_phase', 'test_phase', 'production_phase','council_phase') NOT NULL,
+    id integer(11) NOT NULL,
+    constraint check(id = 1),
+    phase enum('setup_phase', 'test_phase', 'production_phase','council_phase') NOT NULL,
     primary key (id)
 );
 insert into voting_state (id, phase) values (1,'setup_phase');
