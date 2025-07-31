@@ -55,7 +55,7 @@ class InstallMainSQLCommandline implements ICommandline
             'middlewares' => 'setup cms middlewares ',
 
 
-
+            /*
             'install/ds_class'    => 'setup ds_class',
 
             'install/wahlgruppe'    => 'setup wahlgruppe',
@@ -80,7 +80,7 @@ class InstallMainSQLCommandline implements ICommandline
 
             'install/kandidaten_bilder'    => 'setup kandidaten_bilder',
             'install/kandidaten_bilder.ds'    => 'setup kandidaten_bilder.ds',
-
+*/
             'install/canChangeValue'    => 'setup canChangeValue',
             'install/system_settings_suggestion'    => 'setup system_settings_suggestion',
             'install/system_settings_suggestion.ds'    => 'setup system_settings_suggestion.ds',
@@ -130,6 +130,7 @@ class InstallMainSQLCommandline implements ICommandline
             'install/wm_sync_tables'    => 'setup wm_sync_tables',
             'install/wm_sync_tables.ds'    => 'setup wm_sync_tables.ds',
 
+            /*
             'install/stimmzettel_fusstexte'    => 'setup stimmzettel_fusstexte',
             'install/stimmzettel_fusstexte.ds'    => 'setup stimmzettel_fusstexte.ds',
 
@@ -143,7 +144,7 @@ class InstallMainSQLCommandline implements ICommandline
 
             'install/ds_files_data'    => 'setup ds_files_data',
             'install/ds_files_data.ds'    => 'setup ds_files_data.ds',
-
+            */
 
             'install/username_count'    => 'setup username_count',
             'install/username_count.ds'    => 'setup username_count.ds',
