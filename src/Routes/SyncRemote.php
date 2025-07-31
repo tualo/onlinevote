@@ -105,7 +105,7 @@ class SyncRemote implements IRoute
                     if ($tablename == 'ds_files_data') {
                         // nicht einlesen, da daten zu groß sein können
                     } else {
-                        $remote_data[$tablename] = APIRequestHelper::query($url . '/papervote/' . $tablename . '/read?limit=1000000');
+                        $remote_data[$tablename] = APIRequestHelper::query($url . 'papervote/' . $tablename . '/read?limit=1000000');
                         if ($remote_data[$tablename] === false) {
                             throw new \Exception('error on ' . $tablename . ' ' . APIRequestHelper::$last_error_message);
                         }
