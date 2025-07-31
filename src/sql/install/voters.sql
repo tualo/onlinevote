@@ -23,3 +23,7 @@ BEGIN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'allready voted';
   END IF;
 END //
+
+
+
+
