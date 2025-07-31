@@ -32,6 +32,7 @@
     "tualo/monacoeditor": "^1.0",
     "tualo/bootstrap": "^1.0",
     "tualo/fontawesome": "^1.0",
+    "tualo/votemanager": "^1.0",
     "michelf/php-markdown": "2.0.0"
   },
   "version": "1.0.3"

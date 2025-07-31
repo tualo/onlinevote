@@ -6,7 +6,8 @@ use Garden\Cli\Cli;
 use Garden\Cli\Args;
 use Tualo\Office\Basic\ISetupCommandline;
 use Tualo\Office\Basic\PostCheck;
-use Tualo\Office\CMS\Commands\Setup as BaseSetup;
+use Tualo\Office\CMS\Commands\Setup as CMSSetup;
+use Tualo\Office\VoteManager\Commandline\Setup as BaseSetup;
 
 class Setup extends BaseSetup
 {
@@ -34,26 +35,19 @@ class Setup extends BaseSetup
     public static function getCommands(Args $args): array
     {
         $parentCommands = parent::getCommands($args);
-        return [
+        $cmsCommands = CMSSetup::getCommands($args);
+        $commands = [
+            ...$cmsCommands,
             ...$parentCommands,
-
-            'install-sql-ds',
-            'install-sql-ds-dsx',
-            'install-sql-ds-privacy',
-            'install-sql-ds-docsystem',
-            'install-sql-tualojs',
-            'install-sql-monaco',
-            'install-sql-dashboard',
-            'install-sql-bootstrap',
-            'import-bootstrap-scss',
-            'install-sql-bootstrap-menu',
-            'install-sql-cms',
-            'install-sql-cms-menu',
-            'install-sql-onlinevote',
             'import-onlinevote',
             'import-onlinevote-page',
             // 'compile'
         ];
+
+        // remove duplicates
+        $commands = array_unique($commands);
+
+        return $commands;
     }
 
     public static function run(Args $args)
