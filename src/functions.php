@@ -12,6 +12,7 @@ require_once "Commands/Import.php";
 require_once "Commands/Setup.php";
 require_once "Commands/Security.php";
 require_once "Commands/SystemChecks/BallotBoxesCheck.php";
+require_once "Commands/SystemChecks/RemoteCheck.php";
 
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
@@ -29,4 +30,3 @@ require_once "Routes/KeyUpload.php";
 require_once "Routes/State.php";
 require_once "Routes/SaveSettings.php";
 require_once "Routes/SendResults.php";
-
