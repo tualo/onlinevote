@@ -144,6 +144,13 @@ class SyncRemote implements IRoute
                     $newData = [];
                     if ($table_row['table_name'] != 'ds_files_data') {
 
+                        if (!isset($remote_data[$table_row['table_name']]) || !isset($remote_data[$table_row['table_name']]['data'])) {
+                            if ($table_row['table_name'] == 'ds_files') {
+                                $remote_data[$table_row['table_name']]['data'] = [];
+                            } else {
+                                throw new \Exception('no data for ' . $table_row['table_name']);
+                            }
+                        }
                         foreach ($remote_data[$table_row['table_name']]['data'] as $row) {
                             if (isset($row['__file_name'])) unset($row['__file_name']);
                             if (isset($row['__file_data'])) unset($row['__file_data']);
@@ -152,10 +159,12 @@ class SyncRemote implements IRoute
                         $remote_data[$table_row['table_name']]['data'] = $newData;
                     }
                 }
-
+                TualoApplication::result('state', __LINE__);
                 foreach ($table_list as $table_row) {
                     if ($table_row['table_name'] == 'ds_files_data') {
                     } else {
+                        TualoApplication::result('state_tn', $table_row['table_name']);
+                        TualoApplication::result('state_data', $remote_data[$table_row['table_name']]);
                         $table = DSTable::instance($table_row['table_name']);
                         $table->insert($remote_data[$table_row['table_name']]['data']);
                         if ($table->error()) throw new \Exception($table->errorMessage());
