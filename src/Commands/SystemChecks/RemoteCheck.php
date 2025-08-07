@@ -8,6 +8,47 @@ use Tualo\Office\OnlineVote\Handshake;
 
 class RemoteCheck extends SystemCheck
 {
+    public static function makeResolvedCurlRequest($url, $ip): array|bool
+    {
+        $ch = curl_init();
+        // resolve domain to 127.0.0.1
+        $headers = [
+            'Host: ' . parse_url($url, PHP_URL_HOST),
+            'Connection: close',
+        ];
+
+        $use_url = str_replace(parse_url($url, PHP_URL_HOST), $ip, $url);
+        curl_setopt($ch, CURLOPT_URL, $use_url);
+
+
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $json = json_decode($response, true);
+        if (is_null($json)) {
+            self::formatPrintLn(['red'], 'Fehler beim Parsen der Antwort: ' . json_last_error_msg());
+            return false;
+        }
+        if (isset($json['success']) && $json['success'] === true) {
+            self::formatPrintLn(['green'], 'Remote System Check erfolgreich: ' . $json['msg']);
+        } else {
+            self::formatPrintLn(['red'], 'Remote System Check fehlgeschlagen: ' . $json['msg']);
+        }
+
+        return $json;
+    }
 
     public static function hasClientTest(): bool
     {
@@ -68,17 +109,46 @@ class RemoteCheck extends SystemCheck
         }
 
         $expected_timezone = App::configuration('onlinevote', 'expected_timezone', 'Europe/Berlin');
-        if (date_default_timezone_get() != $expected_timezone) {
-            if ($phase == 'setup_phase') {
-                self::formatPrintLn(['yellow'], 'Zeitzone ist nicht ' . $expected_timezone . ', Setup Phase');
-            } else {
-                self::formatPrintLn(['red'], 'Zeitzone ist nicht ' . $expected_timezone);
 
-                $return_value += 1;
-            }
+
+        if (App::configuration('onlinevote', 'public_domain', '') == '') {
+            self::formatPrintLn(['red'], 'public_domain nicht gesetzt');
+            $return_value += 1;
         } else {
-            self::formatPrintLn(['green'], 'Zeitzone ist ' . $expected_timezone);
+
+            if (App::configuration('onlinevote', 'base_path', '') == '') {
+                self::formatPrintLn(['red'], 'base_path nicht gesetzt');
+                $return_value += 1;
+            } else {
+                $protokoll = App::configuration('onlinevote', 'public_domain_protocol', 'https');
+                self::formatPrintLn(['green'], 'public_domain: ' . App::configuration('onlinevote', 'public_domain', ''));
+                if (
+                    $systemcheck = self::makeResolvedCurlRequest($protokoll . '://' . App::configuration('onlinevote', 'public_domain', '') . '/' . App::configuration('onlinevote', 'base_path', '') . '/onlinevote/systemcheck', '127.0.0.1')
+                ) {
+
+
+                    if ($systemcheck['timezone'] != $expected_timezone) {
+                        if ($phase == 'setup_phase') {
+                            self::formatPrintLn(['yellow'], 'Zeitzone ist nicht ' . $expected_timezone . ', Setup Phase');
+                        } else {
+                            self::formatPrintLn(['red'], 'Zeitzone ist nicht ' . $expected_timezone);
+
+                            $return_value += 1;
+                        }
+                    } else {
+                        self::formatPrintLn(['green'], 'Zeitzone ist ' . $expected_timezone);
+                    }
+                } else {
+                    self::formatPrintLn(['red'], 'Remote System Check fehlgeschlagen');
+                    $return_value += 1;
+                }
+            }
         }
+
+
+        /*
+        
+        */
 
         try {
             Handshake::pingRemote() || throw new \Exception('Der Remote Server ist nicht erreichbar');

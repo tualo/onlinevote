@@ -30,3 +30,4 @@ require_once "Routes/KeyUpload.php";
 require_once "Routes/State.php";
 require_once "Routes/SaveSettings.php";
 require_once "Routes/SendResults.php";
+require_once "Routes/Systemcheck.php";
