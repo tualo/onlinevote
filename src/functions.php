@@ -13,6 +13,7 @@ require_once "Commands/Setup.php";
 require_once "Commands/Security.php";
 require_once "Commands/SystemChecks/BallotBoxesCheck.php";
 require_once "Commands/SystemChecks/RemoteCheck.php";
+require_once "Commands/SystemChecks/CleanPath.php";
 
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
