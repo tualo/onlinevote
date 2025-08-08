@@ -53,6 +53,7 @@ class CleanPath extends SystemCheck
             '/ext-build/',
             '/vendor/',
             '/composer.json',
+            '/package.json',
             '/composer.lock',
             '/tm',
             '/index.php',
