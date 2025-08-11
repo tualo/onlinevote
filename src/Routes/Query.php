@@ -89,7 +89,7 @@ group by
         $fld = $db->singleValue('select group_concat(concat(table_name,".`",column_name,"`") separator ",") fld from ds_column where table_name="wahlberechtigte_anlage"
          and column_name not in (
                 "stimmzettel",
-                "wahlscheinnnummer",
+                "wahlscheinnummer",
                 "pwhash",
                 "username",
                 "password",
