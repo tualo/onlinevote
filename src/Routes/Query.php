@@ -140,6 +140,8 @@ group by
             App::result('success', count($data) > 0);
             App::contenttype('application/json');
         }, ['get', 'post'], true);
+
+
         BasicRoute::add('/papervote/(?P<type>(identnummer|wahlschein))/(?P<barcode>[\w\-\_\d]+)', function ($matches) {
             try {
                 $db = App::get('session')->getDB();
