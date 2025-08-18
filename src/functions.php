@@ -22,6 +22,7 @@ require_once "Routes/Ping.php";
 require_once "Routes/AppendPublicKey.php";
 require_once "Routes/SyncRemote.php";
 require_once "Routes/Image.php";
+require_once "Routes/Get.php";
 require_once "Routes/RemoveVoterReference.php";
 require_once "Routes/SyncBlockedVoters.php";
 require_once "Routes/Decrypt.php";
