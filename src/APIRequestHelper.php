@@ -91,6 +91,9 @@ class APIRequestHelper
             self::$last_error_nr = $httpCode;
             self::$last_error_message = "Backend server problems";
             App::logger('APIRequestHelper')->error("httpCode $httpCode query $url ");
+            if ($httpCode === 0) {
+                throw new \Exception("Could not connect to backend server");
+            }
             return false;
         }
         return $data;
