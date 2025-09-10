@@ -153,7 +153,7 @@ class WMStateMachine
             ) {
                 $this->_passwordfield =  (Uuid::uuid4())->toString();
                 if (App::configuration('onlinevote', 'fixed_fields_for', '') == $this->proxyIP()) {
-                    $this->_passwordfield = App::configuration('onlinevote', 'fixed_fields_password', $this->_usernamefield);
+                    $this->_passwordfield = App::configuration('onlinevote', 'fixed_fields_password', $this->_passwordfield);
                 }
 
                 $_SESSION['lastreset_passwordfield_time'] = time();
