@@ -42,7 +42,7 @@ class Image implements IRoute
                 if ($image_error != '') {
                     RouteSecurityHelper::serveSecureStaticFile(
                         'none.png',
-                        dirname(__DIR__, 2) . 'assets',
+                        dirname(__DIR__, 2) . '/assets',
                         ['png'],
                         ['png' => 'image/png']
                     );
