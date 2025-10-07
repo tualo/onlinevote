@@ -6,6 +6,7 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\Route as BasicRoute;
 use Tualo\Office\Basic\IRoute;
 use Tualo\Office\DS\DSFiles;
+use Tualo\Office\Basic\RouteSecurityHelper;
 
 class Image implements IRoute
 {
@@ -37,7 +38,18 @@ class Image implements IRoute
                     $imagedata = $image->getBase64('titel', 'sample-male', true);
                     $image_error = $image->getError();
                     if ($image_error != '') {
-                        throw new \Exception($image_error);
+
+
+
+                        RouteSecurityHelper::serveSecureStaticFile(
+                            'none.png',
+                            dirname(__DIR__, 2) . 'assets',
+                            ['png'],
+                            ['png' => 'image/png']
+                        );
+                        exit;
+
+                        // throw new \Exception($image_error);
                     }
                 }
                 BasicRoute::$finished = true;
