@@ -33,26 +33,22 @@ class Image implements IRoute
                     $image_error = $image->getError();
                 }
                 if ($image_error != '') {
-
                     $image = DSFiles::instance('tualocms_bilder');
                     $imagedata = $image->getBase64('titel', 'sample-male', true);
                     $image_error = $image->getError();
-                    if ($image_error != '') {
-
-
-
-                        RouteSecurityHelper::serveSecureStaticFile(
-                            'none.png',
-                            dirname(__DIR__, 2) . 'assets',
-                            ['png'],
-                            ['png' => 'image/png']
-                        );
-                        exit;
-
-                        // throw new \Exception($image_error);
-                    }
                 }
+
                 BasicRoute::$finished = true;
+                if ($image_error != '') {
+                    RouteSecurityHelper::serveSecureStaticFile(
+                        'none.png',
+                        dirname(__DIR__, 2) . 'assets',
+                        ['png'],
+                        ['png' => 'image/png']
+                    );
+                    return;
+                }
+
                 http_response_code(200);
 
                 list($mime, $data) =  explode(',', $imagedata);
