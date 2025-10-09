@@ -41,6 +41,7 @@ class Setup extends BaseSetup
             ...$parentCommands,
             'install-sql-onlinevote',
             'install-sql-onlinevote-menu',
+            'install-sessionsql-onlinevote-menu',
             'install-sql-onlinevote-pug',
             'import-onlinevote',
             'import-onlinevote-page',
