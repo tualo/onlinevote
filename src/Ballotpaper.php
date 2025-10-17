@@ -387,7 +387,7 @@ class Ballotpaper
 
 
         try {
-            App::logger('Ballotpaper(function save)')->debug(__LINE__);
+            App::logger('Ballotpaper(function save)')->debug(__LINE__ . '');
             $db->direct('start transaction;');
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach ($pgpkeys as $keyitem) {
@@ -399,7 +399,7 @@ class Ballotpaper
                 $hash['isvalid']        =   $this->valid() ? '1' : '0';
                 $hash['token']          =   $this->getSecretToken();
                 $hash['voter_id']       =   $this->getVoterId();
-                App::logger('Ballotpaper(function save)')->debug(__LINE__);
+                App::logger('Ballotpaper(function save)')->debug(__LINE__ . '');
 
                 if ((App::configuration('onlinevote', 'errorOnInvalidVote', '0') == '1') && ($hash['isvalid'] == 0)) throw new InvalidVote("Ungültige Stimme");
 
@@ -412,7 +412,7 @@ class Ballotpaper
                     $hash
                 );
             }
-            App::logger('Ballotpaper(function save)')->debug(__LINE__);
+            App::logger('Ballotpaper(function save)')->debug(__LINE__ . '');
             if ($_SESSION['api'] == 1) {
 
                 $url = $_SESSION['api_url'] . 'papervote/set';
@@ -433,7 +433,7 @@ class Ballotpaper
                 'voter_id'      =>  $this->getVoterId(),
                 'stimmzettel' => ($this->getBallotpaperId())
             ]);
-            App::logger('Ballotpaper(function save)')->debug(__LINE__);
+            App::logger('Ballotpaper(function save)')->debug(__LINE__ . '');
             $db->direct('commit;');
         } catch (\Exception $e) {
             $db->direct('rollback;');
