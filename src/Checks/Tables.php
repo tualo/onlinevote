@@ -54,6 +54,7 @@ class Tables  extends PostCheck
             'voter_sessions_save_state' => [],
             'reportfiles' => [],
             'reportfiles_typen' => [],
+            'wm_wahlschein_register' => [],
         ];
         self::tableCheck(
             'ds',
