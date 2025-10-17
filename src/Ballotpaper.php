@@ -429,7 +429,7 @@ class Ballotpaper
                 if (!isset($record['success'])) throw new RemoteBallotpaperSaveException('Ungültige Antwort vom Remote System, success fehlt');
                 if ($record['success'] === false) throw new RemoteBallotpaperSaveException($record['msg']);
             }
-            $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}', [
+            $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel}', [
                 'voter_id'      =>  $this->getVoterId(),
                 'stimmzettel' => ($this->getBallotpaperId())
             ]);
