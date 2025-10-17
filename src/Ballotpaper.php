@@ -288,7 +288,7 @@ class Ballotpaper
         $sql = 'update voters set contact = now() where voter_id = {voter_id} and stimmzettel = {stimmzettel}';
         $db->direct($sql, [
             'voter_id'      =>  $this->getVoterId(),
-            'stimmzettel'   => ((string)$this->getBallotpaperId()) . '|0'
+            'stimmzettel'   => ($this->getBallotpaperId())
         ]);
     }
 
@@ -313,7 +313,7 @@ class Ballotpaper
         ';
         $db->direct($sql, [
             'voter_id'      =>  $this->getVoterId(),
-            'stimmzettel'   => ((string)$this->getBallotpaperId()) . '|0',
+            'stimmzettel'   => ((string)$this->getBallotpaperId()),
             'session_id'    =>  session_id(),
             'completed'     =>  0
         ]);
@@ -326,16 +326,16 @@ class Ballotpaper
 
         $voter = $db->singleRow('
             select
-                distinct voter_id ,stimmzettel_id
+                distinct voter_id ,stimmzettel 
             from 
                 ballotbox 
             where 
                 voter_id        =   {voter_id}
-                and stimmzettel_id =   {stimmzettel_id}
+                and stimmzettel  =   {stimmzettel}
         ', [
 
             'voter_id' => $this->getVoterId(),
-            'stimmzettel_id' => $this->getBallotpaperId()
+            'stimmzettel' => $this->getBallotpaperId()
         ]);
         return $voter !== false;
     }
@@ -387,7 +387,7 @@ class Ballotpaper
 
 
         try {
-            App::logger('Ballotpaper(function save)')->debug(__LINE__ . ' Starting transaction');
+            App::logger('Ballotpaper(function save)')->debug(__LINE__);
             $db->direct('start transaction;');
             $pgpkeys = $db->direct('select * from pgpkeys');
             foreach ($pgpkeys as $keyitem) {
@@ -395,25 +395,24 @@ class Ballotpaper
                 $hash = $keyitem;
 
                 $hash['ballotpaper']    =   TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt($keyitem['publickey'], json_encode($this->filled)), 'MESSAGE');
-                $hash['stimmzettel_id'] =   $this->getBallotpaperId();
-                $hash['stimmzettel']    =   $this->getBallotpaperId() . '|0';
+                $hash['stimmzettel']    =   $this->getBallotpaperId();
                 $hash['isvalid']        =   $this->valid() ? '1' : '0';
                 $hash['token']          =   $this->getSecretToken();
                 $hash['voter_id']       =   $this->getVoterId();
-                App::logger('Ballotpaper(function save)')->debug(__LINE__ . ' Starting transaction');
+                App::logger('Ballotpaper(function save)')->debug(__LINE__);
 
                 if ((App::configuration('onlinevote', 'errorOnInvalidVote', '0') == '1') && ($hash['isvalid'] == 0)) throw new InvalidVote("Ungültige Stimme");
 
                 $db->direct(
                     '
                 insert into ballotbox 
-                    (id,keyname,ballotpaper,voter_id,stimmzettel_id,stimmzettel,isvalid) 
+                    (id,keyname,ballotpaper,voter_id,stimmzettel,isvalid) 
                 values 
-                    ({token},{keyname},{ballotpaper},{voter_id},{stimmzettel_id},{stimmzettel},{isvalid})',
+                    ({token},{keyname},{ballotpaper},{voter_id},{stimmzettel},{isvalid})',
                     $hash
                 );
             }
-            App::logger('Ballotpaper(function save)')->debug(__LINE__ . ' Starting transaction');
+            App::logger('Ballotpaper(function save)')->debug(__LINE__);
             if ($_SESSION['api'] == 1) {
 
                 $url = $_SESSION['api_url'] . 'papervote/set';
@@ -427,14 +426,14 @@ class Ballotpaper
                     'birthdate'     => (string)$stateMachine->voter()->getBirthdate()
                 ]);
                 if ($record === false) throw new RemoteBallotpaperApiException('Der Vorgang konnte nicht abgeschlossen werden');
-                if ($record['success'] == false) throw new RemoteBallotpaperSaveException($record['msg']);
+                if (!isset($record['success'])) throw new RemoteBallotpaperSaveException('Ungültige Antwort vom Remote System, success fehlt');
+                if ($record['success'] === false) throw new RemoteBallotpaperSaveException($record['msg']);
             }
-            App::logger('Ballotpaper(function save)')->debug(__LINE__ . ' Starting transaction');
             $db->direct('update voters set completed = 1 where voter_id = {voter_id} and stimmzettel = {stimmzettel_id}', [
-                'voter_id'      =>  (string)$this->getVoterId(),
-                'stimmzettel_id' => ((string)$this->getBallotpaperId()) . '|0'
+                'voter_id'      =>  $this->getVoterId(),
+                'stimmzettel' => ($this->getBallotpaperId())
             ]);
-            App::logger('Ballotpaper(function save)')->debug(__LINE__ . ' Starting transaction');
+            App::logger('Ballotpaper(function save)')->debug(__LINE__);
             $db->direct('commit;');
         } catch (\Exception $e) {
             $db->direct('rollback;');

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `ballotbox_decrypted` (
   `ballotpaper` text NOT NULL,
   `saveerror` tinyint(4) DEFAULT 0,
   `isvalid` tinyint(4) DEFAULT 0,
-  `stimmzettel` varchar(10) DEFAULT '',
+  `stimmzettel` integer not null,
   PRIMARY KEY (`id`,`keyname`),
   KEY `idx_ballotbox_decrypted_pgpkeys` (`keyname`),
   CONSTRAINT `fk_ballotbox_decrypted_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE

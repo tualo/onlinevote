@@ -1,15 +1,15 @@
-DELIMITER ;
+DELIMITER  //
 CREATE TABLE IF NOT EXISTS `ballotbox` (
   `id` varchar(50) NOT NULL,
   `keyname` varchar(50) NOT NULL,
   `ballotpaper` text NOT NULL,
-  `voter_id` varchar(20) DEFAULT NULL,
+  `voter_id` bigint DEFAULT NULL,
   `blocked` tinyint(4) DEFAULT 0,
-  `stimmzettel` varchar(15) DEFAULT NULL,
+  `stimmzettel` integer DEFAULT NULL,
   `saveerror` tinyint(4) DEFAULT 0,
   `saveerrorid` varchar(36) DEFAULT '',
   `isvalid` tinyint(4) DEFAULT 0,
-  `stimmzettel_id` varchar(10) DEFAULT '',
+  
   PRIMARY KEY (`id`,`keyname`),
   KEY `idx_ballotbox_voter_id` (`voter_id`),
   KEY `idx_ballotbox_keyname` (`keyname`),
@@ -17,10 +17,10 @@ CREATE TABLE IF NOT EXISTS `ballotbox` (
   KEY `idx_ballotbox_blocked` (`blocked`),
   KEY `idx_ballotbox_saveerrorid` (`saveerrorid`),
   CONSTRAINT `fk_ballotbox_pgpkeys` FOREIGN KEY (`keyname`) REFERENCES `pgpkeys` (`keyname`) ON DELETE CASCADE ON UPDATE CASCADE
-) ;
+) //
 
 
-DELIMITER  //
+
 CREATE OR REPLACE TRIGGER trigger_ballotbox_ai
 AFTER INSERT
    ON ballotbox FOR EACH ROW

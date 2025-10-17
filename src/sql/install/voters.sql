@@ -1,21 +1,19 @@
-DELIMITER ;
+DELIMITER //
 CREATE TABLE IF NOT EXISTS `voters` (
-  `voter_id` varchar(36) NOT NULL,
-  `stimmzettel` varchar(36) NOT NULL,
+  `voter_id` bigint NOT NULL,
+  `stimmzettel` int NOT NULL,
   `session_id` varchar(50) DEFAULT NULL,
   `completed` tinyint(4) DEFAULT 0,
   `comitted` tinyint(4) DEFAULT 0,
   `contact` datetime DEFAULT current_timestamp,
   PRIMARY KEY (`voter_id`,`stimmzettel`),
   KEY `idx_voters_voter_id_session_id` (`voter_id`,`session_id`)
-) ;
-
-call addfieldifnotexists('voters','contact','datetime DEFAULT current_timestamp');
+) //
 
 
-DELIMITER //
 
- CREATE or replace TRIGGER voters_bi_completed
+
+CREATE or replace TRIGGER voters_bi_completed
 AFTER INSERT
    ON voters FOR EACH ROW
 BEGIN
