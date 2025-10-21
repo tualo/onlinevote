@@ -28,6 +28,14 @@ class APIRequestHelper
         if (App::configuration('logger-options', 'APIRequestHelper', '0') == '1')
             App::logger('APIRequestHelper')->debug(self::$last_data);
         $object = json_decode(self::$last_data, true);
+
+        if (
+            !is_null($object) &&
+            isset($object["internal_message"])
+        ) {
+            App::logger('APIRequestHelper')->error($object["internal_message"]);
+        }
+
         if (
             !is_null($object) &&
             isset($object["success"]) &&
