@@ -11,7 +11,7 @@ use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
 use Tualo\Office\DS\DSTable;
 
-class SendResults implements IRoute
+class SendResults extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()

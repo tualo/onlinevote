@@ -11,7 +11,7 @@ use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
 use Tualo\Office\DS\DSTable;
 
-class SyncRemote implements IRoute
+class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
 {
     private static function writeBallotPaperCSS()
     {

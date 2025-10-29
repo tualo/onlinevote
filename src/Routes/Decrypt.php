@@ -11,7 +11,7 @@ use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
 use Tualo\Office\DS\DSTable;
 
-class Decrypt implements IRoute
+class Decrypt extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()
@@ -62,7 +62,7 @@ class Decrypt implements IRoute
                 ');
 
                 foreach ($list as $elm) {
-                    $decrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper'],'MESSAGE'));
+                    $decrypted = TualoApplicationPGP::decrypt($elm['privatekey'], TualoApplicationPGP::unarmor($elm['ballotpaper'], 'MESSAGE'));
                     $elm['ballotpaper'] = $decrypted;
                     $db->direct('insert ignore into ballotbox_decrypted (keyname,id,ballotpaper,stimmzettel,isvalid ) values ({keyname},{id},{ballotpaper},{stimmzettel},{isvalid} )  ', $elm);
                     $db->direct('update ballotbox set decrypted=1 where id={id} and keyname={keyname}', $elm);
@@ -95,7 +95,7 @@ class Decrypt implements IRoute
                     )
                 );
                 */
-                
+
 
                 TualoApplication::result('success', true);
             } catch (Exception $e) {

@@ -10,7 +10,7 @@ use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Crypt\Common\PublicKey;
 
 
-class AppendPublicKey implements IRoute
+class AppendPublicKey extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()

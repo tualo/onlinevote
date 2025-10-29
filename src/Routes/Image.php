@@ -8,7 +8,7 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\DS\DSFiles;
 use Tualo\Office\Basic\RouteSecurityHelper;
 
-class Image implements IRoute
+class Image extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function register()
     {

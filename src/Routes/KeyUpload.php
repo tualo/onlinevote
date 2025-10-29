@@ -14,7 +14,7 @@ use phpseclib3\Crypt\PrivateKeyLoader;
 use phpseclib3\Crypt\RSA;
 use phpseclib3\Crypt\Common\PrivateKey;
 
-class KeyUpload implements IRoute
+class KeyUpload extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()
@@ -27,7 +27,7 @@ class KeyUpload implements IRoute
             $db = $session->getDB();
             try {
 
-                $stop_offset = intval( TualoApplication::configuration('onlinevote','backgroundStopSeconds','0') );
+                $stop_offset = intval(TualoApplication::configuration('onlinevote', 'backgroundStopSeconds', '0'));
                 // use interval add secnid
                 if ($db->singleRow('select stoptime from wm_loginpage_settings where stoptime<now() and id = 1', []) === false) {
                     throw new Exception("Der Schlüssel kann erst nach dem Ende der Wahlfrist hochgeladen werden");
@@ -77,7 +77,7 @@ class KeyUpload implements IRoute
 
                             $rsaKey = RSA::load($file);
                             if (!$rsaKey instanceof PrivateKey) throw new \Exception("Der Schlüssel kann nicht verwendet werden");
-                            
+
 
                             // TualoApplicationPGP::enarmor(TualoApplicationPGP::encrypt( $keyitem['publickey'], json_encode($this->filled)),'MESSAGE');
 
@@ -85,7 +85,7 @@ class KeyUpload implements IRoute
                             TualoApplication::result('fingerprint', $fingerprints);
 
 
-                            
+
                             $found = false;
                             $list = $db->direct('select fingerprint from pgpkeys', []);
                             foreach ($list as $element) {
