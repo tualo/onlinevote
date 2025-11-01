@@ -11,9 +11,13 @@ use Tualo\Office\DS\DSTable;
 class SaveSettings extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.savesettings';
+    }
     public static function register()
     {
-        BasicRoute::add('/onlinevote/savesesstings', function () {
+        BasicRoute::add('/onlinevote/savesettings', function () {
             App::contenttype('application/json');
             App::result('success', false);
             try {
@@ -34,6 +38,6 @@ class SaveSettings extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
             }
-        }, ['post'], true);
+        }, ['post'], true, [], self::scope());
     }
 }

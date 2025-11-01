@@ -14,6 +14,10 @@ use Tualo\Office\DS\DSTable;
 class SyncBlockedVoters extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.decrypt';
+    }
     public static function register()
     {
         BasicRoute::add('/onlinevote/sync_blockedvoters', function ($matches) {
@@ -69,6 +73,6 @@ class SyncBlockedVoters extends \Tualo\Office\Basic\RouteWrapper
                 TualoApplication::result('msg', $e->getMessage());
             }
             TualoApplication::contenttype('application/json');
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

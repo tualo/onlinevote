@@ -14,13 +14,21 @@ use Tualo\Office\DS\DSTable;
 class Reset extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.resetballotbox';
+    }
     public static function register()
     {
         BasicRoute::add('/onlinevote/ballotboxreset', function ($matches) {
             TualoApplication::contenttype('application/json');
-            $session = TualoApplication::get('session');
+            $session = TualoApplication::getSession();
             $db = $session->getDB();
             try {
+
+                if (!$session->isMaster()) {
+                    throw new Exception("Nur Master-Nutzern ist es erlaubt die Wahl zurückzusetzen");
+                }
 
                 if ($db->singleRow('select starttime from wm_loginpage_settings where starttime>now() and id = 1', []) === false) {
                     throw new Exception("Es kann nur vor Beginn der Wahlfrist zurückgesetzt werden");
@@ -37,6 +45,6 @@ class Reset extends \Tualo\Office\Basic\RouteWrapper
             } catch (Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get'], true);
+        }, ['get'], true,   [], self::scope());
     }
 }

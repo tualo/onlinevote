@@ -13,6 +13,10 @@ use Tualo\Office\DS\DSTable;
 
 class SendResults extends \Tualo\Office\Basic\RouteWrapper
 {
+    public static function scope(): string
+    {
+        return 'onlinevote.sendresults';
+    }
 
     public static function register()
     {

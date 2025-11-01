@@ -9,6 +9,10 @@ use Tualo\Office\Basic\IRoute;
 
 class Get extends \Tualo\Office\Basic\RouteWrapper
 {
+    public static function scope(): string
+    {
+        return 'onlinevote.sync';
+    }
 
     public static function register()
     {
@@ -38,6 +42,6 @@ class Get extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

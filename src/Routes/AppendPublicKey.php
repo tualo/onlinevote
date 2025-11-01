@@ -12,6 +12,10 @@ use phpseclib3\Crypt\Common\PublicKey;
 
 class AppendPublicKey extends \Tualo\Office\Basic\RouteWrapper
 {
+    public static function scope(): string
+    {
+        return 'onlinevote.create.ballotbox';
+    }
 
     public static function register()
     {
@@ -57,6 +61,6 @@ class AppendPublicKey extends \Tualo\Office\Basic\RouteWrapper
 
                 App::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

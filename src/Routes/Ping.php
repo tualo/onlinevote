@@ -10,6 +10,10 @@ use Tualo\Office\Basic\IRoute;
 class Ping extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.ping';
+    }
     public static function register()
     {
         BasicRoute::add('/onlinevote/ping', function () {
@@ -32,6 +36,6 @@ class Ping extends \Tualo\Office\Basic\RouteWrapper
                 App::result('last_sql', $db->last_sql);
                 App::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

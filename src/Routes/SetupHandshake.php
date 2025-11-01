@@ -49,6 +49,10 @@ class SetupHandshake extends \Tualo\Office\Basic\RouteWrapper
         return false;
     }
 
+    public static function scope(): string
+    {
+        return 'onlinevote.setuphandshake';
+    }
     public static function register()
     {
         BasicRoute::add('/onlinevote/setuphandshake', function ($matches) {
@@ -148,6 +152,6 @@ class SetupHandshake extends \Tualo\Office\Basic\RouteWrapper
                 App::result('last_sql', $db->last_sql);
                 App::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

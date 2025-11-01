@@ -17,6 +17,10 @@ use phpseclib3\Crypt\Common\PrivateKey;
 class KeyUpload extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.decrypt';
+    }
     public static function register()
     {
         BasicRoute::add('/onlinevote/pgp/upload', function () {
@@ -132,6 +136,6 @@ class KeyUpload extends \Tualo\Office\Basic\RouteWrapper
             } catch (Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

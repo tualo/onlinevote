@@ -14,6 +14,11 @@ use Tualo\Office\DS\DSTable;
 class RemoveVoterReference extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.decrypt';
+    }
+
     public static function register()
     {
         BasicRoute::add('/onlinevote/remove_voter_references', function ($matches) {
@@ -34,6 +39,6 @@ class RemoveVoterReference extends \Tualo\Office\Basic\RouteWrapper
             } catch (Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

@@ -9,6 +9,10 @@ use Tualo\Office\Basic\IRoute;
 
 class Systemcheck extends \Tualo\Office\Basic\RouteWrapper
 {
+    public static function scope(): string
+    {
+        return 'onlinevote.systemcheck';
+    }
 
     public static function register()
     {
@@ -20,6 +24,6 @@ class Systemcheck extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 App::result('msg', $e->getMessage());
             }
-        }, ['get'], App::needsActiveLogin('onlinevote'));
+        }, ['get'], App::needsActiveLogin('onlinevote'), [], self::scope());
     }
 }

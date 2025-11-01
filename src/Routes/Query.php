@@ -127,6 +127,12 @@ group by
         return $data;
     }
 
+
+    public static function scope(): string
+    {
+        return 'onlinevote.sync';
+    }
+
     public static function register()
     {
         BasicRoute::add('/onlinevote/state/completed', function ($matches) {
@@ -139,27 +145,6 @@ group by
             App::result('data',  $data);
             App::result('success', count($data) > 0);
             App::contenttype('application/json');
-        }, ['get', 'post'], true);
-
-
-        BasicRoute::add('/papervote/(?P<type>(identnummer|wahlschein))/(?P<barcode>[\w\-\_\d]+)', function ($matches) {
-            try {
-                $db = App::get('session')->getDB();
-                App::contenttype('application/json');
-                $sql = str_replace(
-                    '#search_field',
-                    ($matches['type'] == 'identnummer') ? 'wahlberechtigte_anlage.identnummer' : 'wahlschein.wahlscheinnummer',
-                    Query::prepareQuerySQL($db)
-                );
-                $data = Query::wzb($db, $db->direct($sql, $matches));
-                App::result('data',  $data);
-                App::result('success', count($data) > 0);
-                App::result('msg', (count($data) == 0) ? 'Der Wähler wurde nicht gefunden.' : '');
-            } catch (\Exception $e) {
-
-                App::result('last_sql', $db->last_sql);
-                App::result('msg', $e->getMessage());
-            }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

@@ -18,6 +18,8 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
         $session = TualoApplication::get('session');
         $db = $session->getDB();
         $sql = "select group_concat(concat('.ballot-background-',id,'{background-color:',farbe,char(59),'}') separator 'SLASH_N') x from stimmzettel";
+        $sql .= "union select group_concat(concat('.ballot-textcolor-',id,'{color:',farbe,char(59),'}') separator 'SLASH_N') x from stimmzettel";
+
         $result = $db->singleValue($sql, [], 'x');
         $result = str_replace('SLASH_N', "\n", $result);
         $filename = 'ballotpaper-backgrounds.css';
@@ -32,6 +34,10 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
         }
     }
 
+    public static function scope(): string
+    {
+        return 'onlinevote.sync';
+    }
 
     public static function register()
     {
@@ -59,7 +65,7 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
 
         BasicRoute::add('/onlinevote/writecss', function () {
             TualoApplication::contenttype('application/json');
@@ -69,7 +75,7 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get'], true);
+        }, ['get'], true, [], self::scope());
 
         BasicRoute::add('/onlinevote/syncremote', function () {
             TualoApplication::contenttype('application/json');
@@ -213,6 +219,6 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
             } catch (\Exception $e) {
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

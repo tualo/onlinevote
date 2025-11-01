@@ -9,6 +9,12 @@ use Tualo\Office\Basic\IRoute;
 class ApiUser extends \Tualo\Office\Basic\RouteWrapper
 {
 
+    public static function scope(): string
+    {
+        return 'onlinevote.sync';
+    }
+
+
     public static function register()
     {
         BasicRoute::add('/papervote/wmregister/(?P<username>[\w\-\_\d]+)', function ($matches) {
@@ -25,6 +31,6 @@ class ApiUser extends \Tualo\Office\Basic\RouteWrapper
                 App::result('last_sql', $db->last_sql);
                 App::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }

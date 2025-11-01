@@ -10,6 +10,11 @@ use Tualo\Office\Basic\RouteSecurityHelper;
 
 class Image extends \Tualo\Office\Basic\RouteWrapper
 {
+    public static function scope(): string
+    {
+        return 'onlinevote.sync';
+    }
+
     public static function register()
     {
 
@@ -71,6 +76,6 @@ class Image extends \Tualo\Office\Basic\RouteWrapper
                 BasicRoute::$finished = true;
                 http_response_code(200);
             }
-        }, ['get'], true);
+        }, ['get'], true, [], self::scope());
     }
 }
