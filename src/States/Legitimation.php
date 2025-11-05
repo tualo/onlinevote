@@ -24,10 +24,14 @@ class Legitimation implements State
         if (($nextState = $stateMachine->checkLogout()) != '') return $nextState;
         if (!$stateMachine->voter()->validSession()) throw new SessionInvalidException();
         $nextState = 'Tualo\Office\OnlineVote\States\Legitimation';
-        if (
-            isset($_REQUEST['legitimation_confirmed']) &&
-            ($_REQUEST['legitimation_confirmed'] == 1)
-        ) {
+
+        $confirmed = 0;
+        if (isset($_REQUEST['legitimation_confirmed'])) {
+
+            $confirmed = $_REQUEST['legitimation_confirmed'];
+            $confirmed = preg_replace('/[^0-9]/', '', $confirmed);
+        }
+        if ($confirmed == 1) {
 
             if (App::configuration('onlinevote', 'extendedLegitimation', '0') == '1') {
                 if (!isset($_REQUEST['notinlist']) && isset($_REQUEST['wzb']) && (is_string($_REQUEST['wzb']))) {
@@ -35,8 +39,10 @@ class Legitimation implements State
                         if ($signer['id'] == $_REQUEST['wzb']) {
                             $_REQUEST['lastname'] = $signer['nachname'];
                             $_REQUEST['firstname'] = $signer['vorname'];
-                            if ($signer['geburtsdatum'] == $_REQUEST['birthdate']) {
-                                $_REQUEST['confirmed_birthdate'] = $_REQUEST['birthdate'];
+                            if (is_string($_REQUEST['birthdate'])) {
+                                if ($signer['geburtsdatum'] == $_REQUEST['birthdate']) {
+                                    $_REQUEST['confirmed_birthdate'] = $_REQUEST['birthdate'];
+                                }
                             }
                             // $_REQUEST['birthdate']=$signer['geburtsdatum'];
                         }
@@ -58,7 +64,7 @@ class Legitimation implements State
             }
 
             if (App::configuration('onlinevote', 'phonePINLegitimation', '0') == '1') {
-                if (isset($_REQUEST['phonenumber'])) {
+                if (isset($_REQUEST['phonenumber']) && is_string($_REQUEST['phonenumber'])) {
                     $nextState = 'Tualo\Office\OnlineVote\States\PhonePINLegitimation';
                     $pin = rand(100000, 999999);
                     $stateMachine->voter()->setPhonenumber($_REQUEST['phonenumber']);
