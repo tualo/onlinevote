@@ -54,8 +54,8 @@ class Voter
     private string $birthdate = "";
     private string $confirmed_birthdate = "";
     private string $allowEditName = "";
-    private string $last_state = "unknown";
-
+    // private string $last_state = "unknown";
+    private int $last_state = 1;
 
     private bool $loggedIn = false;
     private bool $groupedVote = false;
@@ -266,7 +266,7 @@ class Voter
                         'voter_id' => $this->getId()
                     ]);
                     if ($voterVotedOnline === false) {
-                        $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'] : 'unknown';
+                        $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'] : 1;
                         return 'allready-voted-offline';
                     } else {
                         return 'allready-voted-online';
