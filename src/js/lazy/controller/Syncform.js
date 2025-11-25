@@ -6,8 +6,18 @@ Ext.define('Tualo.OnlineVote.controller.Syncform', {
         let me = this,
             view = me.getView(),
             vm = view.getViewModel(),
-            setup = await fetch('./onlinevote/syncsetup').then((response) => { return response.json() }),
-            state = await fetch('./onlinevote/state').then((response) => { return response.json() });
+            setup = await fetch('./onlinevote/syncsetup', {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+            }).then((response) => { return response.json() }),
+            state = await fetch('./onlinevote/state', {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+            }).then((response) => { return response.json() });
         if (setup.success == false) {
             Ext.toast({
                 html: setup.msg,
@@ -65,7 +75,12 @@ Ext.define('Tualo.OnlineVote.controller.Syncform', {
         let me = this,
             view = me.getView(),
             x = view.disable(),
-            syncremote = await fetch('./onlinevote/syncremote').then((response) => { return response.json() })
+            syncremote = await fetch('./onlinevote/syncremote', {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+            }).then((response) => { return response.json() })
         if (syncremote.success == false) {
             Ext.toast({
                 html: syncremote.msg,
