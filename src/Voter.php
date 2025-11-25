@@ -115,7 +115,7 @@ class Voter
         $this->confirmed_birthdate = isset($json['confirmed_birthdate']) ? $json['confirmed_birthdate'] : '-----';
     }
 
-    public function getLastState(): string
+    public function getLastState(): int
     {
         return $this->last_state;
     }
