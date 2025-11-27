@@ -17,7 +17,7 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
     {
         $session = TualoApplication::get('session');
         $db = $session->getDB();
-        $sql = "select group_concat(concat('.ballot-background-',id,'{background-color:',farbe,char(59),'}') separator 'SLASH_N') x from stimmzettel";
+        $sql = "select group_concat(concat('.ballot-background-',id,'{background-color:',farbe,char(59),'}') separator 'SLASH_N') x from stimmzettel ";
         $sql .= "union select group_concat(concat('.ballot-textcolor-',id,'{color:',farbe,char(59),'}') separator 'SLASH_N') x from stimmzettel";
 
         $result = $db->singleValue($sql, [], 'x');
