@@ -27,10 +27,12 @@ class Reset extends \Tualo\Office\Basic\RouteWrapper
             try {
 
                 if (!$session->isMaster()) {
+                    http_response_code(403);
                     throw new Exception("Nur Master-Nutzern ist es erlaubt die Wahl zurückzusetzen");
                 }
 
                 if ($db->singleRow('select starttime from wm_loginpage_settings where starttime>now() and id = 1', []) === false) {
+                    http_response_code(405);
                     throw new Exception("Es kann nur vor Beginn der Wahlfrist zurückgesetzt werden");
                 }
 
