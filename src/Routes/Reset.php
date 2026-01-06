@@ -35,11 +35,15 @@ class Reset extends \Tualo\Office\Basic\RouteWrapper
                 }
 
                 $db->execute('delete from ballotbox');
+                $db->execute('truncate ballotbox_blockchain');
                 $db->execute('delete from voters');
+                $db->execute('delete from kandidaten_stimmen');
                 $db->execute('delete from voter_sessions_save_state');
                 $db->execute('delete from blocked_voters');
                 $db->execute('delete from unique_voter_session');
                 $db->execute('delete from ballotbox_decrypted');
+
+
 
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
