@@ -34,6 +34,7 @@ class Reset extends \Tualo\Office\Basic\RouteWrapper
                     throw new Exception("Es kann nur vor Beginn der Wahlfrist zurückgesetzt werden");
                 }
 
+                $db->direct('start transaction;');
                 $db->execute('delete from ballotbox');
                 $db->execute('truncate ballotbox_blockchain');
                 $db->execute('delete from voters');
@@ -42,11 +43,13 @@ class Reset extends \Tualo\Office\Basic\RouteWrapper
                 $db->execute('delete from blocked_voters');
                 $db->execute('delete from unique_voter_session');
                 $db->execute('delete from ballotbox_decrypted');
+                $db->direct('commit;');
 
 
 
                 TualoApplication::result('success', true);
             } catch (Exception $e) {
+                $db->direct('rollback;');
                 TualoApplication::result('msg', $e->getMessage());
             }
         }, ['get'], true,   [], self::scope());
