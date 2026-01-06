@@ -1,6 +1,25 @@
 delimiter ; 
 
-create or replace view view_website_ballotpaper as select * from stimmzettel;
+create or replace view view_website_ballotpaper as 
+with texte as (
+  select 
+    stimmzettel_stimmzettel_fusstexte.id_stimmzettel,
+    stimmzettel_fusstexte.text
+  from 
+    stimmzettel_fusstexte
+    join 
+    stimmzettel_stimmzettel_fusstexte
+    on stimmzettel_fusstexte.id=stimmzettel_stimmzettel_fusstexte.id_stimmzettel_fusstexte
+)
+select 
+  stimmzettel.*,
+  ifnull(texte.text,'') fusstext  
+from 
+  stimmzettel
+  left join texte
+  on stimmzettel.id=texte.id_stimmzettel
+
+;
 
 create or replace view view_website_ballotpaper_groups as 
 select stimmzettelgruppen.*,
