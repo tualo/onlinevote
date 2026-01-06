@@ -33,3 +33,4 @@ require_once "Routes/State.php";
 require_once "Routes/SaveSettings.php";
 require_once "Routes/SendResults.php";
 require_once "Routes/Systemcheck.php";
+require_once "Routes/Reset.php";
