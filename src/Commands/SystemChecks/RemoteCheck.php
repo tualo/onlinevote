@@ -116,31 +116,38 @@ class RemoteCheck extends SystemCheck
             $return_value += 1;
         } else {
 
+
+
             if (App::configuration('onlinevote', 'base_path', '') == '') {
                 self::formatPrintLn(['red'], 'base_path nicht gesetzt');
                 $return_value += 1;
             } else {
-                $protokoll = App::configuration('onlinevote', 'public_domain_protocol', 'https');
-                self::formatPrintLn(['green'], 'public_domain: ' . App::configuration('onlinevote', 'public_domain', ''));
-                if (
-                    $systemcheck = self::makeResolvedCurlRequest($protokoll . '://' . App::configuration('onlinevote', 'public_domain', '') . '/' . App::configuration('onlinevote', 'base_path', '') . '/onlinevote/systemcheck', '127.0.0.1')
-                ) {
+                if (App::configuration('onlinevote', 'allowed_cidrs', '') == '') {
+                    self::formatPrintLn(['red'], 'allowed_cidrs nicht gesetzt');
+                    $return_value += 1;
+                } else {
+                    $protokoll = App::configuration('onlinevote', 'public_domain_protocol', 'https');
+                    self::formatPrintLn(['green'], 'public_domain: ' . App::configuration('onlinevote', 'public_domain', ''));
+                    if (
+                        $systemcheck = self::makeResolvedCurlRequest($protokoll . '://' . App::configuration('onlinevote', 'public_domain', '') . '/' . App::configuration('onlinevote', 'base_path', '') . '/onlinevote/systemcheck', '127.0.0.1')
+                    ) {
 
 
-                    if ($systemcheck['timezone'] != $expected_timezone) {
-                        if ($phase == 'setup_phase') {
-                            self::formatPrintLn(['yellow'], 'Zeitzone ist nicht ' . $expected_timezone . ', Setup Phase');
+                        if ($systemcheck['timezone'] != $expected_timezone) {
+                            if ($phase == 'setup_phase') {
+                                self::formatPrintLn(['yellow'], 'Zeitzone ist nicht ' . $expected_timezone . ', Setup Phase');
+                            } else {
+                                self::formatPrintLn(['red'], 'Zeitzone ist nicht ' . $expected_timezone);
+
+                                $return_value += 1;
+                            }
                         } else {
-                            self::formatPrintLn(['red'], 'Zeitzone ist nicht ' . $expected_timezone);
-
-                            $return_value += 1;
+                            self::formatPrintLn(['green'], 'Zeitzone ist ' . $expected_timezone);
                         }
                     } else {
-                        self::formatPrintLn(['green'], 'Zeitzone ist ' . $expected_timezone);
+                        self::formatPrintLn(['red'], 'Remote System Check fehlgeschlagen');
+                        $return_value += 1;
                     }
-                } else {
-                    self::formatPrintLn(['red'], 'Remote System Check fehlgeschlagen');
-                    $return_value += 1;
                 }
             }
         }

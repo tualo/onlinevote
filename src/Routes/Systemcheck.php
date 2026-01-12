@@ -11,8 +11,11 @@ class Systemcheck extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function scope(): string
     {
-        return 'onlinevote.systemcheck';
+        return 'basic';
+        //        return 'onlinevote.systemcheck';
     }
+
+
 
     public static function register()
     {
