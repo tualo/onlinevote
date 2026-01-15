@@ -10,5 +10,9 @@ select
 from
     `kandidaten`
     left join kandidaten_bilder on kandidaten_bilder.kandidat = kandidaten.id
-    and kandidaten_bilder.typ = 1;
-        
+
+    and kandidaten_bilder.typ = 1
+
+    
+where   kandidaten.aktiv = 1    ;
+
