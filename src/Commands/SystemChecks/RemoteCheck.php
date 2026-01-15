@@ -76,6 +76,9 @@ class RemoteCheck extends SystemCheck
         if (is_null($clientdb)) return 1;
 
 
+        // ToDo:  Noch offen prüfen der Remote Tokens gültigkeit, Beide Seiten!!!!
+        self::formatPrintLn(['red'], 'ToDo:  Noch offen prüfen der Remote Tokens gültigkeit, Beide Seiten!!!!');
+
         self::formatPrintLn(['blue'], 'Remote System Check:');
         self::intent();
 
