@@ -72,10 +72,12 @@ class SetupHandshake extends \Tualo\Office\Basic\RouteWrapper
                 if (self::remoteLogin() === true) {
 
                     $token = $session->registerOAuth(
-                        $params     =   [],
+                        // $params     =   [],
                         $force      =   true,
                         $anyclient  =   false,
-                        $path       =   '/onlinevote/*'
+                        $path       =   '/onlinevote/*',
+                        $name = 'API Handshake Token',
+                        $device = gethostname()
                     );
                     $session->oauthValidDays($token, 365);
                     $keys = TualoApplicationPGP::keyGen(2048);
