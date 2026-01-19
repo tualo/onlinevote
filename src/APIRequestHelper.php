@@ -91,7 +91,7 @@ class APIRequestHelper
         self::$last_rawdata = $data;
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        App::result('url',  $url);
+        //         App::result('url',  $url);
 
         curl_close($ch);
         self::$last_http_code = $httpCode;
