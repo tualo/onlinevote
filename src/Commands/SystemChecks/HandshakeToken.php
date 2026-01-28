@@ -43,7 +43,7 @@ class HandshakeToken extends FormatedCommandLineOutput implements ISystemCheck
             return 2;
         }
 
-        self::formatPrintLn(['green'], 'Active auth tokens found.');
+        self::formatPrintLn(['green'], 'Active auth tokens found. Valid until: ' . $data[0]['validuntil']);
 
 
 
