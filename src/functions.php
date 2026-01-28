@@ -15,6 +15,8 @@ require_once "Commands/SystemChecks/BallotBoxesCheck.php";
 require_once "Commands/SystemChecks/RemoteCheck.php";
 require_once "Commands/SystemChecks/CleanPath.php";
 require_once "Commands/SystemChecks/AuthTokens.php";
+require_once "Commands/SystemChecks/HandshakeToken.php";
+
 
 require_once "CMSMiddleware/Init.php";
 require_once "Middlewares/Middleware.php";
