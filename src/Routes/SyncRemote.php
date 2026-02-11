@@ -108,7 +108,9 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                     set_time_limit(300);
                     $tablename = $table_row['table_name'];
 
-                    if ($tablename == 'ds_files_data') {
+                    if ($tablename == 'ds_files') {
+                        // nicht einlesen, da daten zu groß sein können
+                    } else if ($tablename == 'ds_files_data') {
                         // nicht einlesen, da daten zu groß sein können
                     } else {
                         $filter = '';
@@ -187,10 +189,40 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                 TualoApplication::result('seconds', time() - $start);
                 $db->commit();
 
+                $liste_der_bilder = $db->direct('select file_id from kandidaten_bilder');
+
+
                 foreach ($table_list as $table_row) {
+                    if ($table_row['table_name'] == 'ds_files') {
+                        foreach ($liste_der_bilder as $bild) {
+                            $filter = '&filter=' . urlencode('[{"property":"file_id" ,"value":"' . $bild['file_id'] . '","operator":"eq"}]');
+                            $records = APIRequestHelper::query($url . '/papervote/ds_files/read?' . $filter);
+                            $table = DSTable::instance('ds_files');
+                            $table->insert($records['data']);
+                            if ($table->error()) throw new \Exception($table->errorMessage());
+
+
+                            $records = APIRequestHelper::query($url . '/papervote/ds_files_data/read?' . $filter);
+
+                            foreach ($records['data'] as $row) {
+                                try {
+                                    $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
+                                    $db->direct($sql, $row);
+                                } catch (Exception $e) {
+                                }
+                                $db->direct('select table_name from `ds` limit 1');
+                            }
+
+                            /*
+                            $table = DSTable::instance('ds_files_data');
+                            $table->insert($records['data']);
+                            if ($table->error()) throw new \Exception($table->errorMessage());
+                            */
+                        }
+                    }
                     if ($table_row['table_name'] == 'ds_files_data') {
 
-
+                        /*
                         $lastCount = -1;
                         $currentPage = 0;
                         $tablename = $table_row['table_name'];
@@ -209,6 +241,7 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                             }
                             $db->commit();
                         }
+                            */
                     }
                 }
                 TualoApplication::result('state', __LINE__);
