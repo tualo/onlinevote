@@ -116,7 +116,9 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                         $filter = '';
                         if ($tablename == 'kandidaten_bilder') {
                             // [{"property":"typ" ,"value":"90","operator":"eq"}]
-                            $filter = '&filter=' . urlencode('[{"property":"typ" ,"value":"90","operator":"eq"}]');
+                            $values = TualoApplication::configuration('onlinevote', 'picture_ids', '90');
+                            $values = explode(',', preg_replace('/[^\d,]*/', '', $values));
+                            $filter = '&filter=' . urlencode('[{"property":"typ" ,"value":' . json_encode($values) . ',"operator":"in"}]');
                         }
                         $remote_data[$tablename] = APIRequestHelper::query($url . 'papervote/' . $tablename . '/read?limit=1000000' . $filter);
                         if ($remote_data[$tablename] === false) {
