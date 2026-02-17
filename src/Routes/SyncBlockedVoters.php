@@ -55,7 +55,11 @@ class SyncBlockedVoters extends \Tualo\Office\Basic\RouteWrapper
                 TualoApplication::result('blocked_voters', count($blocked_voters['data']));
 
                 $db->direct('update ballotbox set blocked=0');
-                $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel_id) in (select voter_id,stimmzettel from blocked_voters)');
+                try {
+                    $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel_id) in (select voter_id,stimmzettel from blocked_voters)');
+                } catch (Exception $e) {
+                    // throw new Exception("Fehler bei der Synchronisation der blockierten Wähler: " . $e->getMessage());
+                }
                 $db->direct('update ballotbox set blocked=1 where (voter_id,stimmzettel) in (select voter_id,stimmzettel from blocked_voters)');
 
                 /*
