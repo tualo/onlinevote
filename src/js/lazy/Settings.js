@@ -9,7 +9,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
     viewModel: {
         type: 'onlinevote_settings_model'
     },
-    listeners:{
+    listeners: {
         boxReady: 'onReady'
     },
     items: [{
@@ -23,7 +23,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
         items: [
             {
                 xtype: 'panel',
-                 
+
                 bind: {
                     html: '{formtext}'
                 }
@@ -36,12 +36,12 @@ Ext.define('Tualo.OnlineVote.Settings', {
                     labelAlign: 'top'
                 },
                 items: [
-                    
+
                     {
                         xtype: 'fieldcontainer',
                         fieldLabel: 'Start',
                         layout: 'hbox',
-                        items:  [
+                        items: [
                             {
                                 xtype: 'datefield',
                                 name: 'startdate',
@@ -51,7 +51,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
                                 bind: {
                                     value: '{startdate}'
                                 }
-                            },{
+                            }, {
                                 xtype: 'splitter'
                             },
                             {
@@ -77,7 +77,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
                         xtype: 'fieldcontainer',
                         fieldLabel: 'Ende',
                         layout: 'hbox',
-                        items:  [
+                        items: [
                             {
                                 xtype: 'datefield',
                                 name: 'stopdate',
@@ -87,7 +87,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
                                 bind: {
                                     value: '{stopdate}'
                                 }
-                            },{
+                            }, {
                                 xtype: 'splitter'
                             },
                             {
@@ -111,7 +111,11 @@ Ext.define('Tualo.OnlineVote.Settings', {
                     {
                         xtype: 'checkbox',
                         name: 'interrupted',
-                        fieldLabel: 'Unterbrochen'
+                        fieldLabel: 'Unterbrochen',
+
+                        bind: {
+                            value: '{interrupted}'
+                        }
                     }
                 ]
             }
@@ -119,7 +123,7 @@ Ext.define('Tualo.OnlineVote.Settings', {
 
         bbar: {
             reference: 'bbar',
-            items: ['->',{
+            items: ['->', {
                 itemId: 'card-prev',
                 text: 'Speichern',
                 handler: 'save'
