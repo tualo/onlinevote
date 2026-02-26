@@ -10,6 +10,8 @@ use Tualo\Office\Basic\TualoApplication as App;
 
 use Tualo\Office\OnlineVote\Exceptions\BlockedUser;
 use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailed;
+use Tualo\Office\OnlineVote\Exceptions\LoginNewDocuments;
+use Tualo\Office\OnlineVote\Exceptions\LoginVoterInaktiv;
 use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOnline;
 use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOffline;
 
@@ -39,6 +41,12 @@ class Login implements State
         } else if ($res == 'allready-voted-offline') {
             $stateMachine->logger('Login(State)')->info("login AllreadyVoted {$username} - " . __LINE__ . " " . __FILE__ . " ");
             throw new LoginAllreadyVotedOffline('login AllreadyVoted offline ' . $username);
+        } else if ($res == 'new-documents') {
+            $stateMachine->logger('Login(State)')->info("login New documents {$username} - " . __LINE__ . " " . __FILE__ . " ");
+            throw new LoginNewDocuments('login New documents ' . $username);  
+        } else if ($res == 'voter-inaktiv') {
+            $stateMachine->logger('Login(State)')->info("login Voter inaktiv {$username} - " . __LINE__ . " " . __FILE__ . " ");
+            throw new LoginVoterInaktiv('login Voter inaktiv ' . $username);                        
         } else {
 
             $stateMachine->logger('Login(State)')->info("login Error {$username} - " . __LINE__ . " " . __FILE__ . " ");

@@ -267,6 +267,16 @@ class Voter
                     ]);
                     if ($voterVotedOnline === false) {
                         $this->last_state = isset($record['last_wahlscheinstatus']) ? $record['last_wahlscheinstatus'].'' : 'unknown';
+                        if (isset($record['last_wahlscheinstatus'])){
+                            if($record['last_wahlscheinstatus']==7){
+                                $this->last_state = 'new-documents';
+                                return 'new-documents';
+                            }
+                            if($record['last_wahlscheinstatus']==13){
+                                $this->last_state = 'voter-inaktiv';
+                                return 'voter-inaktiv';
+                            }                            
+                        } 
                         return 'allready-voted-offline';
                     } else {
                         return 'allready-voted-online';

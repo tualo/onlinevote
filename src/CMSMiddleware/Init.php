@@ -13,6 +13,8 @@ use Tualo\Office\OnlineVote\Exceptions\BallotPaperAllreadyVotedException;
 use Tualo\Office\OnlineVote\Exceptions\VoterLoginFailed;
 use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOnline;
 use Tualo\Office\OnlineVote\Exceptions\LoginAllreadyVotedOffline;
+use Tualo\Office\OnlineVote\Exceptions\LoginVoterInaktiv;
+use Tualo\Office\OnlineVote\Exceptions\LoginNewDocuments;
 use Tualo\Office\OnlineVote\Exceptions\BlockedUser;
 use Tualo\Office\OnlineVote\Exceptions\SystemBallotpaperSaveException;
 use Tualo\Office\OnlineVote\Exceptions\RemoteBallotpaperApiException;
