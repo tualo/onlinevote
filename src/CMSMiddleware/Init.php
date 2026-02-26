@@ -247,6 +247,14 @@ class Init
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginAllreadyOffline');
             App::logger('OnlineVote(LoginAllreadyVotedOffline)')->error($e->getMessage());
+        } catch (LoginVoterInaktiv $e) {
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginInaktiv');
+            App::logger('OnlineVote(LoginVoterInaktiv)')->error($e->getMessage());
+        } catch (LoginNewDocuments $e) {
+            $result['errorMessage'] = $e->getMessage();
+            $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\VoterLoginNewDocuments');
+            App::logger('OnlineVote(LoginNewDocuments)')->error($e->getMessage());
         } catch (BlockedUser $e) {
             $result['errorMessage'] = $e->getMessage();
             $result['responsecode'] = 401;
