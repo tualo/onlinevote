@@ -90,6 +90,7 @@ class APIRequestHelper
         $data = curl_exec($ch);
         self::$last_rawdata = $data;
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $last_error = curl_error($ch);
 
         //         App::result('url',  $url);
 
@@ -98,7 +99,7 @@ class APIRequestHelper
         if ($httpCode !== 200) {
             self::$last_error_nr = $httpCode;
             self::$last_error_message = "Backend server problems";
-            App::logger('APIRequestHelper')->error("httpCode $httpCode query $url ");
+            App::logger('APIRequestHelper')->error("httpCode $httpCode query $url  last_error $last_error");
             return false;
         }
         return $data;
