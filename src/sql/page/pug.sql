@@ -383,7 +383,8 @@ ICAgICAgICAgICA=') );
 
 
 
-insert into ds_pug_templates (name,id,note,template) values ('page-onlinevote-failures','page-onlinevote-failures',from_base64('cGFnZS1vbmxpbmV2b3RlLWZhaWx1cmVz'),from_base64( 'LXZhciBzaG9ydFN0YXRlID0gc3Vic3RyKGNtcy53bXMuZ2V0TmV4dFN0YXRlKCksNDApOwpjYXNl
+insert ignore into ds_pug_templates (name,id,note,template) values 
+('page-onlinevote-failures','page-onlinevote-failures',from_base64('cGFnZS1vbmxpbmV2b3RlLWZhaWx1cmVz'),from_base64( 'LXZhciBzaG9ydFN0YXRlID0gc3Vic3RyKGNtcy53bXMuZ2V0TmV4dFN0YXRlKCksNDApOwpjYXNl
 IHNob3J0U3RhdGUKICAgIHdoZW4gJ1BHUEtleU1pc3NlZCcKICAgICAgICBkaXYucGFnZS1lcnJv
 ci5jb250YWluZXItZmx1aWQKICAgICAgICAgICAgZGl2LmNvbnRhaW5lci5hbGVydC5hbGVydC13
 YXJuaW5nCiAgICAgICAgICAgICAgICBkaXYucm93CiAgICAgICAgICAgICAgICAgICAgZGl2LmNv
@@ -435,5 +436,4 @@ YWxlcnQuYWxlcnQtd2FybmluZwogICAgICAgICAgICAgICAgZGl2LnJvdwogICAgICAgICAgICAg
 ICAgICAgIGRpdi5jb2wgIXtjbXMubWFya2Rvd24oY21zLnR4dCgnZXJyb3JfbG9naW4nKSl9CiAg
 ICB3aGVuICdFcnJvcicKICAgICAgICBpbmNsdWRlIHBhZ2UtZXJyb3IKICAgIGRlZmF1bHQKICAg
 ICAgICBpbmNsdWRlIHBhZ2UtbWFpbnRlbmFuY2UKICAgICAgICAgICAg') )
-on duplicate key update template=values(template)
 ;

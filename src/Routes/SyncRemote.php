@@ -180,9 +180,11 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                     } else {
                         TualoApplication::result('state_tn', $table_row['table_name']);
                         TualoApplication::result('state_data', $remote_data[$table_row['table_name']]);
-                        $table = DSTable::instance($table_row['table_name']);
-                        $table->insert($remote_data[$table_row['table_name']]['data']);
-                        if ($table->error()) throw new \Exception($table->errorMessage());
+                        if (count($remote_data[$table_row['table_name']]['data']) != 0) {
+                            $table = DSTable::instance($table_row['table_name']);
+                            $table->insert($remote_data[$table_row['table_name']]['data']);
+                            if ($table->error()) throw new \Exception($table->errorMessage());
+                        }
                     }
                     $db->direct('select table_name from `ds` limit 1');
                 }
@@ -200,21 +202,22 @@ class SyncRemote extends \Tualo\Office\Basic\RouteWrapper
                             $filter = '&filter=' . urlencode('[{"property":"file_id" ,"value":"' . $bild['file_id'] . '","operator":"eq"}]');
                             $records = APIRequestHelper::query($url . '/papervote/ds_files/read?' . $filter);
                             $table = DSTable::instance('ds_files');
-                            $table->insert($records['data']);
-                            if ($table->error()) throw new \Exception($table->errorMessage());
+                            if (count($records['data']) != 0) {
+                                $table->insert($records['data']);
+                                if ($table->error()) throw new \Exception($table->errorMessage());
 
 
-                            $records = APIRequestHelper::query($url . '/papervote/ds_files_data/read?' . $filter);
+                                $records = APIRequestHelper::query($url . '/papervote/ds_files_data/read?' . $filter);
 
-                            foreach ($records['data'] as $row) {
-                                try {
-                                    $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
-                                    $db->direct($sql, $row);
-                                } catch (Exception $e) {
+                                foreach ($records['data'] as $row) {
+                                    try {
+                                        $sql = 'replace into ds_files_data (file_id,data) values ({file_id},{data})';
+                                        $db->direct($sql, $row);
+                                    } catch (Exception $e) {
+                                    }
+                                    $db->direct('select table_name from `ds` limit 1');
                                 }
-                                $db->direct('select table_name from `ds` limit 1');
                             }
-
                             /*
                             $table = DSTable::instance('ds_files_data');
                             $table->insert($records['data']);
