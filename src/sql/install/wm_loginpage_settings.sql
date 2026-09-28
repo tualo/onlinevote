@@ -35,7 +35,12 @@ BEGIN
             signal sqlstate '45000' set message_text = 'Invalid time range';
         END IF;
         if NEW.starttime < NOW() THEN
-            signal sqlstate '45000' set message_text = 'Start time must be in the future';
+            if (exists(select phase from voting_state where phase in ('setup_phase','test_phase'))) then
+                -- only as warning, do not signal an error
+                signal sqlstate '01000' set message_text = 'Start time is in the past, only a warning';
+            else
+                signal sqlstate '45000' set message_text = 'Start time must be in the future';
+            END IF;
         END IF;
 
     end if;
