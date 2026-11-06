@@ -170,7 +170,7 @@ class Init
         try {
             $class = new \ReflectionClass($wmstate->getCurrentState());
             if (!$class->hasMethod('transition')) {
-                App::logger('CMS')->error($wmstate->getCurrentState() . ' has no run transition');
+                App::logger('CMS')->error($wmstate->getCurrentState() . ' has no run transition', []);
             } else {
                 $state = new ($wmstate->getCurrentState());
                 $wmstate->setNextState($state->transition($request, $result));
@@ -291,7 +291,7 @@ class Init
         } catch (\Exception $e) {
             $result['errorMessage'] = $e->getMessage();
             $wmstate->setNextState('Tualo\Office\OnlineVote\States\failures\Error');
-            App::logger('OnlineVote')->error($e->getMessage());
+            App::logger('OnlineVote')->error($e->getMessage(), []);
         }
         App::logger('OnlineVote')->debug(__LINE__);
 
@@ -307,13 +307,13 @@ class Init
         try {
             $class = new \ReflectionClass($wmstate->getNextState());
             if (!$class->hasMethod('prepare')) {
-                App::logger('CMS')->error($wmstate->getNextState() . ' has no  prepare');
+                App::logger('CMS')->error($wmstate->getNextState() . ' has no  prepare', []);
             } else {
                 $state = new ($wmstate->getNextState());
                 $wmstate->setNextState($state->prepare($request, $result));
             }
         } catch (\Exception $e) {
-            App::logger('OnlineVote')->error($e->getMessage());
+            App::logger('OnlineVote')->error($e->getMessage(), []);
         }
 
         $result['wms'] = $wmstate;

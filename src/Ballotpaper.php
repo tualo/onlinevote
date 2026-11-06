@@ -250,11 +250,11 @@ class Ballotpaper
         if (App::configuration('logger-options', 'Ballotpaper', '0') == '1') App::logger('Ballotpaper')->debug(json_encode($candidates));
         foreach ($candidates as $candidate) {
             if (!isset($this->hashMap[$candidate])) {
-                App::logger('Ballotpaper')->error("candidate not found");
+                App::logger('Ballotpaper')->error("candidate not found", []);
                 throw new \Exception("candidate not found");
             }
             if (in_array($this->hashMap[$candidate], $this->filled)) {
-                App::logger('Ballotpaper')->error("candidate allready in list");
+                App::logger('Ballotpaper')->error("candidate allready in list", []);
                 throw new \Exception("candidate allready in list");
             }
             $this->filled[] = intval($this->hashMap[$candidate]);

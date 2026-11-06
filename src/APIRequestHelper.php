@@ -33,7 +33,7 @@ class APIRequestHelper
             !is_null($object) &&
             isset($object["internal_message"])
         ) {
-            App::logger('APIRequestHelper')->error($object["internal_message"]);
+            App::logger('APIRequestHelper')->error($object["internal_message"], []);
         }
 
         if (
@@ -51,7 +51,7 @@ class APIRequestHelper
 
         ) {
             self::$last_error_message = $object["msg"];
-            App::logger('APIRequestHelper')->error(self::$last_error_message);
+            App::logger('APIRequestHelper')->error(self::$last_error_message, []);
             return false;
         } else {
             self::log('error', 'Code 2' . "\API:" . $url . "\nResult:" . self::$last_data);
@@ -61,7 +61,7 @@ class APIRequestHelper
 
             self::$last_error_nr = -100;
             self::$last_error_message = "Backend server false response";
-            App::logger('APIRequestHelper')->error("Backend server false response $url " . self::$last_data);
+            App::logger('APIRequestHelper')->error("Backend server false response $url " . self::$last_data, []);
             return false;
         }
     }
@@ -99,7 +99,7 @@ class APIRequestHelper
         if ($httpCode !== 200) {
             self::$last_error_nr = $httpCode;
             self::$last_error_message = "Backend server problems";
-            App::logger('APIRequestHelper')->error("httpCode $httpCode query $url  last_error $last_error");
+            App::logger('APIRequestHelper')->error("httpCode $httpCode query $url  last_error $last_error", []);
             return false;
         }
         return $data;
@@ -115,7 +115,7 @@ class APIRequestHelper
         ) {
             return $object["data"][0];
         } else {
-            App::logger('APIRequestHelper')->error('Code 3' . "\API:" . $url . "\nResult:" . json_encode($object));
+            App::logger('APIRequestHelper')->error('Code 3' . "\API:" . $url . "\nResult:" . json_encode($object), []);
             self::$last_error_nr = -101;
             self::$last_error_message = "Backend server false response (querySingleItem) ";
             return false;
@@ -154,7 +154,7 @@ class APIRequestHelper
                 )
             );
         } catch (\Exception $e) {
-            App::logger('APIRequestHelper')->error($e->getMessage());
+            App::logger('APIRequestHelper')->error($e->getMessage(), []);
         }
     }
 }
