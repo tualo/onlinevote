@@ -25,15 +25,14 @@
   "minimum-stability": "dev",
   "require": {
     "ramsey/uuid": "~4.9.0",
-    "phpseclib/phpseclib": "^3.0.46",
-    "tualo/tualopgp": "^1.0",
-    "tualo/cms": "^1.0",
-    "tualo/tualojs": "^1.0",
-    "tualo/monacoeditor": "^1.0",
-    "tualo/bootstrap": "^1.0",
-    "tualo/fontawesome": "^1.0",
-    "tualo/votemanager": "^1.0",
+    "phpseclib/phpseclib": "^4.0.3",
+    "tualo/tualopgp": ">=1.0",
+    "tualo/cms": ">=1.0",
+    "tualo/tualojs": ">=1.0",
+    "tualo/bootstrap": ">=1.0",
+    "tualo/fontawesome": ">=1.0",
+    "tualo/votemanager": ">=1.1.85",
     "michelf/php-markdown": "2.0.0"
   },
-  "version": "2.0.45"
+  "version": "2.0.46"
 }
