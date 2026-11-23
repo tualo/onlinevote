@@ -22,48 +22,17 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
         {
           xtype: 'glyphtool',
           //type:'add',
-          //glyph: 'xf055@FontAwesome' ,
           glyph: 'fa-solid fa-circle-plus',
           tooltip: 'Eine Wahlrune anlegen',
           handler: 'onAppend'
-        },/*
-          {
-            //type:'add',
-            glyph: 'xf13e@FontAwesome' ,
-            tooltip: 'Einen privaten Schlüssel importieren',
-            handler: 'onUpload'
-          },*/
+        },
         {
           //type:'add',
           xtype: 'glyphtool',
           glyph: 'fa-solid fa-file-lines',
           tooltip: 'Bericht abrufen',
           handler: 'pzReport'
-        }/*,
-          {
-            //type:'add',
-            glyph: 'xf0c6@FontAwesome' ,
-            tooltip: 'Berechtigungen prüfen',
-            handler: 'sync_blockedvoters'
-          },
-          {
-            //type:'add',
-            glyph: 'xf12d@FontAwesome' ,
-            tooltip: 'Wählerkennung entfernen',
-            handler: 'remove_voter_references'
-          },
-          {
-            //type:'add',
-            glyph: 'xf00a@FontAwesome' ,
-            tooltip: 'Entschlüsseln',
-            handler: 'decrypt'
-          },
-          {
-            //type:'add',
-            glyph: 'f042@FontAwesome' ,
-            tooltip: 'Auszählen',
-            handler: 'countVotes'
-          }*/
+        }
       ],
       items: [
 

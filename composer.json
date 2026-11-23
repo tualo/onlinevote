@@ -30,9 +30,8 @@
     "tualo/cms": ">=1.0",
     "tualo/tualojs": ">=1.0",
     "tualo/bootstrap": ">=1.0",
-    "tualo/fontawesome": ">=1.0",
     "tualo/votemanager": ">=1.1.85",
     "michelf/php-markdown": "2.0.0"
   },
-  "version": "2.0.49"
+  "version": "2.0.50"
 }
