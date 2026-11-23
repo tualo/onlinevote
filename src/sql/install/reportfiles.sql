@@ -108,7 +108,7 @@ VALUES
     'reportfiles-{DATE}',
     0,
     1000,
-    0,
+    1,
     'Tualo.DataSets.ListViewFileDrop',
     1,
     'Tualo.DataSets.model.Basic'
