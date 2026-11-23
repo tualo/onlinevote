@@ -20,6 +20,7 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
       scrollable: 'y',
       tools: [
         {
+          xtype: 'glyphtool',
           //type:'add',
           //glyph: 'xf055@FontAwesome' ,
           glyph: 'fa-solid fa-circle-plus',
@@ -34,6 +35,7 @@ Ext.define('Tualo.OnlineVote.Ballotbox', {
           },*/
         {
           //type:'add',
+          xtype: 'glyphtool',
           glyph: 'fa-solid fa-file-lines',
           tooltip: 'Bericht abrufen',
           handler: 'pzReport'
