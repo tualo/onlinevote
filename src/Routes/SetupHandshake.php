@@ -8,7 +8,7 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Ramsey\Uuid\Uuid;
-use phpseclib3\Crypt\RSA;
+use phpseclib4\Crypt\RSA;
 
 class SetupHandshake extends \Tualo\Office\Basic\RouteWrapper
 {

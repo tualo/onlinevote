@@ -6,8 +6,8 @@ use Tualo\Office\TualoPGP\TualoApplicationPGP;
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\Route as BasicRoute;
 use Tualo\Office\Basic\IRoute;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\Crypt\Common\PublicKey;
+use phpseclib4\Crypt\PublicKeyLoader;
+use phpseclib4\Crypt\Common\PublicKey;
 
 
 class AppendPublicKey extends \Tualo\Office\Basic\RouteWrapper

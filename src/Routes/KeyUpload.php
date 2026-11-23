@@ -10,9 +10,9 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\OnlineVote\APIRequestHelper;
 use Tualo\Office\DS\DSCreateRoute;
 use Tualo\Office\DS\DSTable;
-use phpseclib3\Crypt\PrivateKeyLoader;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Crypt\Common\PrivateKey;
+use phpseclib4\Crypt\PrivateKeyLoader;
+use phpseclib4\Crypt\RSA;
+use phpseclib4\Crypt\Common\PrivateKey;
 
 class KeyUpload extends \Tualo\Office\Basic\RouteWrapper
 {
